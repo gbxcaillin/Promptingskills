@@ -85,6 +85,8 @@ header p{color:var(--text2);margin-top:8px;font-size:1.05rem}
 .result-header .copy-btn.copied{border-color:var(--green);color:var(--green)}
 .result-body{padding:18px}
 .result-body .optimized-prompt{white-space:pre-wrap;font-size:.92rem;line-height:1.7;color:var(--text)}
+.result-body .neg-prompt{white-space:pre-wrap;font-size:.85rem;line-height:1.5;color:var(--orange);margin-top:10px;padding:10px;background:rgba(251,146,60,.06);border:1px solid rgba(251,146,60,.15);border-radius:var(--radius-sm)}
+.result-body .neg-label{font-size:.75rem;font-weight:600;color:var(--orange);margin-bottom:4px}
 .result-body .changes{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
 .result-body .changes summary{font-size:.8rem;color:var(--text3);cursor:pointer;font-weight:600}
 .result-body .changes ul{margin-top:6px;padding-left:18px;font-size:.8rem;color:var(--text2)}
@@ -113,7 +115,7 @@ header p{color:var(--text2);margin-top:8px;font-size:1.05rem}
 <div class="container">
   <header>
     <h1>Prompt Optimizer</h1>
-    <p>Enter a prompt and select models — get optimized versions tailored to each model's strengths</p>
+    <p>Enter a prompt and select models &mdash; get research-backed optimized versions tailored to each model</p>
   </header>
 
   <div class="input-section">
@@ -157,7 +159,7 @@ header p{color:var(--text2);margin-top:8px;font-size:1.05rem}
   </div>
 </div>
 
-<footer class="footer">Prompt Optimizer &mdash; Tailored prompts for 69 AI generation models</footer>
+<footer class="footer">Prompt Optimizer &mdash; Research-backed prompt engineering for 69 AI generation models</footer>
 
 <script>
 const MODELS = [
@@ -235,291 +237,687 @@ const MODELS = [
   {id:"flux-2-lora-realism",name:"Flux 2 LoRA Gallery Realism",type:"image",family:"Flux",tags:[],desc:"Enhanced photorealism",provider:"Black Forest Labs"},
 ];
 
-// ── Optimization strategies per model family ──
+// ═══════════════════════════════════════════════════════
+// PROMPT ANALYSIS UTILITIES
+// ═══════════════════════════════════════════════════════
+
+function hasLighting(p) { return /light|lighting|illuminat|glow|shadow|sun|lamp|neon|golden.?hour|backli|rim.?light|chiaroscuro|luminous/i.test(p); }
+function hasCamera(p) { return /camera|shot|angle|tracking|dolly|crane|pan|zoom|lens|tripod|handheld|steadicam|orbit|tilt|push.?in|pull.?back|pov|fpv/i.test(p); }
+function hasMotion(p) { return /motion|movement|moving|walk|run|dance|action|stride|leap|sway|spin|turn|reach|gesture/i.test(p); }
+function hasAudio(p) { return /audio|sound|music|voice|dialogue|sfx|ambient|footstep|whisper|shout|hum|creak|rustle/i.test(p); }
+function hasMaterial(p) { return /texture|material|surface|fabric|metal|glass|wood|skin|leather|silk|velvet|stone|concrete|marble/i.test(p); }
+function hasStyle(p) { return /style|art|artistic|painting|illustration|render|watercolor|oil|pencil|anime|photorealistic|cinematic/i.test(p); }
+function hasPhotography(p) { return /f\/|aperture|focal|lens|iso|shutter|bokeh|depth.?of.?field|shot.?on|mm\b|dslr|mirrorless/i.test(p); }
+function hasText(p) { return /"[^"]+"|'[^']+'|reading|says|text|sign|label|title|caption|logo|lettering|typography/i.test(p); }
+
+function extractSubject(p) {
+  const s = p.split(/[.,;!]/)[0].trim();
+  return s.length > 10 ? s : p.substring(0, 80).trim();
+}
+
+function stripQualityTags(p) {
+  return p.replace(/\b(masterpiece|best quality|4k|8k|ultra.?detailed|highly.?detailed|high.?quality|amazing|stunning|beautiful|epic)\b[,\s]*/gi, '').trim();
+}
+
+function stripWeightSyntax(p) {
+  return p.replace(/\(([^():]+):\d+\.?\d*\)/g, '$1').replace(/\(([^()]+)\)\+{1,}/g, '$1').trim();
+}
+
+function wrapQuotedText(p) {
+  return p.replace(/(?:reading|says|text|sign|label|that says|with text|displaying)\s+([A-Z][A-Z\s&!?.]{1,30}[A-Z!?.]?)(?=\s|,|\.|\b)/g, (m, txt) => {
+    if (/"/.test(m)) return m;
+    return m.replace(txt, '"' + txt.trim() + '"');
+  });
+}
+
+function ensurePresentTense(p) {
+  return p.replace(/\b(walked|ran|danced|stood|looked|turned|moved|jumped|fell|rose|sat)\b/gi, (m) => {
+    const map = {walked:'walks',ran:'runs',danced:'dances',stood:'stands',looked:'looks',turned:'turns',moved:'moves',jumped:'jumps',fell:'falls',rose:'rises',sat:'sits'};
+    return map[m.toLowerCase()] || m;
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// VIDEO OPTIMIZATION STRATEGIES (Research-backed)
+// ═══════════════════════════════════════════════════════
 
 const VIDEO_STRATEGIES = {
+
+  // ── SEADANCE (ByteDance) ──
   Seadance: {
-    style: "cinematic",
-    tips: ["Structure as multi-shot scenes with [Shot 1], [Shot 2] markers","Describe audio/sound design explicitly","Use cinematic language: tracking shot, dolly zoom, crane shot","Mention transitions between shots"],
-    prefix: "",
-    suffix: ", cinematic quality, smooth transitions, multi-shot narrative, professional color grading, immersive audio design",
-    transform(p){return addCameraWork(addSceneStructure(p))}
+    negativePrompt: "blurry, low quality, jittery motion, inconsistent lighting, audio desync, character drift between shots",
+    tips: [
+      "Use 8-part formula: Format, Subject, Action, Environment, Camera, Look, Timing, Audio + Constraints",
+      "Write as director's briefs, not captions. Specify cause before reaction and include physics (friction, weight, momentum)",
+      "Reference tagging: @Image1, @Video1 with one job per reference",
+      "2.5 supports 30-second continuous single-pass video with up to 50 multimodal references",
+      "Structure narrative in four beats: establishing wide (0-6s), primary action (6-14s), escalation (14-24s), resolution (24-30s)",
+      "For continuation: extract final frame, feed as @Image1 for next generation",
+      "Region-level editing in 2.5 lets you patch props/backgrounds without re-rendering"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      if (!hasCamera(r)) r += '. Smooth dolly push following the subject';
+      if (!hasLighting(r)) r += ', with cinematic natural lighting casting long shadows';
+      if (!hasAudio(r)) r += '. The audio captures ambient environmental sound with subtle atmospheric texture';
+      r += ', cinematic color grading, professional production quality, seamless multi-shot transitions';
+      return r;
+    }
   },
+
+  // ── MINIMAX H3 ──
   MiniMax: {
-    style: "cinematic",
-    tips: ["Specify 2K resolution in prompt","Describe native audio elements","Include character emotions and dialogue cues","Detail scene atmosphere"],
-    prefix: "",
-    suffix: ", 2K resolution, native audio, cinematic composition, rich atmospheric detail, expressive character performance",
-    transform(p){return addAtmosphere(p)}
+    negativePrompt: "blurry, distorted, low quality, jittery, audio desync, character drift, tonal shift between cuts",
+    tips: [
+      "H3 uses three dedicated prompt fields: main visual, overall_soundscape (ambient/physical audio), and non_diegetic_music",
+      "Full multimodal context: text + up to 9 images + 3 video clips + 3 audio clips in one request",
+      "Use timecoded shot lists: [0-2s] High-angle overhead... [2-4s] Smoothly push in...",
+      "Reliable on-screen text/UI rendering in video",
+      "Describe transitions as physical events: circular wipes, vertical car-door cuts, flash-to-white",
+      "Specify exposure/stock effects: fine grain, halation, VHS glitches, scanlines, chromatic aberration",
+      "Up to 7,000-character prompts supported"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      if (!hasCamera(r)) r += '. Camera smoothly pushes in from medium to close-up';
+      if (!hasLighting(r)) r += ', rich atmospheric lighting with natural color temperature';
+      if (!hasAudio(r)) r += '. Ambient soundscape: subtle environmental room tone with natural audio depth';
+      r += ', 2K resolution, cinematic composition, expressive character performance';
+      return r;
+    }
   },
+
+  // ── GEMINI OMNI FLASH (Google) ──
   Gemini: {
-    style: "conversational",
-    tips: ["Use natural, conversational descriptions","Describe the scene as if telling a story","Be clear and direct about what you want","Include context and purpose"],
-    prefix: "",
-    suffix: ", natural motion, clear visual storytelling, well-composed scene",
-    transform(p){return p}
+    negativePrompt: null,
+    tips: [
+      "Use directional prompts over specifications: 'shoot it like a Sofia Coppola film' beats a camera spec list",
+      "Place camera movements at the END of the prompt for maximum impact",
+      "One focused moment per prompt — do not chain events",
+      "Max 10 seconds at 720p with native audio synthesis",
+      "Multi-turn editing is the defining feature (up to 3 sequential edits)",
+      "Describe the scene as if telling a story — natural conversational language works best",
+      "Include context and purpose of the video"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(p);
+      if (!hasLighting(r)) r += ', bathed in natural light with soft atmospheric haze';
+      r += '. Camera gently captures the scene with natural, documentary-style framing';
+      return r;
+    }
   },
+
+  // ── FLUX VIDEO (Black Forest Labs) ──
   Flux: {
-    style: "detailed",
-    tips: ["Be extremely detailed and descriptive","Layer details: subject, action, environment, lighting, mood","Specify camera angle and lens type","Include artistic style references"],
-    prefix: "",
-    suffix: ", highly detailed, professional quality, sharp focus, masterful composition",
-    transform(p){return addDetailedLighting(p)}
+    negativePrompt: null,
+    tips: [
+      "Write descriptive sentences, not keyword lists — FLUX uses a 24B vision-language model",
+      "Word order matters: lead with the main subject, it gets the most attention",
+      "Quality tags (masterpiece, best quality, 4k) have minimal benefit — use descriptive language instead",
+      "No weight syntax support — (beautiful:1.4) is ignored. Use natural emphasis instead",
+      "Specify camera and lens: 'Shot on Sony A7IV, 35mm lens, golden hour' for photorealism",
+      "Add one strong lighting description — vague lighting produces vague results",
+      "Keep under 80 words for standard work; up to 300 for complex multi-subject scenes"
+    ],
+    transform(p, model) {
+      let r = stripWeightSyntax(stripQualityTags(ensurePresentTense(p)));
+      if (!hasLighting(r)) r += ', illuminated by dramatic natural lighting with defined shadow play';
+      if (!hasCamera(r)) r += '. Smooth cinematic camera work with deliberate tracking movement';
+      r += ', professional quality, sharp focus, masterful composition';
+      return r;
+    }
   },
+
+  // ── KLING (Kuaishou) ──
   Kling: {
-    style: "cinematic",
-    tips: ["Emphasize motion and consistency between shots","Describe camera movement explicitly","Good with multi-reference concepts","Specify audio/voice elements for 2.6+"],
-    prefix: "",
-    suffix: ", consistent character appearance, smooth natural motion, cinematic framing, professional audio",
-    transform(p){return addCameraWork(addMotionDetail(p))}
+    negativePrompt: "blur, distort, low quality, warping fingers, frozen lips, jittery eyes, face swap, character merge, identity drift, extra limbs, moonwalk sliding feet",
+    tips: [
+      "5-part spine: [Camera Movement] + [Scene/Environment] + [Subject & Action] + [Lighting/Mood/Style] + [Audio/Time]",
+      "Sweet spot: 50-150 words. Over 300 words causes model to ignore and hallucinate",
+      "One camera move per shot: 'dolly push', 'tracking shot', 'orbit' — never combine multiple moves",
+      "Use ++keyword++ emphasis on 2-4 critical elements only",
+      "Multi-shot: label as 'Shot 1 (0-3s):' format. Supports up to 6 shots in Kling 3.0",
+      "Dialogue: [Character A: Description, voice tone]: 'Dialogue text'",
+      "SFX: prefix for sound effects. Describe ambient acoustics plainly",
+      "Always specify action endpoints: 'picks up the cup, then settles back into place'",
+      "Translate emotions into observable physics: 'shoulders drop and she exhales' not 'looks relieved'",
+      "Texture keywords prevent plastic look: film grain, skin pores, fabric creases, condensation"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      const subject = extractSubject(r);
+      if (!hasCamera(r)) r = 'Smooth tracking shot. ' + r;
+      if (!hasMotion(r)) r += ', with fluid natural motion and realistic body mechanics';
+      if (!hasLighting(r)) r += ', cinematic lighting with practical light sources and defined shadows';
+      if (!hasAudio(r) && (model.id.includes('2.6') || model.id.includes('3.0'))) {
+        r += '. Ambient sound: subtle environmental audio with natural acoustics';
+      }
+      r += ', film grain texture, skin pores visible, consistent character appearance, professional cinematography';
+      return r;
+    }
   },
+
+  // ── PIXVERSE ──
   PixVerse: {
-    style: "concise",
-    tips: ["Keep prompts focused and concise","Best for short-form content (5-15s)","Describe one clear action or scene","Emphasize visual impact over complexity"],
-    prefix: "",
-    suffix: ", dynamic visual impact, vibrant colors, engaging short-form content",
-    transform(p){return p}
+    negativePrompt: "blurry, distorted faces, extra limbs, watermark, low quality, jerky motion, morphing, flickering",
+    tips: [
+      "50-80 words structured as: Sentence 1 (subject + action + location), Sentence 2 (camera + style), Sentence 3 (constraints)",
+      "Lead with your subject — the model parses sequentially, early elements get more weight",
+      "One primary action per clip. Specify physical motion: 'feet strike ground with force'",
+      "Replace 'cinematic' with specific film language: rim light, tungsten side light, 35mm lens, low-angle",
+      "Write positive constraints: 'hands remain stable and move naturally, body proportions stay intact'",
+      "C1: Use @ref_name for reference images (up to 7). Supports storyboard-to-video pipeline",
+      "Duration: 5, 8, or 10 seconds. C1 up to 15 seconds at 1080p",
+      "Enable generate_audio_switch for BGM, SFX, or dialogue"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      if (!hasCamera(r)) r += '. Slow push-in with slight handheld feel';
+      if (!hasLighting(r)) r += ', with defined rim lighting and natural color temperature';
+      r += '. Hands remain stable and move naturally, body proportions stay intact throughout, dynamic visual impact';
+      return r;
+    }
   },
+
+  // ── HAPPYHORSE ──
   HappyHorse: {
-    style: "narrative",
-    tips: ["Structure as a mini-narrative with beginning, middle, end","Include character voice/dialogue cues","Describe scene transitions","Emphasize story arc within the video"],
-    prefix: "",
-    suffix: ", narrative-driven, multi-shot storytelling, native audio, emotional arc, cinematic pacing",
-    transform(p){return addNarrativeStructure(p)}
+    negativePrompt: null,
+    tips: [
+      "Keep prompts under 30 words for 1.0 — longer prompts risk being partially ignored",
+      "1.1 shot-brief format: Subject + Motion + Camera + Audio + Format",
+      "Audio MUST be named explicitly in every prompt (1.1) — leaving it unnamed produces random audio",
+      "One main motion per clip. One strong camera or lighting cue, not five",
+      "Excels at: vehicles, fabric motion, fire, reflections, aerial landscapes",
+      "1.1 adds native lip-sync in 7 languages (EN, ZH, JA, KO, DE, FR, Cantonese)",
+      "Place camera directions at the END of the prompt for maximum impact",
+      "Replace generic terms: 'soft golden backlight with rim glow on shoulder' instead of 'beautiful lighting'",
+      "Timed dialogue: '0-4s: character1 says in French, \"Tu as vu ca?\"; 4-8s: character2 laughs'"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      const words = r.split(/\s+/).length;
+      if (words > 30 && model.id === 'happyhorse') {
+        const sentences = r.split(/[.!?]/).filter(s => s.trim());
+        r = sentences.slice(0, 2).join('. ').trim();
+      }
+      if (!hasLighting(r)) r += ', soft golden backlight with rim glow';
+      if (!hasAudio(r)) r += '. Audio: natural ambient sound with environmental acoustics';
+      if (!hasCamera(r)) r += '. Steadicam push following the subject';
+      return r;
+    }
   },
+
+  // ── WAN (Alibaba) ──
   Wan: {
-    style: "detailed",
-    tips: ["Provide start/end frame descriptions for 2.7+","Describe aesthetic style precisely","Good with consistent visual styles","Specify frame control parameters"],
-    prefix: "",
-    suffix: ", consistent aesthetic, professional creative quality, smooth motion, artistic coherence",
-    transform(p){return addFrameControl(p)}
+    negativePrompt: "blurry, distorted, low quality, jitter, flicker, morphing",
+    tips: [
+      "Formula: Subject + Action + Environment + Camera + Lighting + Style + Motion + Output Intent",
+      "Use one camera verb per shot: push, orbit, track, tilt, crane — avoid vague 'cinematic'",
+      "Separate primary motion (main action) from secondary motion (environment) to prevent visual noise",
+      "Wan 2.6+ supports timing brackets: [0-3s] establishing wide, [3-6s] close-up push — with multi_shots: true",
+      "CFG scheduling: start at 7 for composition, lower to 4 for detail pass",
+      "For image-to-video: prompt ONLY motion and camera — the image defines entity, scene, and style",
+      "Maintain consistent visual style from start to end with explicit style anchoring"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      if (!hasCamera(r)) r += '. Camera slowly tracks alongside the subject with a gentle push-in';
+      if (!hasLighting(r)) r += ', with natural directional lighting and soft atmospheric haze';
+      r += '. Maintain consistent visual style and color palette from start to end, smooth fluid motion throughout';
+      return r;
+    }
   },
+
+  // ── VEO (Google DeepMind) ──
   Veo: {
-    style: "cinematic",
-    tips: ["Describe scenes in high fidelity detail","Specify 4K quality elements for 3.1","Include natural ambient audio descriptions","Focus on realism and physical accuracy"],
-    prefix: "",
-    suffix: ", ultra-high fidelity, photorealistic rendering, natural ambient audio, physically accurate motion, 4K cinematic quality",
-    transform(p){return addDetailedLighting(addAtmosphere(p))}
+    negativePrompt: "blurry, low quality, distorted, glitchy, unnatural motion",
+    tips: [
+      "Structure: Subject + Action + Scene + Camera + Style + Audio + Negative prompts (3-6 sentences, 100-150 words)",
+      "Dialogue trick: use colon format — Character says: 'dialogue' — to prevent unwanted subtitles",
+      "Camera placement: include '(that's where the camera is)' for precise camera positioning",
+      "8-second dialogue rule: keep speech segments under 8 seconds for natural pacing",
+      "Veo 3.1: timestamp prompting [00:00-00:02] Shot A, [00:02-00:04] Shot B for multi-beat sequences",
+      "Excels at water physics, fabric, lighting reflections, and professional cinematography terms",
+      "Always generates audio — specify exactly what you want to hear, including 'silence' if needed",
+      "Veo 3.1 has 40-60% improved frame consistency over Veo 3"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      if (!hasCamera(r)) r += '. Camera captures the scene from a low angle with slow deliberate movement';
+      if (!hasLighting(r)) r += ', with rich natural lighting that casts defined shadows and warm highlights';
+      if (!hasAudio(r)) r += '. Audio: natural environmental sounds with subtle ambient atmosphere';
+      r += ', photorealistic rendering, physically accurate motion, high fidelity detail';
+      if (model.id === 'veo-3.1') r += ', 4K cinematic quality';
+      return r;
+    }
   },
+
+  // ── GROK IMAGINE VIDEO (xAI) ──
   "Grok Imagine": {
-    style: "fast",
-    tips: ["Prompts can be shorter — model is fast and responsive","Focus on the key visual concept","Include cinematic style keywords","Good for rapid iteration"],
-    prefix: "",
-    suffix: ", cinematic quality, vivid colors, dynamic composition",
-    transform(p){return p}
+    negativePrompt: null,
+    tips: [
+      "Video formula: Subject + Action + Camera Movement + Motion Detail + Mood + Duration",
+      "Lead with subject in 30-80 words of plain English. Commit to ONE aesthetic per prompt",
+      "Negative prompts are IGNORED — use positive framing only",
+      "Motion verbs: turns, smiles, blinks, walks, leaps, sways, spins, ripples, flickers",
+      "Camera: push in, pull back, orbit, pan, rise, static. Use 'camera not moving' (not 'stable camera') to lock frame",
+      "Native audio: physical impacts (footsteps, door slams) work best; emotion-led prompts often produce music only",
+      "Speed modifiers: 'quickly', 'violently', 'with large amplitude', 'powerfully'",
+      "Video resolution: 480p or 720p, duration 6-30 seconds"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(p);
+      if (!hasLighting(r)) r += ', with golden hour rim light and soft atmospheric haze';
+      if (!hasCamera(r)) r += '. Camera slowly pushes in with subtle handheld movement';
+      r += ', cinematic quality, vivid natural colors';
+      return r;
+    }
   },
+
+  // ── SORA (OpenAI) ──
   Sora: {
-    style: "narrative",
-    tips: ["Write prompts as story descriptions","Include character motivations and emotions","Describe the passage of time","Focus on narrative coherence and world-building"],
-    prefix: "",
-    suffix: ", story-driven, emotionally resonant, cohesive world-building, narrative continuity, immersive audio storytelling",
-    transform(p){return addNarrativeStructure(p)}
+    negativePrompt: null,
+    tips: [
+      "2-5 sentences structured as: scene / cinematography / actions / audio",
+      "Sora treats prompts as 'creative wish lists, not contracts' — same prompt yields different results each time",
+      "Shorter clips (4s) follow instructions more reliably — stitch two 4s clips rather than one 8s clip",
+      "Native audio generation — ALWAYS specify sound or the model decides for you",
+      "Duration set via API parameter (4/8/12/16/20s), not in prose text",
+      "Excels at single-action sequences with specific camera language",
+      "Struggles with: hands, text rendering, object permanence, and physics past 20 seconds",
+      "Each prompt should focus on a single clear moment with one action"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      if (!hasCamera(r)) r += '. The camera drifts slowly through the scene, capturing the moment with cinematic framing';
+      if (!hasAudio(r)) r += '. The audio captures natural ambient sounds: environmental textures and subtle atmospheric presence';
+      r += ', story-driven, emotionally resonant, cohesive world-building';
+      return r;
+    }
   },
+
+  // ── LTX (Lightricks) ──
   LTX: {
-    style: "cinematic",
-    tips: ["Optimized for up to 20-second clips","Specify 4K quality elements","For Audio-to-Video: describe visuals that match the audio mood","Fast generation — good for iteration"],
-    prefix: "",
-    suffix: ", next-gen cinematic quality, 4K resolution, smooth temporal coherence, professional grade",
-    transform(p){return addCameraWork(p)}
+    negativePrompt: null,
+    tips: [
+      "6-part shot scaffold (single prose paragraph): Shot + Scene + Action + Character + Camera + Audio",
+      "Write prose paragraphs, NOT comma-separated tags — tags fail on LTX",
+      "4-8 descriptive sentences as a single flowing paragraph. Up to 5,000 characters supported",
+      "Joint audio-video diffusion in single pass — always describe the soundscape",
+      "Audio format: 'The audio is [ambient bed]: [specific effects], [additional textures], no music'",
+      "Separate camera movement from subject motion in distinct clauses",
+      "Duration: 6-20s on Fast tier, 6-10s on Pro tier. FPS: 24 (cinematic), 48/50 (slow-mo)",
+      "For multi-shot (LTX-2.5): name transitions explicitly — 'hard cut transitions to', 'dissolve', 'match cut'",
+      "Physical cues for emotion: 'shoulders drop, jaw tightens' — not labeled emotions"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      if (!hasCamera(r)) r += '. The camera slowly pushes in with steady, deliberate movement';
+      if (!hasLighting(r)) r += ', bathed in cinematic lighting with natural color temperature and soft shadow falloff';
+      if (!hasAudio(r)) r += '. The audio is subtle ambient atmosphere: environmental room tone with natural acoustic depth, no music';
+      r += ', crisp realistic detail, sharp focus, cinematic color grade';
+      return r;
+    }
   },
+
+  // ── HAILUO (MiniMax) ──
   Hailuo: {
-    style: "action",
-    tips: ["Emphasize physical motion and actions","Describe body mechanics and movement flow","Good for action sequences and dance","Include environmental interaction details"],
-    prefix: "",
-    suffix: ", dynamic physical motion, natural body mechanics, cinematic action choreography, realistic physics",
-    transform(p){return addMotionDetail(p)}
+    negativePrompt: "cartoon, anime, illustration, blur, distort, low quality, jitter",
+    tips: [
+      "Formula: [Camera Shot + Motion] + [Subject + Description] + [Action] + [Scene + Description] + [Lighting] + [Style/Mood]",
+      "Use double parentheses ((red dress)) to force priority on critical visual features",
+      "Write in present tense. Prompts should read like short directing notes, not prose descriptions",
+      "Excels at: motion generation, temporal flow, body movement, facial micro-expressions, physical realism",
+      "Hailuo 2.3: expanded stylization — anime, ink-wash painting, game-CG styles",
+      "Translate emotions into observable behavior: 'shoulders drop and she exhales' not 'looks relieved'",
+      "Counter cartoonish output with: 'photorealistic, hyper-detailed, shot on Arri Alexa, cinematic movie style'",
+      "Overload limit: prioritize 2-3 action beats per clip"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      if (!hasCamera(r)) r = 'Medium shot, slow dolly push. ' + r;
+      if (!hasMotion(r)) r += ', with fluid natural body mechanics and realistic weight';
+      if (!hasLighting(r)) r += ', cinematic lighting with practical sources';
+      r += ', photorealistic, hyper-detailed, dynamic physical motion, natural body mechanics, realistic physics';
+      return r;
+    }
   },
+
+  // ── VIDU (Shengshu) ──
   Vidu: {
-    style: "storyboard",
-    tips: ["Structure prompts like storyboard panels","Include reference descriptions","Good for anime-style content (Q2)","Describe composition of each key frame"],
-    prefix: "",
-    suffix: ", storyboard-quality composition, clear visual narrative, reference-consistent, well-defined key frames",
-    transform(p){return addSceneStructure(p)}
+    negativePrompt: "blurry, distorted, flickering background, morphing, extra limbs",
+    tips: [
+      "Concise prompts work best — single-sentence intent statements perform well",
+      "One-Pass Rule: single subject, one clear action, one camera movement per 5-second clip",
+      "Physics-driven language: 'steam rising, fabric fluttering, wet pavement reflections'",
+      "Prefer slow camera moves: slow push-in, slow arcs, subtle parallax, micro-dolly",
+      "Q3: 1-16 seconds, sweet spot is 5-second clips. Native audio generation included",
+      "Q2: Reference2V accepts up to 7 distinct images for character consistency",
+      "Remove 2-3 adjectives and add 'Stable background' to eliminate flickering",
+      "Fast whips, wild handheld, and hyper-detailed reflections cause shimmer — avoid them",
+      "For best faces: use Image-to-Video with high-quality Start Frame instead of text-to-video"
+    ],
+    transform(p, model) {
+      let r = ensurePresentTense(stripQualityTags(p));
+      const words = r.split(/\s+/).length;
+      if (words > 40) {
+        const sentences = r.split(/[.!?]/).filter(s => s.trim());
+        r = sentences.slice(0, 2).join('. ').trim();
+      }
+      if (!hasCamera(r)) r += '. Camera gently pushes in with subtle parallax';
+      if (!hasLighting(r)) r += ', soft volumetric lighting with natural shadow depth';
+      r += '. Stable background, natural physics, organic motion';
+      if (model.id === 'vidu-q3' && !hasAudio(r)) r += ', ambient atmospheric audio';
+      return r;
+    }
   },
 };
+
+// ═══════════════════════════════════════════════════════
+// IMAGE OPTIMIZATION STRATEGIES (Research-backed)
+// ═══════════════════════════════════════════════════════
 
 const IMAGE_STRATEGIES = {
-  "GPT Image": {
-    style: "natural",
-    tips: ["Use natural language descriptions","Be specific about text rendering if needed","Describe composition and layout","Include artistic style references"],
-    prefix: "",
-    suffix: ", high quality, detailed, professional composition",
-    transform(p){return p}
-  },
-  "Nano Banana": {
-    style: "descriptive",
-    tips: ["Leverage Gemini's understanding of natural descriptions","Specify quality tier (standard vs premium)","Include detailed scene descriptions","Good with complex multi-element scenes"],
-    prefix: "",
-    suffix: ", high fidelity rendering, vivid detail, balanced composition, natural color palette",
-    transform(p){return addDetailedLighting(p)}
-  },
-  Seedream: {
-    style: "detailed",
-    tips: ["ByteDance's models respond well to layered descriptions","Specify resolution quality (2K/3K for Lite)","Include artistic style and medium","Detail texture and material properties"],
-    prefix: "",
-    suffix: ", masterful detail, refined artistic quality, rich textures, professional rendering",
-    transform(p){return addMaterialDetail(p)}
-  },
-  Recraft: {
-    style: "design",
-    tips: ["Excellent for SVG and vector-style output","Specify if you want vector/SVG style","Good for icons, illustrations, design assets","Include brand style parameters if relevant"],
-    prefix: "",
-    suffix: ", clean design, crisp lines, professional illustration quality, well-balanced composition",
-    transform(p){return p}
-  },
-  Wan: {
-    style: "controlled",
-    tips: ["Specify facial features for portrait control","Describe text to render if text-in-image needed","Include style and aesthetic direction","Good with controlled generation parameters"],
-    prefix: "",
-    suffix: ", precise facial detail, accurate text rendering, controlled generation, artistic coherence",
-    transform(p){return addDetailedLighting(p)}
-  },
-  "Grok Imagine": {
-    style: "fast",
-    tips: ["Fast generation — keep prompts clear and focused","Good for quick iteration on concepts","Describe the key visual elements","Include style direction upfront"],
-    prefix: "",
-    suffix: ", sharp detail, vivid rendering, clean composition",
-    transform(p){return p}
-  },
-  Kling: {
-    style: "reference",
-    tips: ["Good with multi-reference inputs","Describe visual remix concepts","Include style transfer keywords","Specify composition and framing"],
-    prefix: "",
-    suffix: ", reference-consistent, detailed rendering, artistic composition, visual coherence",
-    transform(p){return addDetailedLighting(p)}
-  },
-  "Qwen Image": {
-    style: "artistic",
-    tips: ["Excels at artistic styles and text on images","Specify art style explicitly","Good with text rendering in images","Include realism parameters for max variant"],
-    prefix: "",
-    suffix: ", artistic excellence, refined style, precise text rendering, natural realism",
-    transform(p){return addArtisticStyle(p)}
-  },
+
+  // ── FLUX (Black Forest Labs) ──
   Flux: {
-    style: "precise",
-    tips: ["Extremely detailed prompts work best","Include technical photography terms","Specify exact lighting setup","Layer: subject → environment → lighting → style → quality","Kontext variants: include context/reference descriptions"],
-    prefix: "",
-    suffix: ", highly detailed, sharp focus, professional photography, masterful lighting, 8K quality",
-    transform(p){return addPhotographyTerms(p)}
+    negativePrompt: null,
+    tips: [
+      "Natural language sentences, NOT keyword lists — FLUX.2 uses a 24B vision-language model (Mistral Small 3.2)",
+      "Word order matters: lead with main subject, it gets the most attention",
+      "Quality tags (masterpiece, best quality) provide MINIMAL benefit — remove them",
+      "Weight syntax (beautiful:1.4) and Midjourney params (--ar, --v) are IGNORED",
+      "NO negative prompt support on FLUX.2 — rewrite negatives as positives: 'sharp focus throughout' not 'no blur'",
+      "Camera/lens language is the highest-impact technique: 'Shot on Sony A7IV, 85mm f/1.4, shallow depth of field'",
+      "Wrap literal text in quotes: a sign reading \"OPEN 24 HOURS\" — FLUX has industry-leading text rendering",
+      "Hex color support: 'walls in hex #0047AB' for exact brand colors",
+      "Guidance scale 2.5-3.5 is the sweet spot. Above 6.0 produces artifacts",
+      "30-80 words ideal. Elements beyond ~80 words get progressively ignored",
+      "Kontext models: three-part edit structure — what to change, how, what to preserve",
+      "For photorealism: specify camera body + lens + lighting setup, not 'realistic photo'"
+    ],
+    transform(p, model) {
+      let r = stripWeightSyntax(stripQualityTags(p));
+      r = wrapQuotedText(r);
+      if (!hasPhotography(r) && !hasStyle(r)) {
+        r += ', shot with a 35mm lens, shallow depth of field, natural bokeh';
+      }
+      if (!hasLighting(r)) r += ', with Rembrandt lighting from camera-left and soft fill';
+      r += ', sharp focus throughout, professional composition';
+      if (model.id === 'flux-2-lora-realism') r += ', natural skin texture with subtle pores, realistic imperfections, documentary photography';
+      if (model.id === 'flux-kontext-pro' || model.id === 'flux-kontext-max') r += ', maintaining exact same lighting and composition';
+      return r;
+    }
   },
+
+  // ── GPT IMAGE (OpenAI) ──
   "GPT Image": {
-    style: "natural",
-    tips: ["Natural language works best","Describe composition and layout clearly","Specify art style or medium","Include mood and atmosphere"],
-    prefix: "",
-    suffix: ", high quality, detailed rendering, professional composition",
-    transform(p){return p}
+    negativePrompt: null,
+    tips: [
+      "6-slot framework: Subject+Action, Context/Setting, Style/Medium, Lighting, Camera/Composition, Mood+Constraints",
+      "Natural language, like briefing a creative director — 30-80 words of clear, specific prose",
+      "No negative prompt parameter — express constraints as inline exclusions at end: 'No watermark, no extra text'",
+      "~99% character-level text accuracy on GPT Image 2. Wrap exact copy in double quotes",
+      "Specify font style: 'bold serif', 'thin sans-serif'. Add 'verbatim, perfectly legible' for critical text",
+      "Include intended use early (ad, UI mockup, infographic) to set context",
+      "Camera references work well: 'Shot on Leica Q3, 28mm f/1.7 lens'",
+      "Avoid stacking generic praise ('stunning cinematic 8K masterpiece') — use visual facts instead",
+      "Quality parameter: set to 'high' for small text, dense panels, close-up portraits",
+      "Supports up to 4 reference images and transparent backgrounds (PNG/WebP)"
+    ],
+    transform(p, model) {
+      let r = stripQualityTags(p);
+      r = wrapQuotedText(r);
+      if (!hasLighting(r)) r += ', with natural studio lighting and soft diffused shadows';
+      if (!hasStyle(r) && !hasPhotography(r)) r += ', professional photography composition';
+      r += ', high quality, detailed rendering. No watermark, no extra text';
+      return r;
+    }
   },
+
+  // ── NANO BANANA (Google/Gemini) ──
+  "Nano Banana": {
+    negativePrompt: null,
+    tips: [
+      "Narrative paragraphs, NOT keyword lists — Gemini-based architecture understands natural language",
+      "No negative prompts — use 'semantic positive framing': 'sharp focus' instead of 'not blurry'",
+      "Supports up to 14 reference images and 4K output",
+      "Multilingual text rendering supported",
+      "For photorealism: specify camera equipment and materiality — 'Shot on Canon R5, 85mm f/1.4'",
+      "Multi-turn conversational editing is a core feature — refine iteratively",
+      "Describe materials and textures explicitly for best results"
+    ],
+    transform(p, model) {
+      let r = stripWeightSyntax(stripQualityTags(p));
+      r = wrapQuotedText(r);
+      if (!hasLighting(r)) r += ', illuminated by soft natural light with gentle shadow gradients';
+      if (!hasMaterial(r)) r += ', with rich material textures and natural surface detail';
+      r += ', sharp focus throughout, balanced composition, natural color palette';
+      return r;
+    }
+  },
+
+  // ── SEEDREAM (ByteDance) ──
+  Seedream: {
+    negativePrompt: "blurry, low quality, distorted, artificial, plastic-looking, oversaturated",
+    tips: [
+      "Natural-language sentences, NOT keyword lists — the model reasons through prompts semantically",
+      "Word order matters: lead with the main subject, style goes last",
+      "Optimal prompt length: 30-100 words. Under 15 = generic, over 150 = conflicting",
+      "Text rendering: double-quote exact strings, keep to 3-5 words, specify font and placement",
+      "Version 4.5 has the best text rendering; 5.0 Pro adds thinking mode and character consistency",
+      "Counter-intuitive realism: ask for imperfections — 'natural sensor noise, slight handheld imperfections'",
+      "'4K' and '8K' in prompt text affect STYLE, not actual pixel output — set dimensions in API parameters",
+      "For photorealism: describe specific camera body + lens combo"
+    ],
+    transform(p, model) {
+      let r = stripWeightSyntax(stripQualityTags(p));
+      r = wrapQuotedText(r);
+      if (!hasLighting(r)) r += ', with soft directional lighting and natural shadow falloff';
+      if (!hasMaterial(r)) r += ', rich material textures with natural surface detail';
+      r += ', natural sensor noise, slight imperfections for realism, refined artistic quality';
+      return r;
+    }
+  },
+
+  // ── RECRAFT V4 ──
+  Recraft: {
+    negativePrompt: null,
+    tips: [
+      "Think like a designer, not a photographer — Recraft understands design intent",
+      "Two modes: short prompts (model designs WITH you) vs. structured prompts (model EXECUTES your architecture)",
+      "For SVG: use flat, geometric, 2-5 colors, no texture language — native vector/SVG output is unique to this model",
+      "Always quote text that should render literally: 'a sign reading \"HELLO\"'",
+      "Good for: icons, illustrations, design assets, brand materials, vector graphics",
+      "Include brand style parameters if relevant",
+      "Specify composition clearly: 'centered', 'rule of thirds', 'symmetrical layout'"
+    ],
+    transform(p, model) {
+      let r = wrapQuotedText(p);
+      if (!hasStyle(r)) r += ', clean professional design with balanced composition';
+      r += ', crisp lines, well-balanced layout';
+      return r;
+    }
+  },
+
+  // ── WAN IMAGE (Alibaba) ──
+  Wan: {
+    negativePrompt: "blurry, distorted, low quality, deformed hands, unnatural proportions",
+    tips: [
+      "Formula: Subject + Action + Environment + Camera + Lighting + Style",
+      "Wan 2.7 image: accurate text rendering on signs, labels, and posters — double-quote exact text",
+      "Specify facial features explicitly for portrait control",
+      "Separate primary subject from background to prevent visual noise",
+      "For text rendering: double-quote strings, specify font style and placement"
+    ],
+    transform(p, model) {
+      let r = stripQualityTags(p);
+      r = wrapQuotedText(r);
+      if (!hasLighting(r)) r += ', with natural directional lighting and soft ambient fill';
+      r += ', precise facial detail, controlled generation, artistic coherence';
+      return r;
+    }
+  },
+
+  // ── GROK IMAGINE IMAGE (xAI) ──
+  "Grok Imagine": {
+    negativePrompt: null,
+    tips: [
+      "Natural language, written like a design brief — 30-80 words",
+      "Negative prompts do NOT take effect — model ignores them entirely. Use positive framing only",
+      "Commit to ONE aesthetic per prompt — do not mix conflicting styles",
+      "Camera specs beat adjectives: 'Shot on Sony A7R V with 85mm f/1.2 lens' beats 'professional photo'",
+      "Lighting is the single biggest quality driver: golden hour, Rembrandt, backlit, chiaroscuro",
+      "Write text in CAPITALS for literal rendering. Put in quotes and describe placement",
+      "Image 2.0: 'most legible typography in the family' — multilingual signage stays sharp",
+      "Smart Resize: recomposes across 9 ratios (1:2 to 2:1) by filling, not cropping"
+    ],
+    transform(p, model) {
+      let r = p;
+      r = wrapQuotedText(r);
+      if (!hasLighting(r)) r += ', with Rembrandt lighting and warm atmospheric glow';
+      if (!hasPhotography(r) && !hasStyle(r)) r += ', shot on a professional camera with natural depth of field';
+      r += ', sharp detail, vivid natural colors, clean composition';
+      return r;
+    }
+  },
+
+  // ── KLING IMAGE (Kuaishou) ──
+  Kling: {
+    negativePrompt: "blurry, low quality, distorted, extra fingers, deformed hands, unnatural proportions",
+    tips: [
+      "Supports extracting features from up to 10 reference images",
+      "Reference by image number: 'subjects from image 1 and image 2'",
+      "Formula: 'Keep [subject]'s facial features, character has [hairstyle], wearing [clothing], performing [action], background is [setting]'",
+      "When using elements, prompt should focus on ACTION and COMPOSITION — let the element handle appearance",
+      "Include style transfer keywords for consistent aesthetics"
+    ],
+    transform(p, model) {
+      let r = stripQualityTags(p);
+      if (!hasLighting(r)) r += ', with cinematic lighting and natural shadow depth';
+      r += ', reference-consistent, detailed rendering, artistic composition, visual coherence';
+      return r;
+    }
+  },
+
+  // ── QWEN IMAGE (Alibaba) ──
+  "Qwen Image": {
+    negativePrompt: "blurry, low quality, pixelated, distorted, watermark, text overlay, signature, oversaturated, artificial, plastic-looking, extra fingers, deformed hands",
+    tips: [
+      "Structured labels over narrative prose — priority ordering matters (subject first, then environment, then details)",
+      "7-layer framework for 3.0: Goal, Canvas, Zones, Exact copy, Visual system, References, Validation rules",
+      "Double-quote text: '\"Aurora Festival 2026\"' — bumps spelling accuracy from ~65% to ~85%",
+      "Combined with CFG 7.0 and 50 steps, text accuracy reaches ~96%",
+      "Keep to 1-3 sentences for Qwen 2.x. 3.0 supports up to 4,500-token prompts",
+      "Negative prompts FULLY SUPPORTED via negative_prompt parameter — always include the base set",
+      "Camera/lens references work well: 'Shot on Canon EOS R5, 85mm f/1.4 lens'",
+      "CFG sweet spot: 4-5 general, 7-10 for text-heavy/product work",
+      "prompt_extend: disable when your prompt is already detailed or you need reproducibility"
+    ],
+    transform(p, model) {
+      let r = stripWeightSyntax(stripQualityTags(p));
+      r = wrapQuotedText(r);
+      if (!hasLighting(r)) r += ', natural lighting with soft diffused shadows';
+      if (!hasPhotography(r) && !hasStyle(r)) r += ', shot on Canon EOS R5, 85mm f/1.4 lens';
+      r += ', rich material textures, precise detail, balanced composition';
+      return r;
+    }
+  },
+
+  // ── OPENART ──
   OpenArt: {
-    style: "photorealistic",
-    tips: ["Emphasize photorealism for Photorealistic variant","Include SDXL-compatible quality tags for SDXL variant","Describe materials and textures","Include lighting direction and quality"],
-    prefix: "",
-    suffix: ", photorealistic, lifelike detail, natural skin texture, professional studio lighting, 8K resolution",
-    transform(p){return addPhotographyTerms(addMaterialDetail(p))}
+    negativePrompt: "blurry, low quality, distorted, watermark, oversaturated, artificial skin",
+    tips: [
+      "Photorealistic variant: emphasize photorealism with natural skin texture and material detail",
+      "SDXL variant: natural language sentences work better than tag lists on SDXL",
+      "Include lighting direction and quality explicitly",
+      "Describe materials and textures for best results",
+      "Camera/lens specifications add significant quality"
+    ],
+    transform(p, model) {
+      let r = stripQualityTags(p);
+      if (!hasPhotography(r)) r += ', shot with an 85mm lens, shallow depth of field';
+      if (!hasLighting(r)) r += ', professional studio lighting with soft diffused fill';
+      if (!hasMaterial(r)) r += ', natural skin texture, realistic material detail';
+      r += ', photorealistic, lifelike detail, professional composition';
+      return r;
+    }
   },
+
+  // ── Z-IMAGE ──
   "Z-Image": {
-    style: "efficient",
-    tips: ["Good for rapid iteration","Keep prompts focused","Describe the core visual concept clearly","Include style keywords early in prompt"],
-    prefix: "",
-    suffix: ", high quality, efficient rendering, clean detail",
-    transform(p){return p}
+    negativePrompt: "blurry, low quality, distorted",
+    tips: [
+      "Good for rapid iteration — keep prompts focused and concise",
+      "Describe the core visual concept clearly",
+      "Include style keywords early in prompt — they get more weight",
+      "Optimized for speed — simpler prompts produce faster, cleaner results"
+    ],
+    transform(p, model) {
+      let r = stripQualityTags(p);
+      if (!hasLighting(r)) r += ', with balanced natural lighting';
+      r += ', high quality, clean detail, sharp focus';
+      return r;
+    }
   },
+
+  // ── JUGGERNAUT ──
   Juggernaut: {
-    style: "realistic",
-    tips: ["Excels at naturalism and realism","Include skin texture and material detail","Describe natural lighting scenarios","SDXL tags work well for XL variant"],
-    prefix: "",
-    suffix: ", ultra-realistic, natural skin texture, subsurface scattering, professional photography, lifelike detail, 8K",
-    transform(p){return addPhotographyTerms(addMaterialDetail(p))}
+    negativePrompt: "blurry, low quality, distorted, plastic skin, unrealistic, oversmoothed, artificial",
+    tips: [
+      "Juggernaut XL: REQUIRES three trigger words — 'skin textures', 'high resolution', 'cinematic'",
+      "Keep prompts under 75 tokens for XL",
+      "CFG 4-7 depending on version. Use hires.fix with LOWER CFG for detail — do not raise CFG",
+      "Token bleed is the main pitfall with multi-subject scenes — keep subjects separate",
+      "Juggernaut Flux Pro: built on FLUX architecture — NO negative prompts, NO weight syntax",
+      "Flux Pro: two clean sentences outperform adjective chains. Euler Beta sampler, CFG 2.5 for photorealism",
+      "Specify concrete materials: 'brushed steel', 'aged leather', 'weathered wood'",
+      "Camera equipment: 'shot on Sony A7III, 50mm f/1.4' for realistic anchoring"
+    ],
+    transform(p, model) {
+      let r = stripQualityTags(p);
+      if (model.id === 'juggernaut-xl') {
+        if (!hasPhotography(r)) r += ', shot on a professional camera with natural depth of field';
+        if (!hasMaterial(r)) r += ', natural skin texture with visible pores, realistic material detail';
+        r += ', skin textures, high resolution, cinematic, subsurface scattering, professional photography';
+      } else {
+        r = stripWeightSyntax(r);
+        if (!hasPhotography(r)) r += ', shot on Sony A7III, 50mm f/1.4 lens';
+        if (!hasLighting(r)) r += ', with natural directional lighting and soft shadow falloff';
+        r += ', natural skin texture, realistic imperfections, enhanced naturalism';
+      }
+      return r;
+    }
   },
+
+  // ── DYNAVISION XL ──
   DynaVision: {
-    style: "3d-stylized",
-    tips: ["Optimized for stylized 3D aesthetic","Describe 3D rendering style","Include material and shader references","Good for character art and product renders"],
-    prefix: "",
-    suffix: ", stylized 3D render, clean topology, vibrant materials, professional 3D lighting, Pixar-quality shading",
-    transform(p){return add3DStyle(p)}
+    negativePrompt: "blurry, low quality, distorted, photorealistic, photograph",
+    tips: [
+      "Intentionally SIMPLE prompting — the 3D animation aesthetic (Pixar/DreamWorks/Disney) is baked in",
+      "NEVER use the SDXL refiner with DynaVision — it degrades quality significantly",
+      "Known issues with tall aspect ratios (causes neck elongation) — stick to landscape or square",
+      "Good for character art, product renders, stylized scenes",
+      "Don't fight the 3D style — lean into it. Describe the scene, not the rendering technique"
+    ],
+    transform(p, model) {
+      let r = stripQualityTags(p);
+      r = r.replace(/\b(photorealistic|photograph|realistic photo|real photo)\b[,\s]*/gi, '');
+      if (!hasLighting(r)) r += ', with bright professional 3D lighting and vibrant color palette';
+      r += ', stylized 3D character design, vibrant materials, expressive features, clean geometry';
+      return r;
+    }
   },
 };
 
-// ── Prompt enhancement utilities ──
-
-function addCameraWork(p) {
-  const cameras = ["cinematic camera movement","smooth tracking shot","dynamic camera angle","professional cinematography"];
-  if (!/camera|shot|angle|tracking|dolly|crane|pan|zoom/i.test(p)) {
-    p += ". Cinematic camera work with smooth tracking movements";
-  }
-  return p;
-}
-function addMotionDetail(p) {
-  if (!/motion|movement|moving|walk|run|dance|action/i.test(p)) {
-    p += ", with fluid natural motion";
-  }
-  return p;
-}
-function addSceneStructure(p) {
-  if (!/scene|shot \d|panel/i.test(p)) {
-    p = "[Scene 1] " + p;
-  }
-  return p;
-}
-function addNarrativeStructure(p) {
-  if (!/beginning|then|finally|next|first|after/i.test(p)) {
-    const sentences = p.split(/[.!]/).filter(s => s.trim());
-    if (sentences.length === 1) {
-      p = "Opening on: " + p.trim() + ". The scene unfolds naturally with emotional depth";
-    }
-  }
-  return p;
-}
-function addAtmosphere(p) {
-  if (!/atmosphere|ambient|mood|tone|feeling/i.test(p)) {
-    p += ", rich atmospheric depth with immersive ambient detail";
-  }
-  return p;
-}
-function addFrameControl(p) {
-  if (!/start frame|end frame|beginning.*end/i.test(p)) {
-    p += ". Maintain consistent visual style from start to end";
-  }
-  return p;
-}
-function addDetailedLighting(p) {
-  if (!/light|lighting|illuminat|glow|shadow|sun|lamp|neon/i.test(p)) {
-    p += ", with dramatic natural lighting and soft shadows";
-  }
-  return p;
-}
-function addMaterialDetail(p) {
-  if (!/texture|material|surface|fabric|metal|glass|wood|skin/i.test(p)) {
-    p += ", with rich material textures and surface detail";
-  }
-  return p;
-}
-function addArtisticStyle(p) {
-  if (!/style|art|artistic|painting|illustration|render/i.test(p)) {
-    p += ", rendered in a refined artistic style";
-  }
-  return p;
-}
-function addPhotographyTerms(p) {
-  if (!/f\/|aperture|focal|lens|iso|shutter|bokeh|depth of field/i.test(p)) {
-    p += ", shot with a 35mm lens, shallow depth of field, natural bokeh";
-  }
-  return p;
-}
-function add3DStyle(p) {
-  if (!/3d|render|polygon|shader|topology|blender|unreal/i.test(p)) {
-    p += ", stylized 3D render with clean geometry and vibrant material shading";
-  }
-  return p;
-}
-
-// ── State ──
+// ═══════════════════════════════════════════════════════
+// STATE & RENDERING
+// ═══════════════════════════════════════════════════════
 
 let selectedModels = new Set();
 let currentTypeFilter = "all";
 let currentFamilyFilter = null;
 let searchTerm = "";
-
-// ── Render ──
 
 function getFamilies() {
   const f = new Map();
@@ -571,8 +969,6 @@ function renderModels() {
 
 function render() { renderFilterBar(); renderModels(); }
 
-// ── Actions ──
-
 function toggleModel(id) {
   if (selectedModels.has(id)) selectedModels.delete(id); else selectedModels.add(id);
   renderModels();
@@ -623,23 +1019,36 @@ function copyPrompt(btn, id) {
   });
 }
 
-// ── Optimization Engine ──
+function copyNeg(btn, id) {
+  const el = document.getElementById("neg-" + id);
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    btn.textContent = "Copied!";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 1500);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// OPTIMIZATION ENGINE
+// ═══════════════════════════════════════════════════════
 
 function optimizeForModel(basePrompt, model) {
   const strategies = model.type === "video" ? VIDEO_STRATEGIES : IMAGE_STRATEGIES;
-  const strategy = strategies[model.family] || { suffix: "", transform: p => p, tips: [] };
+  const strategy = strategies[model.family] || { transform: p => p, tips: [] };
 
   let prompt = basePrompt.trim();
   if (prompt.endsWith(".")) prompt = prompt.slice(0, -1);
 
-  if (strategy.transform) prompt = strategy.transform(prompt);
-  if (strategy.prefix) prompt = strategy.prefix + prompt;
-  if (strategy.suffix) prompt = prompt + strategy.suffix;
+  if (strategy.transform) prompt = strategy.transform(prompt, model);
 
-  prompt = prompt.replace(/\s{2,}/g, " ").replace(/,\s*,/g, ",").trim();
+  prompt = prompt.replace(/\s{2,}/g, " ").replace(/,\s*,/g, ",").replace(/\.\s*\./g, ".").trim();
   if (!prompt.endsWith(".")) prompt += ".";
 
-  return { optimized: prompt, tips: strategy.tips || [] };
+  return {
+    optimized: prompt,
+    negativePrompt: strategy.negativePrompt || null,
+    tips: strategy.tips || []
+  };
 }
 
 function optimizePrompts() {
@@ -666,7 +1075,8 @@ function optimizePrompts() {
     container.innerHTML = results.map((r, i) => {
       const typeClass = r.model.type === "video" ? "type-video" : "type-image";
       const typeLabel = r.model.type === "video" ? "VIDEO" : "IMAGE";
-      const tipsHtml = r.tips.length ? `<details class="changes"><summary>Optimization tips for ${r.model.family}</summary><ul>${r.tips.map(t=>`<li>${t}</li>`).join("")}</ul></details>` : "";
+      const negHtml = r.negativePrompt ? `<div class="neg-prompt"><div class="neg-label">Negative Prompt <button class="copy-btn" onclick="event.stopPropagation();copyNeg(this,'${i}')" style="margin-left:8px;font-size:.7rem;padding:2px 8px">Copy</button></div><span id="neg-${i}">${escapeHtml(r.negativePrompt)}</span></div>` : '';
+      const tipsHtml = r.tips.length ? `<details class="changes"><summary>Research-backed tips for ${r.model.name} (${r.model.family})</summary><ul>${r.tips.map(t=>`<li>${t}</li>`).join("")}</ul></details>` : "";
       return `<div class="result-card">
         <div class="result-header" onclick="this.parentElement.querySelector('.result-body').classList.toggle('collapsed')">
           <h3>${r.model.name} <span class="model-type ${typeClass}">${typeLabel}</span></h3>
@@ -674,6 +1084,7 @@ function optimizePrompts() {
         </div>
         <div class="result-body">
           <div class="optimized-prompt" id="prompt-${i}">${escapeHtml(r.optimized)}</div>
+          ${negHtml}
           ${tipsHtml}
         </div>
       </div>`;
@@ -689,7 +1100,6 @@ function escapeHtml(s) {
   return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
-// ── Init ──
 render();
 </script>
 </body>
