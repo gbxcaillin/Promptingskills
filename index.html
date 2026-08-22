@@ -52,9 +52,28 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .brand-band h1{font-family:var(--serif);font-weight:300;font-size:clamp(2.2rem,5vw,3.2rem);line-height:1.15}
 .brand-band p{color:rgba(255,255,255,.7);margin-top:10px;font-size:.92rem;max-width:560px;margin-left:auto;margin-right:auto}
 
-.section-label{font-size:.68rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--accent-text);margin-bottom:10px}
+.section-label{font-size:.68rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--accent-text);margin-bottom:10px;display:block}
 
-.input-section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin:32px 0 28px}
+.finder-card{display:flex;align-items:center;justify-content:space-between;gap:24px;background:var(--contrast-bg);color:var(--contrast-fg);border-radius:var(--radius);padding:32px;margin:32px 0 24px}
+.finder-card[hidden]{display:none}
+.finder-card .finder-copy{max-width:640px}
+.finder-card .section-label{color:var(--teal)}
+.finder-card h2{font-family:var(--serif);font-weight:400;font-size:1.9rem;margin-bottom:8px}
+.finder-card p{font-size:.9rem;line-height:1.6;opacity:.82}
+.finder-card .btn-primary{flex-shrink:0}
+
+.or-divider{display:flex;align-items:center;gap:16px;margin:28px 0 24px;color:var(--ink3)}
+.or-divider::before,.or-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.or-divider span{font-size:.66rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase}
+
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--teal);color:#fff;font-family:var(--sans);font-size:.9rem;font-weight:600;flex-shrink:0}
+.sub-head{font-family:var(--sans);font-size:.72rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin:20px 0 12px;display:flex;align-items:center;gap:8px}
+.sub-head .count{font-family:var(--mono);font-size:.7rem;color:var(--ink3);font-weight:400;letter-spacing:.05em;text-transform:none}
+.type-toggle-lg{width:100%}
+.type-toggle-lg button{flex:1;padding:13px 0;font-size:.78rem}
+
+.input-section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin:24px 0 28px}
+.input-section h2{font-family:var(--serif);font-size:1.7rem;font-weight:400;margin-bottom:16px;display:flex;align-items:center;gap:10px}
 .prompt-area{width:100%;min-height:120px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);color:var(--ink);padding:14px;font-size:1rem;resize:vertical;font-family:var(--sans);line-height:1.5;transition:border-color .2s}
 .prompt-area:focus{outline:none;border-color:var(--teal)}
 .prompt-area::placeholder{color:var(--ink3)}
@@ -72,8 +91,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .type-toggle button.active{background:var(--contrast-bg);color:var(--contrast-fg)}
 
 .model-section{margin-bottom:24px}
-.model-section h2{font-family:var(--serif);font-size:1.7rem;font-weight:400;margin-bottom:14px;display:flex;align-items:baseline;gap:10px}
-.model-section h2 .count{font-family:var(--mono);font-size:.72rem;color:var(--ink3);font-weight:400;letter-spacing:.05em}
+.model-section h2{font-family:var(--serif);font-size:1.7rem;font-weight:400;margin-bottom:16px;display:flex;align-items:center;gap:10px}
 
 .chip-group{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
 .chip-group-label{font-size:.6rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3);padding-top:9px;min-width:72px;flex-shrink:0}
@@ -209,7 +227,9 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   .btn{justify-content:center;padding:14px}
   .type-toggle{width:100%}
   .type-toggle button{flex:1;padding:12px 0}
-  .model-section h2{font-size:1.45rem}
+  .finder-card{flex-direction:column;align-items:flex-start;gap:18px;padding:24px}
+  .finder-card .btn{width:100%;justify-content:center}
+  .model-section h2,.input-section h2{font-size:1.45rem}
   .chip-group{flex-direction:column;gap:6px}
   .chip-group-label{padding-top:0;min-width:0}
   .family-select,.search-input{width:100%}
@@ -242,21 +262,13 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 </header>
 <div class="container">
 
-  <div class="input-section">
-    <label class="section-label" for="userPrompt">Your Prompt</label>
-    <textarea id="userPrompt" class="prompt-area" placeholder="Describe what you want to generate... e.g. 'A samurai walking through a neon-lit Tokyo alley in the rain at night'"></textarea>
-    <div class="controls">
-      <button class="btn btn-primary" id="optimizeBtn" onclick="optimizePrompts()">Optimize Prompts</button>
-      <button class="btn btn-secondary" onclick="startWizard()">Help Me Choose</button>
-      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
-      <div style="flex:1"></div>
-      <div class="type-toggle">
-        <button class="active" onclick="setType('all',this)">All</button>
-        <button onclick="setType('video',this)">Video</button>
-        <button onclick="setType('image',this)">Image</button>
-        <button onclick="setType('text',this)">Text</button>
-      </div>
+  <div class="finder-card" id="finderCard">
+    <div class="finder-copy">
+      <span class="section-label">Start here</span>
+      <h2>Not sure which model to use?</h2>
+      <p>Answer a few quick questions about your project and we'll recommend the best-matched models, ranked by our research into what each one does well. Then we'll optimize your prompt for the ones you pick.</p>
     </div>
+    <button class="btn btn-primary" onclick="startWizard()">Help Me Choose</button>
   </div>
 
   <div class="wizard" id="wizard" hidden>
@@ -267,8 +279,17 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
     <div id="wizardBody"></div>
   </div>
 
+  <div class="or-divider"><span>or build it yourself</span></div>
+
   <div class="model-section">
-    <h2>Select Models <span class="count" id="selectedCount">(0 selected)</span></h2>
+    <h2><span class="step-num">1</span>What are you creating?</h2>
+    <div class="type-toggle type-toggle-lg">
+      <button class="active" onclick="setType('all',this)">All</button>
+      <button onclick="setType('video',this)">Video</button>
+      <button onclick="setType('image',this)">Image</button>
+      <button onclick="setType('text',this)">Text</button>
+    </div>
+    <h3 class="sub-head">Select models <span class="count" id="selectedCount">(0 selected)</span></h3>
     <div class="chip-group">
       <span class="chip-group-label">Specialty</span>
       <div class="chip-row" id="specialtyChips"></div>
@@ -287,6 +308,15 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
     <div class="model-grid" id="modelGrid"></div>
   </div>
 
+  <div class="input-section">
+    <h2><span class="step-num">2</span>Write your prompt</h2>
+    <textarea id="userPrompt" class="prompt-area" placeholder="Describe what you want to generate... e.g. 'A samurai walking through a neon-lit Tokyo alley in the rain at night'"></textarea>
+    <div class="controls">
+      <button class="btn btn-primary" id="optimizeBtn" onclick="optimizePrompts()">Optimize Prompts</button>
+      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
   <div class="loading" id="loading">
     <div class="spinner"></div>
     <p>Optimizing prompts for selected models...</p>
@@ -299,7 +329,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 
   <div class="empty-state" id="emptyState">
     <div class="icon-rule"></div>
-    <p>Enter a prompt above, select one or more models, and click "Optimize Prompts" to generate tailored versions.</p>
+    <p>Pick what you're making and choose your models above, then write your prompt and click "Optimize Prompts".</p>
   </div>
 </div>
 
@@ -1605,6 +1635,7 @@ function startWizard() {
   wizAnswers = {};
   wizStep = 0;
   const w = document.getElementById("wizard");
+  document.getElementById("finderCard").setAttribute("hidden", "");
   w.removeAttribute("hidden");
   renderWizard();
   w.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1612,6 +1643,7 @@ function startWizard() {
 
 function closeWizard() {
   document.getElementById("wizard").setAttribute("hidden", "");
+  document.getElementById("finderCard").removeAttribute("hidden");
 }
 
 function renderWizard() {
