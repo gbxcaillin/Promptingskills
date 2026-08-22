@@ -1,16 +1,19 @@
 ---
 name: prompt-optimizer
 description: >-
-  Rewrite a rough prompt into a model-specific, research-backed prompt for AI
-  generation models — video (Veo, Sora, Kling, Seedance, Hailuo, Wan, LTX,
-  PixVerse, Vidu…), image (Flux, Midjourney-style, GPT Image, Nano Banana,
-  Seedream, Qwen Image, Recraft, Juggernaut…), and text/LLM (Claude, ChatGPT,
-  Gemini, Grok). Use this whenever the user wants to generate an image, video,
-  or game/creative work with an AI model and asks to write, improve, optimize,
-  fix, or "make a good prompt" — even if they only paste a rough idea and name
-  a model, or ask "how should I prompt X for Y". Each model family is prompted
-  differently; this skill applies the right conventions and, crucially, returns
-  the reasoning guide alongside the prompt so the user can keep tweaking it.
+  Consult this skill whenever the user is working on the wording of a prompt to
+  generate something with an AI model — writing one from a rough idea, improving
+  or optimizing an existing prompt, or fixing one that gives wrong results
+  (garbled text, missing detail, generic output). Covers image models (Flux,
+  Midjourney, GPT Image, Nano Banana, Seedream, Qwen Image, Recraft…), video
+  models (Veo, Sora, Kling, Seedance, Hailuo, Wan, LTX, PixVerse, Vidu…), and
+  text/LLM work including games and single-file HTML apps (Claude, ChatGPT,
+  Gemini, Grok). Use it even when the user only pastes an idea and names a
+  model, asks "what's a good prompt for X" or "how should I prompt X for Y", or
+  hasn't picked a model yet. These per-model conventions aren't obvious from
+  general knowledge, so reach for this skill instead of writing the prompt from
+  memory. Do NOT use it for writing code that calls a generation API, buying
+  camera gear, translating an existing prompt, or comparing model prices.
 ---
 
 # Prompt Optimizer for Generative AI Models
