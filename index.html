@@ -99,21 +99,11 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .spec-score.tier-good{color:var(--ink2)}
 .sort-note{font-size:.75rem;color:var(--ink3);font-style:italic;width:100%}
 
-.dropdown{position:relative}
-.dropdown-trigger{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px;font-family:var(--sans);font-size:.76rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);cursor:pointer;transition:border-color .15s}
-.dropdown-trigger:hover,.dropdown-trigger.open{border-color:var(--teal)}
-.dropdown-trigger .caret{transition:transform .2s;color:var(--ink3)}
-.dropdown-trigger.open .caret{transform:rotate(180deg)}
-.dropdown-panel{border:1px solid var(--line);border-top:none;background:var(--surface);border-radius:0 0 var(--radius) var(--radius)}
-.panel-tools{display:flex;flex-wrap:wrap;gap:8px;padding:12px;border-bottom:1px solid var(--line);align-items:center}
-.panel-tools .search-input{flex:1;min-width:180px;width:auto}
-.panel-tools button{font-size:.64rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:9px 12px;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface);color:var(--ink2);cursor:pointer;font-family:var(--sans)}
-.panel-tools button:hover{border-color:var(--teal);color:var(--accent-text)}
-.dropdown-panel .model-grid{max-height:440px;overflow-y:auto;padding:12px}
-.selected-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.sel-chip{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;font-size:.68rem;font-weight:500;letter-spacing:.05em;padding:6px 12px;border-radius:var(--radius);cursor:pointer;transition:background .15s}
-.sel-chip:hover{background:var(--deep-teal)}
-.sel-chip .x{font-size:.85rem;line-height:1}
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
+.family-select{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);color:var(--ink);padding:9px 12px;font-size:.88rem;max-width:100%;cursor:pointer;font-family:var(--sans)}
+.family-select:focus{outline:none;border-color:var(--teal)}
+.action-btn{font-size:.64rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface);color:var(--ink2);cursor:pointer;font-family:var(--sans)}
+.action-btn:hover{border-color:var(--teal);color:var(--accent-text)}
 
 .legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;margin-bottom:14px;padding:12px 14px;background:var(--soft);border-radius:var(--radius)}
 .legend-item{display:inline-flex;align-items:center;gap:7px;font-size:.72rem;color:var(--ink2)}
@@ -194,8 +184,8 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   .model-section h2{font-size:1.45rem}
   .chip-group{flex-direction:column;gap:6px}
   .chip-group-label{padding-top:0;min-width:0}
-  .panel-tools .search-input{width:100%;flex-basis:100%}
-  .panel-tools button{flex:1;padding:11px 8px}
+  .family-select,.search-input{width:100%}
+  .action-btn{flex:1;padding:11px 8px}
   .model-grid{grid-template-columns:1fr}
   .model-card{padding:15px 16px}
   .results-section h2{font-size:1.6rem}
@@ -245,30 +235,18 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
       <span class="chip-group-label">Specialty</span>
       <div class="chip-row" id="specialtyChips"></div>
     </div>
-    <div class="chip-group">
-      <span class="chip-group-label">Family</span>
-      <div class="chip-row" id="familyChips"></div>
+    <div class="filter-bar">
+      <select class="family-select" id="familySelect" onchange="filterFamily(this.value || null)"></select>
+      <input type="text" class="search-input" placeholder="Search models..." oninput="onSearch(this.value)">
+      <button class="action-btn" onclick="selectAllVisible()">Select all visible</button>
+      <button class="action-btn" onclick="deselectAll()">Deselect all</button>
     </div>
     <div class="legend">
       <span class="legend-item"><span class="spec-chip top">Teal tag</span> the model's strongest specialty, based on our research into each model</span>
       <span class="legend-item"><span class="spec-chip">Cream tag</span> other areas where the model also performs well</span>
       <span class="legend-item"><span class="spec-score">&#9733; 9/10</span> our specialty rating, shown when a specialty is selected above</span>
     </div>
-    <div class="dropdown">
-      <button type="button" class="dropdown-trigger" id="modelDropdownBtn" onclick="toggleModelDropdown()">
-        <span id="dropdownLabel">Choose models</span>
-        <span class="caret">&#9662;</span>
-      </button>
-      <div class="dropdown-panel" id="modelPanel" hidden>
-        <div class="panel-tools">
-          <input type="text" class="search-input" placeholder="Search models..." oninput="onSearch(this.value)">
-          <button onclick="selectAllVisible()">Select all visible</button>
-          <button onclick="deselectAll()">Clear selection</button>
-        </div>
-        <div class="model-grid" id="modelGrid"></div>
-      </div>
-    </div>
-    <div class="selected-chips" id="selectedChips"></div>
+    <div class="model-grid" id="modelGrid"></div>
   </div>
 
   <div class="loading" id="loading">
@@ -1106,12 +1084,12 @@ function renderSpecialtyChips() {
   el.innerHTML = html;
 }
 
-function renderFamilyChips() {
+function renderFamilySelect() {
   const families = getFamilies();
-  const el = document.getElementById("familyChips");
-  let html = `<span class="family-chip ${!currentFamilyFilter?'active':''}" onclick="filterFamily(null)">All</span>`;
+  const el = document.getElementById("familySelect");
+  let html = `<option value="">Family: All</option>`;
   families.forEach((count, fam) => {
-    html += `<span class="family-chip ${currentFamilyFilter===fam?'active':''}" onclick="filterFamily('${fam}')">${fam} (${count})</span>`;
+    html += `<option value="${fam}" ${currentFamilyFilter===fam?'selected':''}>${fam} (${count})</option>`;
   });
   el.innerHTML = html;
 }
@@ -1159,42 +1137,10 @@ function renderModels() {
       </div>
     </div>`;
   }).join("");
-  updateSelectionUI();
+  document.getElementById("selectedCount").textContent = `(${selectedModels.size} selected)`;
 }
 
-function updateSelectionUI() {
-  const n = selectedModels.size;
-  document.getElementById("selectedCount").textContent = `(${n} selected)`;
-  document.getElementById("dropdownLabel").textContent = n === 0 ? "Choose models" : `${n} model${n === 1 ? "" : "s"} selected`;
-  const sel = MODELS.filter(m => selectedModels.has(m.id));
-  document.getElementById("selectedChips").innerHTML = sel.map(m =>
-    `<span class="sel-chip" onclick="removeModel('${m.id}')" title="Remove ${m.name}">${m.name}<span class="x">&times;</span></span>`
-  ).join("");
-}
-
-function removeModel(id) {
-  selectedModels.delete(id);
-  renderModels();
-}
-
-function toggleModelDropdown() {
-  const panel = document.getElementById("modelPanel");
-  const btn = document.getElementById("modelDropdownBtn");
-  if (panel.hasAttribute("hidden")) { panel.removeAttribute("hidden"); btn.classList.add("open"); }
-  else { panel.setAttribute("hidden", ""); btn.classList.remove("open"); }
-}
-
-document.addEventListener("click", e => {
-  if (!e.target.isConnected) return; // click re-rendered the panel contents; target detached mid-bubble
-  if (e.target.closest(".dropdown")) return;
-  const panel = document.getElementById("modelPanel");
-  if (panel && !panel.hasAttribute("hidden")) {
-    panel.setAttribute("hidden", "");
-    document.getElementById("modelDropdownBtn").classList.remove("open");
-  }
-});
-
-function render() { renderSpecialtyChips(); renderFamilyChips(); renderModels(); }
+function render() { renderSpecialtyChips(); renderFamilySelect(); renderModels(); }
 
 function toggleModel(id) {
   if (selectedModels.has(id)) selectedModels.delete(id); else selectedModels.add(id);
