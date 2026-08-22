@@ -64,7 +64,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .family-chip.active{background:var(--teal);color:#fff;border-color:var(--teal)}
 
 .model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
-.model-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:13px 15px;cursor:pointer;transition:border-color .15s,background .15s;display:flex;align-items:flex-start;gap:10px;user-select:none}
+.model-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:13px 15px;cursor:pointer;transition:border-color .15s,background .15s;display:flex;align-items:flex-start;gap:10px;user-select:none;min-width:0}
 .model-card:hover{border-color:var(--teal)}
 .model-card.selected{border-color:var(--teal);background:var(--teal-tint)}
 .model-card .check{width:17px;height:17px;border-radius:var(--radius);border:1px solid var(--line);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:11px;color:transparent;background:var(--paper)}
@@ -126,11 +126,61 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .footer .lockup{font-size:.55rem;font-weight:500;letter-spacing:.4em;margin-left:.4em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:3px}
 .footer .rule{width:36px;height:1px;background:var(--teal);margin:20px auto}
 
-@media(max-width:600px){
+/* ═══ RESPONSIVE FRAMING ═══
+   Three automatic tiers:
+   1. Portrait phone (~9:19.5) — max-width 640px: single column, stacked controls, full-width touch targets
+   2. Foldable (~4:3 unfolded) — 641-1024px: two-column grid, medium density
+   3. Desktop/laptop — 1025px+: full-width multi-column layout */
+
+/* ── Tier 3: large desktop refinement ── */
+@media(min-width:1440px){
+  .container{max-width:1280px}
+  .model-grid{grid-template-columns:repeat(4,1fr)}
+}
+
+/* ── Tier 2: foldable phones & small tablets (~4:3) ── */
+@media(min-width:641px) and (max-width:1024px){
+  .container{max-width:880px;padding:20px 24px}
+  .brand-band{padding:44px 24px 38px}
+  .brand-band h1{font-size:clamp(2rem,4.5vw,2.6rem)}
+  .model-grid{grid-template-columns:repeat(2,1fr)}
+  .search-input{width:200px}
+}
+/* Near-square unfolded posture: slightly denser grid to use the width */
+@media(min-width:820px) and (max-width:1024px) and (min-aspect-ratio:3/4){
+  .model-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ── Tier 1: portrait phones (~9:19.5) ── */
+@media(max-width:640px){
+  .container{padding:16px 14px}
+  .brand-band{padding:36px 16px 30px}
+  .brand-band .wordmark{font-size:1.6rem}
+  .brand-band h1{font-size:1.9rem}
+  .brand-band p{font-size:.85rem}
   .controls{flex-direction:column;align-items:stretch}
+  .btn{justify-content:center;padding:14px}
+  .type-toggle{width:100%}
+  .type-toggle button{flex:1;padding:12px 0}
+  .model-section h2{font-size:1.45rem}
+  .filter-bar{gap:6px}
+  .spec-select,.search-input{width:100%}
+  .select-actions{display:flex}
+  .select-actions button{flex:1;padding:11px 8px}
   .model-grid{grid-template-columns:1fr}
-  .filter-bar{flex-direction:column}
-  .search-input{width:100%}
+  .model-card{padding:15px 16px}
+  .results-section h2{font-size:1.6rem}
+  .result-header{flex-wrap:wrap;gap:8px}
+  .empty-state{padding:40px 16px}
+  .footer{padding:36px 16px}
+}
+/* Extra-tall phone screens (~9:19.5 and taller): compress the brand band
+   so the prompt input starts above the fold */
+@media(max-width:640px) and (max-aspect-ratio:9/19){
+  .brand-band{padding:26px 16px 22px}
+  .brand-band .rule{margin:16px auto 14px}
+  .brand-band h1{font-size:1.7rem}
+  .brand-band p{display:none}
 }
 </style>
 </head>
