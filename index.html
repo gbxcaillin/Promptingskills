@@ -60,13 +60,22 @@ header p{color:var(--text2);margin-top:8px;font-size:1.05rem}
 .model-card .check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:11px;color:transparent}
 .model-card.selected .check{background:var(--accent);border-color:var(--accent);color:#fff}
 .model-card .info{flex:1;min-width:0}
-.model-card .name{font-weight:600;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.model-card .name{font-weight:600;font-size:.88rem;display:flex;align-items:center;gap:6px}
+.model-card .name .name-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
 .model-card .desc{font-size:.75rem;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.model-card .tags{display:flex;gap:4px;margin-top:4px}
+.model-card .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .tag{font-size:.65rem;padding:1px 6px;border-radius:3px;font-weight:600}
 .tag-new{background:rgba(52,211,153,.15);color:var(--green)}
 .tag-fast{background:rgba(251,146,60,.15);color:var(--orange)}
 .tag-unlimited{background:rgba(124,92,252,.15);color:var(--accent2)}
+.spec-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.spec-chip{font-size:.62rem;padding:1px 6px;border-radius:3px;background:rgba(34,211,238,.1);color:var(--cyan);font-weight:600;white-space:nowrap;border:1px solid rgba(34,211,238,.2)}
+.spec-chip.top{background:rgba(251,191,36,.12);color:var(--yellow);border-color:rgba(251,191,36,.25)}
+.spec-score{font-size:.7rem;font-weight:700;color:var(--yellow);white-space:nowrap;flex-shrink:0}
+.spec-score.tier-good{color:var(--orange)}
+.spec-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:8px 10px;font-size:.9rem;max-width:100%;cursor:pointer}
+.spec-select:focus{outline:none;border-color:var(--accent)}
+.sort-note{font-size:.75rem;color:var(--text3);font-style:italic;width:100%}
 
 .select-actions{display:flex;gap:8px;margin-bottom:12px}
 .select-actions button{font-size:.8rem;padding:4px 12px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer}
@@ -162,80 +171,104 @@ header p{color:var(--text2);margin-top:8px;font-size:1.05rem}
 <footer class="footer">Prompt Optimizer &mdash; Research-backed prompt engineering for 69 AI generation models</footer>
 
 <script>
+// spec: specialty ratings 1-10 per model (research-based). Keys map to SPECIALTIES labels below.
 const MODELS = [
   // === VIDEO MODELS ===
-  {id:"seadance-2.5",name:"Seadance 2.5",type:"video",family:"Seadance",tags:["new","unlimited"],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance"},
-  {id:"minimax-h3",name:"MiniMax H3",type:"video",family:"MiniMax",tags:["new","unlimited"],desc:"2K cinematic video with native audio",provider:"MiniMax"},
-  {id:"seadance-2.0",name:"Seadance 2.0",type:"video",family:"Seadance",tags:[],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance"},
-  {id:"gemini-omni-flash",name:"Gemini Omni Flash",type:"video",family:"Gemini",tags:["new"],desc:"Conversational video generation by Google",provider:"Google"},
-  {id:"flux-3-video",name:"FLUX 3 Video",type:"video",family:"Flux",tags:["new","unlimited"],desc:"Native audio, 5-20s, from Black Forest Labs",provider:"Black Forest Labs"},
-  {id:"seadance-2.0-mini",name:"Seadance 2.0 Mini",type:"video",family:"Seadance",tags:["new"],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance"},
-  {id:"kling-3.0-omni-v",name:"Kling 3.0 Omni",type:"video",family:"Kling",tags:[],desc:"Enhanced multimodal references",provider:"Kuaishou"},
-  {id:"pixverse-c1",name:"PixVerse C1",type:"video",family:"PixVerse",tags:["new"],desc:"Great for short videos",provider:"PixVerse"},
-  {id:"pixverse-v6",name:"PixVerse V6",type:"video",family:"PixVerse",tags:["new"],desc:"Great for short videos",provider:"PixVerse"},
-  {id:"happyhorse-1.1",name:"HappyHorse 1.1",type:"video",family:"HappyHorse",tags:["new"],desc:"Cinematic videos with multi-shot narrative & native audio",provider:"HappyHorse"},
-  {id:"happyhorse",name:"HappyHorse",type:"video",family:"HappyHorse",tags:[],desc:"Cinematic videos with multi-shot narrative & native audio",provider:"HappyHorse"},
-  {id:"wan-2.7-v",name:"Wan 2.7",type:"video",family:"Wan",tags:[],desc:"Cinematic videos with audio & start/end frame control",provider:"Alibaba"},
-  {id:"veo-3.1",name:"Veo 3.1",type:"video",family:"Veo",tags:[],desc:"High fidelity videos with audio & 4K",provider:"Google DeepMind"},
-  {id:"kling-3.0",name:"Kling 3.0",type:"video",family:"Kling",tags:[],desc:"Enhanced audio, consistency & multi-shots",provider:"Kuaishou"},
-  {id:"seadance-1.5-pro",name:"Seadance 1.5 Pro",type:"video",family:"Seadance",tags:[],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance"},
-  {id:"grok-imagine-1.5",name:"Grok Imagine 1.5",type:"video",family:"Grok Imagine",tags:["new","fast"],desc:"Fast generation of cinematic videos",provider:"xAI"},
-  {id:"grok-imagine-v",name:"Grok Imagine",type:"video",family:"Grok Imagine",tags:["fast"],desc:"Fast generation of cinematic videos",provider:"xAI"},
-  {id:"kling-2.6",name:"Kling 2.6",type:"video",family:"Kling",tags:[],desc:"Cinematic videos with audio & voice",provider:"Kuaishou"},
-  {id:"wan-2.6",name:"Wan 2.6",type:"video",family:"Wan",tags:[],desc:"Cinematic videos with audio & multi-shots",provider:"Alibaba"},
-  {id:"sora-2",name:"Sora 2",type:"video",family:"Sora",tags:[],desc:"Story-telling videos with audio",provider:"OpenAI"},
-  {id:"ltx-2.3",name:"LTX 2.3",type:"video",family:"LTX",tags:["fast"],desc:"Next-gen cinematic 4K videos up to 20s",provider:"Lightricks"},
-  {id:"ltx-2.3-audio",name:"LTX 2.3 Audio-to-Video",type:"video",family:"LTX",tags:[],desc:"Generate video from audio with LTX 2.3",provider:"Lightricks"},
-  {id:"kling-2.5",name:"Kling 2.5",type:"video",family:"Kling",tags:[],desc:"Great creativity with excellent value",provider:"Kuaishou"},
-  {id:"kling-o1-v",name:"Kling O1",type:"video",family:"Kling",tags:[],desc:"Great for multi-reference & video editing",provider:"Kuaishou"},
-  {id:"veo-3",name:"Veo 3",type:"video",family:"Veo",tags:[],desc:"High fidelity videos with audio",provider:"Google DeepMind"},
-  {id:"wan-2.5",name:"Wan 2.5",type:"video",family:"Wan",tags:[],desc:"Professional creative videos",provider:"Alibaba"},
-  {id:"hailuo-02",name:"Hailuo 02",type:"video",family:"Hailuo",tags:[],desc:"Great for motion & physical actions",provider:"MiniMax"},
-  {id:"hailuo-2.3",name:"Hailuo 2.3",type:"video",family:"Hailuo",tags:[],desc:"Great for cinematic & acting scenes",provider:"MiniMax"},
-  {id:"kling-2.1",name:"Kling 2.1",type:"video",family:"Kling",tags:[],desc:"Natural motion & great prompt adherence",provider:"Kuaishou"},
-  {id:"seadance-1",name:"Seadance 1",type:"video",family:"Seadance",tags:[],desc:"Narrative videos with multi-shots",provider:"ByteDance"},
-  {id:"vidu-q3",name:"Vidu Q3",type:"video",family:"Vidu",tags:[],desc:"Great for storyboards and adding references",provider:"Shengshu"},
-  {id:"pixverse-5",name:"PixVerse 5",type:"video",family:"PixVerse",tags:["fast"],desc:"Great for short videos",provider:"PixVerse"},
-  {id:"wan-2.2",name:"Wan 2.2",type:"video",family:"Wan",tags:[],desc:"Consistent aesthetic",provider:"Alibaba"},
-  {id:"vidu-q2",name:"Vidu Q2",type:"video",family:"Vidu",tags:[],desc:"Great for anime scenes and storyboards",provider:"Shengshu"},
+  {id:"seadance-2.5",name:"Seadance 2.5",type:"video",family:"Seadance",tags:["new","unlimited"],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{story:10,ref:10,cin:9,aud:9,con:9,mot:8}},
+  {id:"minimax-h3",name:"MiniMax H3",type:"video",family:"MiniMax",tags:["new","unlimited"],desc:"2K cinematic video with native audio",provider:"MiniMax",spec:{cin:9,aud:9,mot:8,con:8,story:8}},
+  {id:"seadance-2.0",name:"Seadance 2.0",type:"video",family:"Seadance",tags:[],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{story:9,ref:9,cin:8,aud:8,con:8,mot:8}},
+  {id:"gemini-omni-flash",name:"Gemini Omni Flash",type:"video",family:"Gemini",tags:["new"],desc:"Conversational video generation by Google",provider:"Google",spec:{speed:8,story:7,aud:7,cin:7,ref:7}},
+  {id:"flux-3-video",name:"FLUX 3 Video",type:"video",family:"Flux",tags:["new","unlimited"],desc:"Native audio, 5-20s, from Black Forest Labs",provider:"Black Forest Labs",spec:{cin:8,aud:8,mot:7,speed:7}},
+  {id:"seadance-2.0-mini",name:"Seadance 2.0 Mini",type:"video",family:"Seadance",tags:["new"],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{speed:8,story:8,cin:7,aud:7}},
+  {id:"kling-3.0-omni-v",name:"Kling 3.0 Omni",type:"video",family:"Kling",tags:[],desc:"Enhanced multimodal references",provider:"Kuaishou",spec:{ref:10,con:9,cin:9,mot:9,aud:8,story:8}},
+  {id:"pixverse-c1",name:"PixVerse C1",type:"video",family:"PixVerse",tags:["new"],desc:"Great for short videos",provider:"PixVerse",spec:{speed:9,anime:8,mot:7,cin:6}},
+  {id:"pixverse-v6",name:"PixVerse V6",type:"video",family:"PixVerse",tags:["new"],desc:"Great for short videos",provider:"PixVerse",spec:{speed:9,anime:8,mot:7,cin:7}},
+  {id:"happyhorse-1.1",name:"HappyHorse 1.1",type:"video",family:"HappyHorse",tags:["new"],desc:"Cinematic videos with multi-shot narrative & native audio",provider:"HappyHorse",spec:{story:9,aud:9,cin:8,con:8}},
+  {id:"happyhorse",name:"HappyHorse",type:"video",family:"HappyHorse",tags:[],desc:"Cinematic videos with multi-shot narrative & native audio",provider:"HappyHorse",spec:{story:8,aud:8,cin:7,con:7}},
+  {id:"wan-2.7-v",name:"Wan 2.7",type:"video",family:"Wan",tags:[],desc:"Cinematic videos with audio & start/end frame control",provider:"Alibaba",spec:{ref:9,cin:8,aud:8,mot:8,con:8}},
+  {id:"veo-3.1",name:"Veo 3.1",type:"video",family:"Veo",tags:[],desc:"High fidelity videos with audio & 4K",provider:"Google DeepMind",spec:{cin:10,aud:10,mot:9,con:9,story:9}},
+  {id:"kling-3.0",name:"Kling 3.0",type:"video",family:"Kling",tags:[],desc:"Enhanced audio, consistency & multi-shots",provider:"Kuaishou",spec:{cin:9,mot:9,con:9,aud:9,story:9}},
+  {id:"seadance-1.5-pro",name:"Seadance 1.5 Pro",type:"video",family:"Seadance",tags:[],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{cin:8,story:8,aud:8,mot:8}},
+  {id:"grok-imagine-1.5",name:"Grok Imagine 1.5",type:"video",family:"Grok Imagine",tags:["new","fast"],desc:"Fast generation of cinematic videos",provider:"xAI",spec:{speed:10,cin:7,mot:7}},
+  {id:"grok-imagine-v",name:"Grok Imagine",type:"video",family:"Grok Imagine",tags:["fast"],desc:"Fast generation of cinematic videos",provider:"xAI",spec:{speed:9,cin:6,mot:6}},
+  {id:"kling-2.6",name:"Kling 2.6",type:"video",family:"Kling",tags:[],desc:"Cinematic videos with audio & voice",provider:"Kuaishou",spec:{aud:9,cin:8,mot:8,con:8}},
+  {id:"wan-2.6",name:"Wan 2.6",type:"video",family:"Wan",tags:[],desc:"Cinematic videos with audio & multi-shots",provider:"Alibaba",spec:{cin:8,aud:8,story:8,mot:7}},
+  {id:"sora-2",name:"Sora 2",type:"video",family:"Sora",tags:[],desc:"Story-telling videos with audio",provider:"OpenAI",spec:{story:10,aud:9,cin:9,mot:8,con:8}},
+  {id:"ltx-2.3",name:"LTX 2.3",type:"video",family:"LTX",tags:["fast"],desc:"Next-gen cinematic 4K videos up to 20s",provider:"Lightricks",spec:{speed:9,cin:8,mot:7}},
+  {id:"ltx-2.3-audio",name:"LTX 2.3 Audio-to-Video",type:"video",family:"LTX",tags:[],desc:"Generate video from audio with LTX 2.3",provider:"Lightricks",spec:{aud:10,cin:7}},
+  {id:"kling-2.5",name:"Kling 2.5",type:"video",family:"Kling",tags:[],desc:"Great creativity with excellent value",provider:"Kuaishou",spec:{mot:8,cin:8,speed:7,con:7}},
+  {id:"kling-o1-v",name:"Kling O1",type:"video",family:"Kling",tags:[],desc:"Great for multi-reference & video editing",provider:"Kuaishou",spec:{ref:10,con:9,cin:7}},
+  {id:"veo-3",name:"Veo 3",type:"video",family:"Veo",tags:[],desc:"High fidelity videos with audio",provider:"Google DeepMind",spec:{cin:9,aud:9,mot:8,con:8}},
+  {id:"wan-2.5",name:"Wan 2.5",type:"video",family:"Wan",tags:[],desc:"Professional creative videos",provider:"Alibaba",spec:{cin:8,mot:7,aud:7}},
+  {id:"hailuo-02",name:"Hailuo 02",type:"video",family:"Hailuo",tags:[],desc:"Great for motion & physical actions",provider:"MiniMax",spec:{mot:10,cin:7}},
+  {id:"hailuo-2.3",name:"Hailuo 2.3",type:"video",family:"Hailuo",tags:[],desc:"Great for cinematic & acting scenes",provider:"MiniMax",spec:{cin:9,mot:9,con:8}},
+  {id:"kling-2.1",name:"Kling 2.1",type:"video",family:"Kling",tags:[],desc:"Natural motion & great prompt adherence",provider:"Kuaishou",spec:{mot:8,cin:7,con:7}},
+  {id:"seadance-1",name:"Seadance 1",type:"video",family:"Seadance",tags:[],desc:"Narrative videos with multi-shots",provider:"ByteDance",spec:{story:8,cin:7}},
+  {id:"vidu-q3",name:"Vidu Q3",type:"video",family:"Vidu",tags:[],desc:"Great for storyboards and adding references",provider:"Shengshu",spec:{ref:9,anime:8,story:8,con:8}},
+  {id:"pixverse-5",name:"PixVerse 5",type:"video",family:"PixVerse",tags:["fast"],desc:"Great for short videos",provider:"PixVerse",spec:{speed:8,anime:7,mot:6}},
+  {id:"wan-2.2",name:"Wan 2.2",type:"video",family:"Wan",tags:[],desc:"Consistent aesthetic",provider:"Alibaba",spec:{cin:7,con:7}},
+  {id:"vidu-q2",name:"Vidu Q2",type:"video",family:"Vidu",tags:[],desc:"Great for anime scenes and storyboards",provider:"Shengshu",spec:{anime:9,story:8,ref:8}},
 
   // === IMAGE MODELS ===
-  {id:"gpt-image-2",name:"GPT Image 2",type:"image",family:"GPT Image",tags:["new"],desc:"OpenAI's next-gen image model",provider:"OpenAI"},
-  {id:"nano-banana-2-lite",name:"Nano Banana 2 Lite",type:"image",family:"Nano Banana",tags:["new","unlimited"],desc:"Google's high-efficiency image model",provider:"Google"},
-  {id:"nano-banana-2",name:"Nano Banana 2",type:"image",family:"Nano Banana",tags:["new"],desc:"Google's Gemini 3.1 Flash image model",provider:"Google"},
-  {id:"seedream-5.0-pro",name:"Seedream 5.0 Pro",type:"image",family:"Seedream",tags:["new"],desc:"ByteDance's flagship 5.0 image model",provider:"ByteDance"},
-  {id:"nano-banana-pro",name:"Nano Banana Pro",type:"image",family:"Nano Banana",tags:[],desc:"Google's premium image model",provider:"Google"},
-  {id:"recraft-v4",name:"Recraft V4",type:"image",family:"Recraft",tags:["new"],desc:"Recraft's image & SVG generation model",provider:"Recraft"},
-  {id:"wan-2.7-i",name:"Wan 2.7",type:"image",family:"Wan",tags:["new"],desc:"Alibaba's image model with facial control & text rendering",provider:"Alibaba"},
-  {id:"grok-imagine-image-2.0",name:"Grok Imagine Image 2.0",type:"image",family:"Grok Imagine",tags:["new","fast"],desc:"xAI's 2.0 image model — sharper text, precision editing",provider:"xAI"},
-  {id:"grok-imagine-i",name:"Grok Imagine",type:"image",family:"Grok Imagine",tags:["new","fast"],desc:"xAI's Aurora-powered image model",provider:"xAI"},
-  {id:"seedream-5.0-lite",name:"Seedream 5.0 Lite",type:"image",family:"Seedream",tags:[],desc:"ByteDance's lightweight 5.0 image model (2K/3K)",provider:"ByteDance"},
-  {id:"seedream-4.5",name:"Seedream 4.5",type:"image",family:"Seedream",tags:["fast"],desc:"ByteDance's advanced image model",provider:"ByteDance"},
-  {id:"kling-3.0-omni-i",name:"Kling 3.0 Omni",type:"image",family:"Kling",tags:[],desc:"Kling's advanced image model",provider:"Kuaishou"},
-  {id:"nano-banana",name:"Nano Banana",type:"image",family:"Nano Banana",tags:[],desc:"Google's standard image model",provider:"Google"},
-  {id:"seedream-4.0",name:"Seedream 4.0",type:"image",family:"Seedream",tags:[],desc:"ByteDance's standard image model",provider:"ByteDance"},
-  {id:"qwen-image-3.0",name:"Qwen Image 3.0",type:"image",family:"Qwen Image",tags:["new","unlimited"],desc:"Alibaba image generation with Standard and Pro modes",provider:"Alibaba"},
-  {id:"qwen-image-2",name:"Qwen Image 2",type:"image",family:"Qwen Image",tags:["fast"],desc:"Enhanced realism and improved text rendering",provider:"Alibaba"},
-  {id:"kling-o1-i",name:"Kling O1",type:"image",family:"Kling",tags:[],desc:"Multi-reference & visual input remix",provider:"Kuaishou"},
-  {id:"flux-kontext-pro",name:"Flux Kontext Pro",type:"image",family:"Flux",tags:[],desc:"Enhanced context consistency",provider:"Black Forest Labs"},
-  {id:"gpt-image-1.5",name:"GPT Image 1.5",type:"image",family:"GPT Image",tags:[],desc:"OpenAI's flagship image model",provider:"OpenAI"},
-  {id:"flux-2-pro",name:"Flux 2 Pro",type:"image",family:"Flux",tags:[],desc:"Enhanced speed & multi-reference",provider:"Black Forest Labs"},
-  {id:"openart-photorealistic",name:"OpenArt Photorealistic",type:"image",family:"OpenArt",tags:[],desc:"Lifelike portraits and realistic scene generation",provider:"OpenArt"},
-  {id:"z-image",name:"Z-Image",type:"image",family:"Z-Image",tags:[],desc:"Enhanced speed & iteration efficiency",provider:"Z-Image"},
-  {id:"qwen-image-max",name:"qwen-image-max",type:"image",family:"Qwen Image",tags:[],desc:"Enhanced realism and naturalness",provider:"Alibaba"},
-  {id:"qwen-image-plus",name:"qwen-image-plus",type:"image",family:"Qwen Image",tags:[],desc:"Excels at artistic styles & text on image",provider:"Alibaba"},
-  {id:"flux-2-klein",name:"Flux 2 Klein 9B",type:"image",family:"Flux",tags:[],desc:"Enhanced speed & real-time iteration",provider:"Black Forest Labs"},
-  {id:"flux-2-max",name:"Flux 2 Max",type:"image",family:"Flux",tags:[],desc:"Enhanced prompt adherence & logic",provider:"Black Forest Labs"},
-  {id:"flux-2-flex",name:"Flux 2 Flex",type:"image",family:"Flux",tags:[],desc:"For design experimentation & iteration",provider:"Black Forest Labs"},
-  {id:"flux-1-dev",name:"Flux 1 Dev",type:"image",family:"Flux",tags:[],desc:"Enhanced style fine-tuning",provider:"Black Forest Labs"},
-  {id:"flux-1.1-pro",name:"Flux 1.1 Pro",type:"image",family:"Flux",tags:[],desc:"Enhanced speed & efficiency",provider:"Black Forest Labs"},
-  {id:"flux-kontext-max",name:"Flux Kontext Max",type:"image",family:"Flux",tags:[],desc:"Enhanced prompt adherence",provider:"Black Forest Labs"},
-  {id:"juggernaut-flux-pro",name:"Juggernaut Flux Pro",type:"image",family:"Juggernaut",tags:[],desc:"Enhanced naturalism & fidelity",provider:"Juggernaut"},
-  {id:"openart-sdxl",name:"OpenArt SDXL",type:"image",family:"OpenArt",tags:[],desc:"SDXL tuned for versatile creative imagery",provider:"OpenArt"},
-  {id:"juggernaut-xl",name:"Juggernaut XL",type:"image",family:"Juggernaut",tags:[],desc:"SDXL with strong realism and detail",provider:"Juggernaut"},
-  {id:"dynavision-xl",name:"DynaVision XL",type:"image",family:"DynaVision",tags:[],desc:"Stylized 3D all-in-one SDXL checkpoint",provider:"DynaVision"},
-  {id:"flux-2-lora-realism",name:"Flux 2 LoRA Gallery Realism",type:"image",family:"Flux",tags:[],desc:"Enhanced photorealism",provider:"Black Forest Labs"},
+  {id:"gpt-image-2",name:"GPT Image 2",type:"image",family:"GPT Image",tags:["new"],desc:"OpenAI's next-gen image model",provider:"OpenAI",spec:{adh:10,text:9,edit:9,design:8,photo:8,illus:8}},
+  {id:"nano-banana-2-lite",name:"Nano Banana 2 Lite",type:"image",family:"Nano Banana",tags:["new","unlimited"],desc:"Google's high-efficiency image model",provider:"Google",spec:{speed:9,edit:8,photo:7,text:7}},
+  {id:"nano-banana-2",name:"Nano Banana 2",type:"image",family:"Nano Banana",tags:["new"],desc:"Google's Gemini 3.1 Flash image model",provider:"Google",spec:{edit:10,text:9,photo:9,adh:9,port:8}},
+  {id:"seedream-5.0-pro",name:"Seedream 5.0 Pro",type:"image",family:"Seedream",tags:["new"],desc:"ByteDance's flagship 5.0 image model",provider:"ByteDance",spec:{photo:9,text:9,adh:9,port:9,edit:8}},
+  {id:"nano-banana-pro",name:"Nano Banana Pro",type:"image",family:"Nano Banana",tags:[],desc:"Google's premium image model",provider:"Google",spec:{edit:10,text:10,photo:9,adh:9,design:8}},
+  {id:"recraft-v4",name:"Recraft V4",type:"image",family:"Recraft",tags:["new"],desc:"Recraft's image & SVG generation model",provider:"Recraft",spec:{design:10,text:9,illus:9,photo:7}},
+  {id:"wan-2.7-i",name:"Wan 2.7",type:"image",family:"Wan",tags:["new"],desc:"Alibaba's image model with facial control & text rendering",provider:"Alibaba",spec:{port:9,text:9,photo:8}},
+  {id:"grok-imagine-image-2.0",name:"Grok Imagine Image 2.0",type:"image",family:"Grok Imagine",tags:["new","fast"],desc:"xAI's 2.0 image model — sharper text, precision editing",provider:"xAI",spec:{speed:9,text:8,edit:8,photo:8}},
+  {id:"grok-imagine-i",name:"Grok Imagine",type:"image",family:"Grok Imagine",tags:["new","fast"],desc:"xAI's Aurora-powered image model",provider:"xAI",spec:{speed:9,photo:7,illus:7}},
+  {id:"seedream-5.0-lite",name:"Seedream 5.0 Lite",type:"image",family:"Seedream",tags:[],desc:"ByteDance's lightweight 5.0 image model (2K/3K)",provider:"ByteDance",spec:{speed:8,photo:8,text:8}},
+  {id:"seedream-4.5",name:"Seedream 4.5",type:"image",family:"Seedream",tags:["fast"],desc:"ByteDance's advanced image model",provider:"ByteDance",spec:{photo:8,text:8,speed:8,port:8}},
+  {id:"kling-3.0-omni-i",name:"Kling 3.0 Omni",type:"image",family:"Kling",tags:[],desc:"Kling's advanced image model",provider:"Kuaishou",spec:{edit:9,photo:8,adh:8}},
+  {id:"nano-banana",name:"Nano Banana",type:"image",family:"Nano Banana",tags:[],desc:"Google's standard image model",provider:"Google",spec:{edit:9,photo:8,text:8,speed:7}},
+  {id:"seedream-4.0",name:"Seedream 4.0",type:"image",family:"Seedream",tags:[],desc:"ByteDance's standard image model",provider:"ByteDance",spec:{photo:8,text:8,port:7}},
+  {id:"qwen-image-3.0",name:"Qwen Image 3.0",type:"image",family:"Qwen Image",tags:["new","unlimited"],desc:"Alibaba image generation with Standard and Pro modes",provider:"Alibaba",spec:{text:9,illus:8,photo:8,adh:8}},
+  {id:"qwen-image-2",name:"Qwen Image 2",type:"image",family:"Qwen Image",tags:["fast"],desc:"Enhanced realism and improved text rendering",provider:"Alibaba",spec:{text:9,photo:8,speed:8}},
+  {id:"kling-o1-i",name:"Kling O1",type:"image",family:"Kling",tags:[],desc:"Multi-reference & visual input remix",provider:"Kuaishou",spec:{edit:9,adh:7}},
+  {id:"flux-kontext-pro",name:"Flux Kontext Pro",type:"image",family:"Flux",tags:[],desc:"Enhanced context consistency",provider:"Black Forest Labs",spec:{edit:10,photo:8,text:7}},
+  {id:"gpt-image-1.5",name:"GPT Image 1.5",type:"image",family:"GPT Image",tags:[],desc:"OpenAI's flagship image model",provider:"OpenAI",spec:{adh:9,text:9,edit:9,design:8,photo:8}},
+  {id:"flux-2-pro",name:"Flux 2 Pro",type:"image",family:"Flux",tags:[],desc:"Enhanced speed & multi-reference",provider:"Black Forest Labs",spec:{photo:9,adh:9,text:8,edit:8,speed:7}},
+  {id:"openart-photorealistic",name:"OpenArt Photorealistic",type:"image",family:"OpenArt",tags:[],desc:"Lifelike portraits and realistic scene generation",provider:"OpenArt",spec:{photo:9,port:9}},
+  {id:"z-image",name:"Z-Image",type:"image",family:"Z-Image",tags:[],desc:"Enhanced speed & iteration efficiency",provider:"Z-Image",spec:{speed:9,photo:8,text:7}},
+  {id:"qwen-image-max",name:"qwen-image-max",type:"image",family:"Qwen Image",tags:[],desc:"Enhanced realism and naturalness",provider:"Alibaba",spec:{photo:9,text:8,port:8}},
+  {id:"qwen-image-plus",name:"qwen-image-plus",type:"image",family:"Qwen Image",tags:[],desc:"Excels at artistic styles & text on image",provider:"Alibaba",spec:{illus:9,text:9,design:7}},
+  {id:"flux-2-klein",name:"Flux 2 Klein 9B",type:"image",family:"Flux",tags:[],desc:"Enhanced speed & real-time iteration",provider:"Black Forest Labs",spec:{speed:9,photo:7,adh:7}},
+  {id:"flux-2-max",name:"Flux 2 Max",type:"image",family:"Flux",tags:[],desc:"Enhanced prompt adherence & logic",provider:"Black Forest Labs",spec:{adh:10,photo:9,text:9}},
+  {id:"flux-2-flex",name:"Flux 2 Flex",type:"image",family:"Flux",tags:[],desc:"For design experimentation & iteration",provider:"Black Forest Labs",spec:{design:8,speed:8,adh:7}},
+  {id:"flux-1-dev",name:"Flux 1 Dev",type:"image",family:"Flux",tags:[],desc:"Enhanced style fine-tuning",provider:"Black Forest Labs",spec:{illus:8,photo:7}},
+  {id:"flux-1.1-pro",name:"Flux 1.1 Pro",type:"image",family:"Flux",tags:[],desc:"Enhanced speed & efficiency",provider:"Black Forest Labs",spec:{speed:8,photo:8,adh:8}},
+  {id:"flux-kontext-max",name:"Flux Kontext Max",type:"image",family:"Flux",tags:[],desc:"Enhanced prompt adherence",provider:"Black Forest Labs",spec:{edit:9,adh:9,text:8}},
+  {id:"juggernaut-flux-pro",name:"Juggernaut Flux Pro",type:"image",family:"Juggernaut",tags:[],desc:"Enhanced naturalism & fidelity",provider:"Juggernaut",spec:{photo:9,port:9}},
+  {id:"openart-sdxl",name:"OpenArt SDXL",type:"image",family:"OpenArt",tags:[],desc:"SDXL tuned for versatile creative imagery",provider:"OpenArt",spec:{illus:8,photo:7,design:7}},
+  {id:"juggernaut-xl",name:"Juggernaut XL",type:"image",family:"Juggernaut",tags:[],desc:"SDXL with strong realism and detail",provider:"Juggernaut",spec:{photo:9,port:9,illus:7}},
+  {id:"dynavision-xl",name:"DynaVision XL",type:"image",family:"DynaVision",tags:[],desc:"Stylized 3D all-in-one SDXL checkpoint",provider:"DynaVision",spec:{illus:9,design:7}},
+  {id:"flux-2-lora-realism",name:"Flux 2 LoRA Gallery Realism",type:"image",family:"Flux",tags:[],desc:"Enhanced photorealism",provider:"Black Forest Labs",spec:{photo:10,port:9}},
 ];
+
+const SPECIALTIES = {
+  video: {
+    cin: "Cinematic realism",
+    mot: "Motion & physics",
+    aud: "Audio & dialogue",
+    con: "Character consistency",
+    story: "Storytelling & multi-shot",
+    anime: "Anime & stylized",
+    ref: "Reference & editing control",
+    speed: "Speed & value"
+  },
+  image: {
+    photo: "Photorealism",
+    port: "Portraits & people",
+    text: "Text rendering",
+    edit: "Image editing & consistency",
+    design: "Design, logos & vector",
+    illus: "Illustration & anime",
+    adh: "Complex prompt adherence",
+    speed: "Speed & iteration"
+  }
+};
 
 // ═══════════════════════════════════════════════════════
 // PROMPT ANALYSIS UTILITIES
@@ -917,6 +950,7 @@ const IMAGE_STRATEGIES = {
 let selectedModels = new Set();
 let currentTypeFilter = "all";
 let currentFamilyFilter = null;
+let currentSpecialty = null; // "video:mot", "image:photo", etc.
 let searchTerm = "";
 
 function getFamilies() {
@@ -929,37 +963,79 @@ function getFamilies() {
   return f;
 }
 
+function renderSpecialtySelect() {
+  let html = '<select class="spec-select" onchange="onSpecialty(this.value)">';
+  html += `<option value="">Specialty: All</option>`;
+  const groups = currentTypeFilter === "all" ? ["video","image"] : [currentTypeFilter];
+  groups.forEach(t => {
+    html += `<optgroup label="${t === 'video' ? 'Video specialties' : 'Image specialties'}">`;
+    Object.entries(SPECIALTIES[t]).forEach(([k, label]) => {
+      const v = t + ':' + k;
+      html += `<option value="${v}" ${currentSpecialty === v ? 'selected' : ''}>${label}</option>`;
+    });
+    html += '</optgroup>';
+  });
+  html += '</select>';
+  return html;
+}
+
 function renderFilterBar() {
   const families = getFamilies();
   const bar = document.getElementById("filterBar");
-  let html = '<input type="text" class="search-input" placeholder="Search models..." oninput="onSearch(this.value)" value="'+searchTerm+'">';
+  let html = renderSpecialtySelect();
+  html += '<input type="text" class="search-input" placeholder="Search models..." oninput="onSearch(this.value)" value="'+searchTerm+'">';
   html += `<span class="family-chip ${!currentFamilyFilter?'active':''}" onclick="filterFamily(null)">All</span>`;
   families.forEach((count, fam) => {
     html += `<span class="family-chip ${currentFamilyFilter===fam?'active':''}" onclick="filterFamily('${fam}')">${fam} (${count})</span>`;
   });
+  if (currentSpecialty) {
+    const [t, k] = currentSpecialty.split(':');
+    html += `<span class="sort-note">Showing ${t} models rated for &ldquo;${SPECIALTIES[t][k]}&rdquo; &mdash; sorted best to worst</span>`;
+  }
   bar.innerHTML = html;
 }
 
 function getVisibleModels() {
-  return MODELS.filter(m => {
+  let list = MODELS.filter(m => {
     if (currentTypeFilter !== "all" && m.type !== currentTypeFilter) return false;
     if (currentFamilyFilter && m.family !== currentFamilyFilter) return false;
     if (searchTerm && !m.name.toLowerCase().includes(searchTerm) && !m.family.toLowerCase().includes(searchTerm) && !m.desc.toLowerCase().includes(searchTerm)) return false;
     return true;
   });
+  if (currentSpecialty) {
+    const [t, k] = currentSpecialty.split(':');
+    list = list.filter(m => m.type === t && m.spec && m.spec[k]);
+    list.sort((a, b) => b.spec[k] - a.spec[k]);
+  }
+  return list;
+}
+
+function topSpecs(m, n) {
+  if (!m.spec) return [];
+  return Object.entries(m.spec).sort((a, b) => b[1] - a[1]).slice(0, n)
+    .map(([k]) => SPECIALTIES[m.type][k]).filter(Boolean);
 }
 
 function renderModels() {
   const grid = document.getElementById("modelGrid");
   const visible = getVisibleModels();
+  const specKey = currentSpecialty ? currentSpecialty.split(':')[1] : null;
   grid.innerHTML = visible.map(m => {
     const sel = selectedModels.has(m.id) ? "selected" : "";
     const tags = m.tags.map(t => `<span class="tag tag-${t}">${t}</span>`).join("");
-    return `<div class="model-card ${sel}" onclick="toggleModel('${m.id}')" title="${m.desc}">
+    let scoreBadge = '';
+    if (specKey && m.spec && m.spec[specKey]) {
+      const s = m.spec[specKey];
+      scoreBadge = `<span class="spec-score ${s < 8 ? 'tier-good' : ''}" title="${SPECIALTIES[m.type][specKey]}: ${s}/10">&#9733; ${s}/10</span>`;
+    }
+    const chips = topSpecs(m, 3).map((label, i) =>
+      `<span class="spec-chip ${i === 0 ? 'top' : ''}">${label}</span>`).join("");
+    return `<div class="model-card ${sel}" onclick="toggleModel('${m.id}')" title="${m.desc} — Best for: ${topSpecs(m, 3).join(', ')}">
       <div class="check">${sel?'&#10003;':''}</div>
       <div class="info">
-        <div class="name">${m.name}</div>
+        <div class="name"><span class="name-text">${m.name}</span>${scoreBadge}</div>
         <div class="desc">${m.desc}</div>
+        ${chips?`<div class="spec-chips">${chips}</div>`:''}
         ${tags?`<div class="tags">${tags}</div>`:''}
       </div>
     </div>`;
@@ -977,6 +1053,7 @@ function toggleModel(id) {
 function setType(type, btn) {
   currentTypeFilter = type;
   currentFamilyFilter = null;
+  if (currentSpecialty && type !== "all" && currentSpecialty.split(':')[0] !== type) currentSpecialty = null;
   document.querySelectorAll(".type-toggle button").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
   render();
@@ -984,6 +1061,11 @@ function setType(type, btn) {
 
 function filterFamily(fam) {
   currentFamilyFilter = fam;
+  render();
+}
+
+function onSpecialty(val) {
+  currentSpecialty = val || null;
   render();
 }
 
