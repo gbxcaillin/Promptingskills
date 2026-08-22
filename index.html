@@ -158,23 +158,33 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .results-section{margin-top:40px}
 .results-section h2{font-family:var(--serif);font-size:1.9rem;font-weight:400;margin-bottom:18px}
 .result-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
-.result-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--soft);cursor:pointer}
+.result-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--soft)}
 .result-header h3{font-size:.92rem;font-weight:600;display:flex;align-items:center;gap:10px}
 .result-header .model-type{font-size:.6rem;padding:2px 8px;border-radius:var(--radius);font-weight:500;letter-spacing:.12em}
 .type-video{background:var(--teal);color:#fff}
 .type-image{background:var(--contrast-bg);color:var(--contrast-fg)}
 .type-text{background:var(--deep-teal);color:#fff}
-.result-header .copy-btn{padding:6px 14px;border-radius:var(--radius);border:1px solid var(--ink);background:none;color:var(--ink);font-size:.66rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:var(--sans)}
-.result-header .copy-btn:hover{background:var(--ink);color:var(--paper)}
-.result-header .copy-btn.copied{border-color:var(--teal);background:var(--teal);color:#fff}
-.result-body{padding:18px}
-.result-body .optimized-prompt{white-space:pre-wrap;font-size:.92rem;line-height:1.7;color:var(--ink)}
-.result-body .neg-prompt{white-space:pre-wrap;font-size:.85rem;line-height:1.5;color:var(--ink2);margin-top:12px;padding:12px 14px;background:var(--soft);border-left:2px solid var(--deep-teal);border-radius:0}
-.result-body .neg-label{font-size:.62rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-text);margin-bottom:5px}
-.result-body .changes{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
-.result-body .changes summary{font-size:.66rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-text);cursor:pointer}
-.result-body .changes ul{margin-top:8px;padding-left:18px;font-size:.8rem;color:var(--ink2)}
-.result-body .changes li{margin-bottom:3px}
+.copy-btn{padding:6px 14px;border-radius:var(--radius);border:1px solid var(--ink);background:none;color:var(--ink);font-size:.66rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.copy-btn:hover{background:var(--ink);color:var(--paper)}
+.copy-btn.copied{border-color:var(--teal);background:var(--teal);color:#fff}
+
+/* Two columns: the example prompt, and the research guide (the core) side by side */
+.result-cols{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}
+.result-example{padding:18px;border-right:1px solid var(--line)}
+.result-guide{padding:18px;background:var(--soft)}
+.col-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px}
+.col-head .section-label{margin-bottom:0}
+.example-note{font-size:.72rem;color:var(--ink3);font-style:italic;margin-bottom:12px}
+.optimized-prompt{white-space:pre-wrap;font-size:.9rem;line-height:1.7;color:var(--ink)}
+.neg-prompt{white-space:pre-wrap;font-size:.82rem;line-height:1.5;color:var(--ink2);margin-top:12px;padding:12px 14px;background:var(--soft);border-left:2px solid var(--deep-teal)}
+.result-guide .neg-prompt{background:var(--surface)}
+.neg-label{font-size:.62rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-text);margin-bottom:5px}
+.guide-lead{font-size:.78rem;color:var(--ink2);margin:6px 0 12px;line-height:1.5}
+.guide-list{list-style:none;margin:0;padding:0}
+.guide-list li{position:relative;padding:8px 0 8px 20px;font-size:.83rem;line-height:1.55;color:var(--ink);border-top:1px solid var(--line)}
+.guide-list li:first-child{border-top:none}
+.guide-list li::before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;background:var(--teal);border-radius:50%}
+.guide-empty{font-size:.8rem;color:var(--ink3)}
 
 .empty-state{text-align:center;padding:60px 20px;color:var(--ink3)}
 .empty-state .icon-rule{width:48px;height:1px;background:var(--teal);margin:0 auto 18px}
@@ -238,6 +248,8 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   .model-card{padding:15px 16px}
   .results-section h2{font-size:1.6rem}
   .result-header{flex-wrap:wrap;gap:8px}
+  .result-cols{grid-template-columns:1fr}
+  .result-example{border-right:none;border-bottom:1px solid var(--line)}
   .empty-state{padding:40px 16px}
   .footer{padding:36px 16px}
 }
@@ -1518,17 +1530,29 @@ function optimizePrompts() {
     container.innerHTML = results.map((r, i) => {
       const typeClass = r.model.type === "video" ? "type-video" : r.model.type === "image" ? "type-image" : "type-text";
       const typeLabel = r.model.type.toUpperCase();
-      const negHtml = r.negativePrompt ? `<div class="neg-prompt"><div class="neg-label">Negative Prompt <button class="copy-btn" onclick="event.stopPropagation();copyNeg(this,'${i}')" style="margin-left:8px;font-size:.7rem;padding:2px 8px">Copy</button></div><span id="neg-${i}">${escapeHtml(r.negativePrompt)}</span></div>` : '';
-      const tipsHtml = r.tips.length ? `<details class="changes"><summary>Research-backed tips for ${r.model.name} (${r.model.family})</summary><ul>${r.tips.map(t=>`<li>${t}</li>`).join("")}</ul></details>` : "";
+      const negHtml = r.negativePrompt ? `<div class="neg-prompt"><div class="neg-label">Negative Prompt <button class="copy-btn" onclick="copyNeg(this,'${i}')" style="margin-left:8px;font-size:.7rem;padding:2px 8px">Copy</button></div><span id="neg-${i}">${escapeHtml(r.negativePrompt)}</span></div>` : '';
+      const tipsHtml = r.tips.length
+        ? `<ul class="guide-list">${r.tips.map(t=>`<li>${escapeHtml(t)}</li>`).join("")}</ul>`
+        : `<p class="guide-empty">No model-specific guidance available.</p>`;
       return `<div class="result-card">
-        <div class="result-header" onclick="this.parentElement.querySelector('.result-body').classList.toggle('collapsed')">
+        <div class="result-header">
           <h3>${r.model.name} <span class="model-type ${typeClass}">${typeLabel}</span></h3>
-          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'${i}')">Copy</button>
         </div>
-        <div class="result-body">
-          <div class="optimized-prompt" id="prompt-${i}">${escapeHtml(r.optimized)}</div>
-          ${negHtml}
-          ${tipsHtml}
+        <div class="result-cols">
+          <div class="result-example">
+            <div class="col-head">
+              <span class="section-label">Starting example</span>
+              <button class="copy-btn" onclick="copyPrompt(this,'${i}')">Copy</button>
+            </div>
+            <p class="example-note">A starting point to tweak using the guide, not a finished prompt.</p>
+            <div class="optimized-prompt" id="prompt-${i}">${escapeHtml(r.optimized)}</div>
+            ${negHtml}
+          </div>
+          <div class="result-guide">
+            <span class="section-label">How to prompt ${escapeHtml(r.model.name)}</span>
+            <p class="guide-lead">The research behind this model. Use it to shape the example on the left into your own prompt.</p>
+            ${tipsHtml}
+          </div>
         </div>
       </div>`;
     }).join("");
