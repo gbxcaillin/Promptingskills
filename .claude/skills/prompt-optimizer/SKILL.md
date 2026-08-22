@@ -18,6 +18,13 @@ description: >-
 
 # Prompt Optimizer for Generative AI Models
 
+> **Reliable invocation:** Writing a prompt is something Claude will often do
+> from general knowledge without consulting a skill, so for a guaranteed run
+> invoke this by name — `/prompt-optimizer` in Claude Code, or "use the
+> prompt-optimizer skill" in claude.ai. Automatic triggering still happens on
+> clearly model-specific or multi-part requests; explicit invocation is the
+> dependable path. (See README.md for install and usage.)
+
 Different generative models want to be prompted in genuinely different ways. A
 phrase that helps Flux hurts Kling; a keyword pile that works on an SDXL
 checkpoint is ignored by GPT Image; an XML-structured brief that Claude loves
