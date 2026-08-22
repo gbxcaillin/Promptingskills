@@ -38,5 +38,14 @@ Example: `/prompt-optimizer a neon jellyfish drifting through deep space, for So
 ## Keeping it current
 
 The model rankings and per-family tips reflect research at packaging time and
-will drift as new models ship. When the landscape moves, ask any Claude with
-this skill to refresh `references/*.md`, then re-package.
+will drift as new models ship. There's a built-in run-once refresh:
+
+- **Claude Code:** run `/update-prompt-optimizer`.
+- **Anywhere else:** tell Claude "update the prompt-optimizer skill following
+  its MAINTENANCE.md."
+
+Claude then researches current models per provider, rewrites only the
+`references/*.md` data (never the method in SKILL.md), adds a `CHANGELOG.md`
+entry, and re-runs `scripts/repackage.sh` to produce a fresh `.skill`. The
+`LAST_UPDATED` file records when it was last refreshed. Full procedure and
+safety rules are in `MAINTENANCE.md`.
