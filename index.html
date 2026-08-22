@@ -156,7 +156,9 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .wiz-runners{font-size:.78rem;color:var(--ink3);margin-top:14px;line-height:1.6}
 
 .results-section{margin-top:40px}
-.results-section h2{font-family:var(--serif);font-size:1.9rem;font-weight:400;margin-bottom:18px}
+.results-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.results-head h2{font-family:var(--serif);font-size:1.9rem;font-weight:400}
+.results-section h2{font-family:var(--serif);font-size:1.9rem;font-weight:400}
 .result-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
 .result-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--soft)}
 .result-header h3{font-size:.92rem;font-weight:600;display:flex;align-items:center;gap:10px}
@@ -335,7 +337,10 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   </div>
 
   <div class="results-section" id="resultsSection" style="display:none">
-    <h2>Optimized Prompts</h2>
+    <div class="results-head">
+      <h2>Optimized Prompts</h2>
+      <button class="action-btn" onclick="regenerate()" title="Re-roll the example variations">&#8635; Regenerate examples</button>
+    </div>
     <div id="resultsContainer"></div>
   </div>
 
@@ -514,6 +519,71 @@ function ensurePresentTense(p) {
 }
 
 // ═══════════════════════════════════════════════════════
+// MOOD-AWARE, VARIED LIGHTING
+// Instead of one fixed default per family, detect the scene's
+// mood and pick a fitting lighting phrase from a pool. A regen
+// seed re-rolls the pick so results aren't deterministic.
+// ═══════════════════════════════════════════════════════
+
+let regenSeed = 0;
+
+function detectMood(p) {
+  const t = p.toLowerCase();
+  if (/neon|cyberpunk|synthwave|arcade|hologram|\bled\b|blade.?runner/.test(t)) return "neon";
+  if (/energy|electric|lightning|\bglow|power|charging|magic|spell|aura|evolv|laser|plasma|pokemon|charizard|pikachu/.test(t)) return "energetic";
+  if (/epic|fantasy|dragon|battle|storm|space|galaxy|cosmic|explosion|apocalyp|mythic|volcano|war\b|dramatic/.test(t)) return "epic";
+  if (/sunset|sunrise|golden.?hour|dawn|dusk|autumn|cozy|candle|fireplace|warm|amber|bonfire/.test(t)) return "warm";
+  if (/night|midnight|\bdark\b|moonlit|nocturnal|noir|shadow|evening|moon\b/.test(t)) return "night";
+  if (/forest|mountain|ocean|beach|jungle|meadow|\bsky\b|landscape|garden|nature|outdoor|field|desert|snow|river|lake|underwater|sea\b/.test(t)) return "nature";
+  return "studio";
+}
+
+const LIGHT_POOLS = {
+  cine: {
+    neon: ["saturated neon glow reflecting off wet surfaces","moody cyberpunk lighting in magenta and cyan","electric neon signage casting colored pools of light"],
+    energetic: ["charged dynamic lighting with crackling energy highlights","vivid high-contrast lighting with glowing accents","dramatic backlight with radiant energy bloom"],
+    epic: ["dramatic volumetric god rays breaking through","high-contrast cinematic lighting with deep shadows","sweeping directional light with atmospheric haze"],
+    warm: ["golden hour rim light and soft atmospheric haze","warm low sun with long cast shadows","amber backlight with a gentle lens flare"],
+    night: ["low-key moonlit lighting with pools of practical light","moody nocturnal lighting with deep shadows","cool blue night lighting with practical highlights"],
+    nature: ["soft natural daylight with dappled shadows","overcast diffused light with even tones","bright directional sunlight with natural color temperature"],
+    studio: ["cinematic lighting with practical sources and defined shadows","balanced natural lighting with soft shadow falloff","a controlled key light with gentle fill"]
+  },
+  photo: {
+    neon: ["lit by saturated neon signage with reflective highlights","cyberpunk color lighting, magenta key with cyan rim","a moody neon glow with shallow depth of field"],
+    energetic: ["dynamic rim lighting with vivid glowing accents","high-energy lighting with bright specular highlights","dramatic backlight with a radiant bloom"],
+    epic: ["dramatic directional lighting with strong contrast","volumetric light beams with atmospheric depth","moody chiaroscuro lighting"],
+    warm: ["golden hour light with a warm rim and soft haze","warm window light with gentle falloff","amber low-sun lighting with long shadows"],
+    night: ["low-key lighting with deep shadow and practical accents","moody nocturnal lighting in cool tones","dim ambient light with a single warm source"],
+    nature: ["soft natural daylight with diffused shadows","overcast even lighting with true-to-life color","bright directional sunlight with natural bounce"],
+    studio: ["clean studio lighting with soft diffused shadows","natural studio lighting with gentle fill","a softbox key light with a subtle rim"]
+  },
+  styled: {
+    neon: ["bold neon color lighting with glowing edges","a vibrant cyberpunk palette with luminous accents"],
+    energetic: ["dynamic lighting with bright glowing highlights","high-energy rim light and vivid accents"],
+    epic: ["dramatic stylized lighting with strong contrast","bold directional light with deep shadow shapes"],
+    warm: ["warm golden lighting with soft gradients","cozy amber light with a gentle glow"],
+    night: ["a moody dark palette with luminous highlights","cool night tones with glowing accents"],
+    nature: ["soft even daylight with clean color","bright natural light with vivid tones"],
+    studio: ["clean even lighting with vibrant color","bright professional lighting with a bold palette"]
+  }
+};
+
+function seededPick(arr, key) {
+  let h = 2166136261;
+  const s = key + "|" + regenSeed;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return arr[Math.abs(h) % arr.length];
+}
+
+function moodLight(p, model) {
+  const register = model.type === "video" ? "cine"
+    : (model.family === "Recraft" || model.family === "DynaVision") ? "styled" : "photo";
+  const mood = detectMood(p);
+  const pool = LIGHT_POOLS[register][mood] || LIGHT_POOLS[register].studio;
+  return ", " + seededPick(pool, register + ":" + mood + ":" + model.family + ":light");
+}
+
+// ═══════════════════════════════════════════════════════
 // VIDEO OPTIMIZATION STRATEGIES (Research-backed)
 // ═══════════════════════════════════════════════════════
 
@@ -534,7 +604,7 @@ const VIDEO_STRATEGIES = {
     transform(p, model) {
       let r = ensurePresentTense(stripQualityTags(p));
       if (!hasCamera(r)) r += '. Smooth dolly push following the subject';
-      if (!hasLighting(r)) r += ', with cinematic natural lighting casting long shadows';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasAudio(r)) r += '. The audio captures ambient environmental sound with subtle atmospheric texture';
       r += ', cinematic color grading, professional production quality, seamless multi-shot transitions';
       return r;
@@ -556,7 +626,7 @@ const VIDEO_STRATEGIES = {
     transform(p, model) {
       let r = ensurePresentTense(stripQualityTags(p));
       if (!hasCamera(r)) r += '. Camera smoothly pushes in from medium to close-up';
-      if (!hasLighting(r)) r += ', rich atmospheric lighting with natural color temperature';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasAudio(r)) r += '. Ambient soundscape: subtle environmental room tone with natural audio depth';
       r += ', 2K resolution, cinematic composition, expressive character performance';
       return r;
@@ -577,7 +647,7 @@ const VIDEO_STRATEGIES = {
     ],
     transform(p, model) {
       let r = ensurePresentTense(p);
-      if (!hasLighting(r)) r += ', bathed in natural light with soft atmospheric haze';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += '. Camera gently captures the scene with natural, documentary-style framing';
       return r;
     }
@@ -597,7 +667,7 @@ const VIDEO_STRATEGIES = {
     ],
     transform(p, model) {
       let r = stripWeightSyntax(stripQualityTags(ensurePresentTense(p)));
-      if (!hasLighting(r)) r += ', illuminated by dramatic natural lighting with defined shadow play';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasCamera(r)) r += '. Smooth cinematic camera work with deliberate tracking movement';
       r += ', professional quality, sharp focus, masterful composition';
       return r;
@@ -624,7 +694,7 @@ const VIDEO_STRATEGIES = {
       const subject = extractSubject(r);
       if (!hasCamera(r)) r = 'Smooth tracking shot. ' + r;
       if (!hasMotion(r)) r += ', with fluid natural motion and realistic body mechanics';
-      if (!hasLighting(r)) r += ', cinematic lighting with practical light sources and defined shadows';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasAudio(r) && (model.id.includes('2.6') || model.id.includes('3.0'))) {
         r += '. Ambient sound: subtle environmental audio with natural acoustics';
       }
@@ -649,7 +719,7 @@ const VIDEO_STRATEGIES = {
     transform(p, model) {
       let r = ensurePresentTense(stripQualityTags(p));
       if (!hasCamera(r)) r += '. Slow push-in with slight handheld feel';
-      if (!hasLighting(r)) r += ', with defined rim lighting and natural color temperature';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += '. Hands remain stable and move naturally, body proportions stay intact throughout, dynamic visual impact';
       return r;
     }
@@ -676,7 +746,7 @@ const VIDEO_STRATEGIES = {
         const sentences = r.split(/[.!?]/).filter(s => s.trim());
         r = sentences.slice(0, 2).join('. ').trim();
       }
-      if (!hasLighting(r)) r += ', soft golden backlight with rim glow';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasAudio(r)) r += '. Audio: natural ambient sound with environmental acoustics';
       if (!hasCamera(r)) r += '. Steadicam push following the subject';
       return r;
@@ -698,7 +768,7 @@ const VIDEO_STRATEGIES = {
     transform(p, model) {
       let r = ensurePresentTense(stripQualityTags(p));
       if (!hasCamera(r)) r += '. Camera slowly tracks alongside the subject with a gentle push-in';
-      if (!hasLighting(r)) r += ', with natural directional lighting and soft atmospheric haze';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += '. Maintain consistent visual style and color palette from start to end, smooth fluid motion throughout';
       return r;
     }
@@ -720,7 +790,7 @@ const VIDEO_STRATEGIES = {
     transform(p, model) {
       let r = ensurePresentTense(stripQualityTags(p));
       if (!hasCamera(r)) r += '. Camera captures the scene from a low angle with slow deliberate movement';
-      if (!hasLighting(r)) r += ', with rich natural lighting that casts defined shadows and warm highlights';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasAudio(r)) r += '. Audio: natural environmental sounds with subtle ambient atmosphere';
       r += ', photorealistic rendering, physically accurate motion, high fidelity detail';
       if (model.id === 'veo-3.1') r += ', 4K cinematic quality';
@@ -743,7 +813,7 @@ const VIDEO_STRATEGIES = {
     ],
     transform(p, model) {
       let r = ensurePresentTense(p);
-      if (!hasLighting(r)) r += ', with golden hour rim light and soft atmospheric haze';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasCamera(r)) r += '. Camera slowly pushes in with subtle handheld movement';
       r += ', cinematic quality, vivid natural colors';
       return r;
@@ -789,7 +859,7 @@ const VIDEO_STRATEGIES = {
     transform(p, model) {
       let r = ensurePresentTense(stripQualityTags(p));
       if (!hasCamera(r)) r += '. The camera slowly pushes in with steady, deliberate movement';
-      if (!hasLighting(r)) r += ', bathed in cinematic lighting with natural color temperature and soft shadow falloff';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasAudio(r)) r += '. The audio is subtle ambient atmosphere: environmental room tone with natural acoustic depth, no music';
       r += ', crisp realistic detail, sharp focus, cinematic color grade';
       return r;
@@ -813,7 +883,7 @@ const VIDEO_STRATEGIES = {
       let r = ensurePresentTense(stripQualityTags(p));
       if (!hasCamera(r)) r = 'Medium shot, slow dolly push. ' + r;
       if (!hasMotion(r)) r += ', with fluid natural body mechanics and realistic weight';
-      if (!hasLighting(r)) r += ', cinematic lighting with practical sources';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += ', photorealistic, hyper-detailed, dynamic physical motion, natural body mechanics, realistic physics';
       return r;
     }
@@ -841,7 +911,7 @@ const VIDEO_STRATEGIES = {
         r = sentences.slice(0, 2).join('. ').trim();
       }
       if (!hasCamera(r)) r += '. Camera gently pushes in with subtle parallax';
-      if (!hasLighting(r)) r += ', soft volumetric lighting with natural shadow depth';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += '. Stable background, natural physics, organic motion';
       if (model.id === 'vidu-q3' && !hasAudio(r)) r += ', ambient atmospheric audio';
       return r;
@@ -878,7 +948,7 @@ const IMAGE_STRATEGIES = {
       if (!hasPhotography(r) && !hasStyle(r)) {
         r += ', shot with a 35mm lens, shallow depth of field, natural bokeh';
       }
-      if (!hasLighting(r)) r += ', with Rembrandt lighting from camera-left and soft fill';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += ', sharp focus throughout, professional composition';
       if (model.id === 'flux-2-lora-realism') r += ', natural skin texture with subtle pores, realistic imperfections, documentary photography';
       if (model.id === 'flux-kontext-pro' || model.id === 'flux-kontext-max') r += ', maintaining exact same lighting and composition';
@@ -904,7 +974,7 @@ const IMAGE_STRATEGIES = {
     transform(p, model) {
       let r = stripQualityTags(p);
       r = wrapQuotedText(r);
-      if (!hasLighting(r)) r += ', with natural studio lighting and soft diffused shadows';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasStyle(r) && !hasPhotography(r)) r += ', professional photography composition';
       r += ', high quality, detailed rendering. No watermark, no extra text';
       return r;
@@ -926,7 +996,7 @@ const IMAGE_STRATEGIES = {
     transform(p, model) {
       let r = stripWeightSyntax(stripQualityTags(p));
       r = wrapQuotedText(r);
-      if (!hasLighting(r)) r += ', illuminated by soft natural light with gentle shadow gradients';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasMaterial(r)) r += ', with rich material textures and natural surface detail';
       r += ', sharp focus throughout, balanced composition, natural color palette';
       return r;
@@ -949,7 +1019,7 @@ const IMAGE_STRATEGIES = {
     transform(p, model) {
       let r = stripWeightSyntax(stripQualityTags(p));
       r = wrapQuotedText(r);
-      if (!hasLighting(r)) r += ', with soft directional lighting and natural shadow falloff';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasMaterial(r)) r += ', rich material textures with natural surface detail';
       r += ', natural sensor noise, slight imperfections for realism, refined artistic quality';
       return r;
@@ -989,7 +1059,7 @@ const IMAGE_STRATEGIES = {
     transform(p, model) {
       let r = stripQualityTags(p);
       r = wrapQuotedText(r);
-      if (!hasLighting(r)) r += ', with natural directional lighting and soft ambient fill';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += ', precise facial detail, controlled generation, artistic coherence';
       return r;
     }
@@ -1011,7 +1081,7 @@ const IMAGE_STRATEGIES = {
     transform(p, model) {
       let r = p;
       r = wrapQuotedText(r);
-      if (!hasLighting(r)) r += ', with Rembrandt lighting and warm atmospheric glow';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasPhotography(r) && !hasStyle(r)) r += ', shot on a professional camera with natural depth of field';
       r += ', sharp detail, vivid natural colors, clean composition';
       return r;
@@ -1030,7 +1100,7 @@ const IMAGE_STRATEGIES = {
     ],
     transform(p, model) {
       let r = stripQualityTags(p);
-      if (!hasLighting(r)) r += ', with cinematic lighting and natural shadow depth';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += ', reference-consistent, detailed rendering, artistic composition, visual coherence';
       return r;
     }
@@ -1053,7 +1123,7 @@ const IMAGE_STRATEGIES = {
     transform(p, model) {
       let r = stripWeightSyntax(stripQualityTags(p));
       r = wrapQuotedText(r);
-      if (!hasLighting(r)) r += ', natural lighting with soft diffused shadows';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasPhotography(r) && !hasStyle(r)) r += ', shot on Canon EOS R5, 85mm f/1.4 lens';
       r += ', rich material textures, precise detail, balanced composition';
       return r;
@@ -1073,7 +1143,7 @@ const IMAGE_STRATEGIES = {
     transform(p, model) {
       let r = stripQualityTags(p);
       if (!hasPhotography(r)) r += ', shot with an 85mm lens, shallow depth of field';
-      if (!hasLighting(r)) r += ', professional studio lighting with soft diffused fill';
+      if (!hasLighting(r)) r += moodLight(r, model);
       if (!hasMaterial(r)) r += ', natural skin texture, realistic material detail';
       r += ', photorealistic, lifelike detail, professional composition';
       return r;
@@ -1091,7 +1161,7 @@ const IMAGE_STRATEGIES = {
     ],
     transform(p, model) {
       let r = stripQualityTags(p);
-      if (!hasLighting(r)) r += ', with balanced natural lighting';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += ', high quality, clean detail, sharp focus';
       return r;
     }
@@ -1119,7 +1189,7 @@ const IMAGE_STRATEGIES = {
       } else {
         r = stripWeightSyntax(r);
         if (!hasPhotography(r)) r += ', shot on Sony A7III, 50mm f/1.4 lens';
-        if (!hasLighting(r)) r += ', with natural directional lighting and soft shadow falloff';
+        if (!hasLighting(r)) r += moodLight(r, model);
         r += ', natural skin texture, realistic imperfections, enhanced naturalism';
       }
       return r;
@@ -1139,7 +1209,7 @@ const IMAGE_STRATEGIES = {
     transform(p, model) {
       let r = stripQualityTags(p);
       r = r.replace(/\b(photorealistic|photograph|realistic photo|real photo)\b[,\s]*/gi, '');
-      if (!hasLighting(r)) r += ', with bright professional 3D lighting and vibrant color palette';
+      if (!hasLighting(r)) r += moodLight(r, model);
       r += ', stylized 3D character design, vibrant materials, expressive features, clean geometry';
       return r;
     }
@@ -1559,8 +1629,15 @@ function optimizePrompts() {
 
     loading.classList.remove("show");
     resultsSection.style.display = "block";
-    resultsSection.scrollIntoView({ behavior: "smooth" });
+    if (!window._suppressScroll) resultsSection.scrollIntoView({ behavior: "smooth" });
+    window._suppressScroll = false;
   }, 400);
+}
+
+function regenerate() {
+  regenSeed++;
+  window._suppressScroll = true;
+  optimizePrompts();
 }
 
 function escapeHtml(s) {
