@@ -345,12 +345,12 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 // spec: specialty ratings 1-10 per model (research-based). Keys map to SPECIALTIES labels below.
 const MODELS = [
   // === VIDEO MODELS ===
-  {id:"seadance-2.5",name:"Seadance 2.5",type:"video",family:"Seadance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{story:10,ref:10,cin:9,aud:9,con:9,mot:8}},
+  {id:"seadance-2.5",name:"Seedance 2.5",type:"video",family:"Seedance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{story:10,ref:10,cin:9,aud:9,con:9,mot:8}},
   {id:"minimax-h3",name:"MiniMax H3",type:"video",family:"MiniMax",desc:"2K cinematic video with native audio",provider:"MiniMax",spec:{cin:9,aud:9,mot:8,con:8,story:8}},
-  {id:"seadance-2.0",name:"Seadance 2.0",type:"video",family:"Seadance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{story:9,ref:9,cin:8,aud:8,con:8,mot:8}},
+  {id:"seadance-2.0",name:"Seedance 2.0",type:"video",family:"Seedance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{story:9,ref:9,cin:8,aud:8,con:8,mot:8}},
   {id:"gemini-omni-flash",name:"Gemini Omni Flash",type:"video",family:"Gemini",desc:"Conversational video generation by Google",provider:"Google",spec:{speed:8,story:7,aud:7,cin:7,ref:7}},
   {id:"flux-3-video",name:"FLUX 3 Video",type:"video",family:"Flux",desc:"Native audio, 5-20s, from Black Forest Labs",provider:"Black Forest Labs",spec:{cin:8,aud:8,mot:7,speed:7}},
-  {id:"seadance-2.0-mini",name:"Seadance 2.0 Mini",type:"video",family:"Seadance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{speed:8,story:8,cin:7,aud:7}},
+  {id:"seadance-2.0-mini",name:"Seedance 2.0 Mini",type:"video",family:"Seedance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{speed:8,story:8,cin:7,aud:7}},
   {id:"kling-3.0-omni-v",name:"Kling 3.0 Omni",type:"video",family:"Kling",desc:"Enhanced multimodal references",provider:"Kuaishou",spec:{ref:10,con:9,cin:9,mot:9,aud:8,story:8}},
   {id:"pixverse-c1",name:"PixVerse C1",type:"video",family:"PixVerse",desc:"Great for short videos",provider:"PixVerse",spec:{speed:9,anime:8,mot:7,cin:6}},
   {id:"pixverse-v6",name:"PixVerse V6",type:"video",family:"PixVerse",desc:"Great for short videos",provider:"PixVerse",spec:{speed:9,anime:8,mot:7,cin:7}},
@@ -359,7 +359,7 @@ const MODELS = [
   {id:"wan-2.7-v",name:"Wan 2.7",type:"video",family:"Wan",desc:"Cinematic videos with audio & start/end frame control",provider:"Alibaba",spec:{ref:9,cin:8,aud:8,mot:8,con:8}},
   {id:"veo-3.1",name:"Veo 3.1",type:"video",family:"Veo",desc:"High fidelity videos with audio & 4K",provider:"Google DeepMind",spec:{cin:10,aud:10,mot:9,con:9,story:9}},
   {id:"kling-3.0",name:"Kling 3.0",type:"video",family:"Kling",desc:"Enhanced audio, consistency & multi-shots",provider:"Kuaishou",spec:{cin:9,mot:9,con:9,aud:9,story:9}},
-  {id:"seadance-1.5-pro",name:"Seadance 1.5 Pro",type:"video",family:"Seadance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{cin:8,story:8,aud:8,mot:8}},
+  {id:"seadance-1.5-pro",name:"Seedance 1.5 Pro",type:"video",family:"Seedance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{cin:8,story:8,aud:8,mot:8}},
   {id:"grok-imagine-1.5",name:"Grok Imagine 1.5",type:"video",family:"Grok Imagine",desc:"Fast generation of cinematic videos",provider:"xAI",spec:{speed:10,cin:7,mot:7}},
   {id:"grok-imagine-v",name:"Grok Imagine",type:"video",family:"Grok Imagine",desc:"Fast generation of cinematic videos",provider:"xAI",spec:{speed:9,cin:6,mot:6}},
   {id:"kling-2.6",name:"Kling 2.6",type:"video",family:"Kling",desc:"Cinematic videos with audio & voice",provider:"Kuaishou",spec:{aud:9,cin:8,mot:8,con:8}},
@@ -374,7 +374,7 @@ const MODELS = [
   {id:"hailuo-02",name:"Hailuo 02",type:"video",family:"Hailuo",desc:"Great for motion & physical actions",provider:"MiniMax",spec:{mot:10,cin:7}},
   {id:"hailuo-2.3",name:"Hailuo 2.3",type:"video",family:"Hailuo",desc:"Great for cinematic & acting scenes",provider:"MiniMax",spec:{cin:9,mot:9,con:8}},
   {id:"kling-2.1",name:"Kling 2.1",type:"video",family:"Kling",desc:"Natural motion & great prompt adherence",provider:"Kuaishou",spec:{mot:8,cin:7,con:7}},
-  {id:"seadance-1",name:"Seadance 1",type:"video",family:"Seadance",desc:"Narrative videos with multi-shots",provider:"ByteDance",spec:{story:8,cin:7}},
+  {id:"seadance-1",name:"Seedance 1",type:"video",family:"Seedance",desc:"Narrative videos with multi-shots",provider:"ByteDance",spec:{story:8,cin:7}},
   {id:"vidu-q3",name:"Vidu Q3",type:"video",family:"Vidu",desc:"Great for storyboards and adding references",provider:"Shengshu",spec:{ref:9,anime:8,story:8,con:8}},
   {id:"pixverse-5",name:"PixVerse 5",type:"video",family:"PixVerse",desc:"Great for short videos",provider:"PixVerse",spec:{speed:8,anime:7,mot:6}},
   {id:"wan-2.2",name:"Wan 2.2",type:"video",family:"Wan",desc:"Consistent aesthetic",provider:"Alibaba",spec:{cin:7,con:7}},
@@ -508,7 +508,7 @@ function ensurePresentTense(p) {
 const VIDEO_STRATEGIES = {
 
   // ── SEADANCE (ByteDance) ──
-  Seadance: {
+  Seedance: {
     negativePrompt: "blurry, low quality, jittery motion, inconsistent lighting, audio desync, character drift between shots",
     tips: [
       "Use 8-part formula: Format, Subject, Action, Environment, Camera, Look, Timing, Audio + Constraints",
