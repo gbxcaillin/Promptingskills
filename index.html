@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Optimizer — AI Video &amp; Image Generation</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a26;--bg4:#222230;
+  --text:#e4e4ef;--text2:#9b9bb0;--text3:#6b6b82;
+  --accent:#7c5cfc;--accent2:#9d7fff;--accent-glow:rgba(124,92,252,.15);
+  --green:#34d399;--orange:#fb923c;--pink:#f472b6;--cyan:#22d3ee;
+  --red:#f87171;--yellow:#fbbf24;
+  --border:#2a2a3a;--radius:10px;--radius-sm:6px;
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+
+.container{max-width:1100px;margin:0 auto;padding:24px 20px}
+
+header{text-align:center;padding:48px 0 32px}
+header h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;background:linear-gradient(135deg,var(--accent2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+header p{color:var(--text2);margin-top:8px;font-size:1.05rem}
+
+.input-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.input-section label{font-weight:600;font-size:.95rem;margin-bottom:8px;display:block}
+.prompt-area{width:100%;min-height:120px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:14px;font-size:1rem;resize:vertical;font-family:inherit;line-height:1.5;transition:border-color .2s}
+.prompt-area:focus{outline:none;border-color:var(--accent)}
+.prompt-area::placeholder{color:var(--text3)}
+
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:16px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border:none;border-radius:var(--radius-sm);font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-secondary{background:var(--bg4);color:var(--text2);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--text)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.type-toggle{display:flex;background:var(--bg3);border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border)}
+.type-toggle button{padding:8px 20px;background:none;border:none;color:var(--text2);font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.type-toggle button.active{background:var(--accent);color:#fff}
+
+.model-section{margin-bottom:24px}
+.model-section h2{font-size:1.15rem;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.model-section h2 .count{font-size:.8rem;color:var(--text3);font-weight:400}
+
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center}
+.search-input{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:8px 14px;font-size:.9rem;width:240px;max-width:100%}
+.search-input:focus{outline:none;border-color:var(--accent)}
+.family-chip{padding:5px 14px;border-radius:20px;font-size:.8rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text2);transition:all .15s;white-space:nowrap}
+.family-chip:hover,.family-chip.active{border-color:var(--accent);color:var(--accent2);background:var(--accent-glow)}
+.family-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.model-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;transition:all .15s;display:flex;align-items:flex-start;gap:10px;user-select:none}
+.model-card:hover{border-color:var(--accent);background:var(--bg3)}
+.model-card.selected{border-color:var(--accent);background:var(--accent-glow)}
+.model-card .check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:11px;color:transparent}
+.model-card.selected .check{background:var(--accent);border-color:var(--accent);color:#fff}
+.model-card .info{flex:1;min-width:0}
+.model-card .name{font-weight:600;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.model-card .desc{font-size:.75rem;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.model-card .tags{display:flex;gap:4px;margin-top:4px}
+.tag{font-size:.65rem;padding:1px 6px;border-radius:3px;font-weight:600}
+.tag-new{background:rgba(52,211,153,.15);color:var(--green)}
+.tag-fast{background:rgba(251,146,60,.15);color:var(--orange)}
+.tag-unlimited{background:rgba(124,92,252,.15);color:var(--accent2)}
+
+.select-actions{display:flex;gap:8px;margin-bottom:12px}
+.select-actions button{font-size:.8rem;padding:4px 12px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer}
+.select-actions button:hover{border-color:var(--accent);color:var(--text)}
+
+.results-section{margin-top:32px}
+.results-section h2{font-size:1.2rem;font-weight:600;margin-bottom:16px}
+.result-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
+.result-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg3);cursor:pointer}
+.result-header h3{font-size:.95rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.result-header .model-type{font-size:.7rem;padding:2px 8px;border-radius:3px;font-weight:600}
+.type-video{background:rgba(244,114,182,.15);color:var(--pink)}
+.type-image{background:rgba(34,211,238,.15);color:var(--cyan)}
+.result-header .copy-btn{padding:5px 12px;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--text2);font-size:.8rem;cursor:pointer;transition:all .15s}
+.result-header .copy-btn:hover{border-color:var(--green);color:var(--green)}
+.result-header .copy-btn.copied{border-color:var(--green);color:var(--green)}
+.result-body{padding:18px}
+.result-body .optimized-prompt{white-space:pre-wrap;font-size:.92rem;line-height:1.7;color:var(--text)}
+.result-body .changes{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.result-body .changes summary{font-size:.8rem;color:var(--text3);cursor:pointer;font-weight:600}
+.result-body .changes ul{margin-top:6px;padding-left:18px;font-size:.8rem;color:var(--text2)}
+.result-body .changes li{margin-bottom:3px}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty-state .icon{font-size:3rem;margin-bottom:12px;opacity:.5}
+.empty-state p{max-width:400px;margin:0 auto}
+
+.loading{display:none;text-align:center;padding:40px}
+.loading.show{display:block}
+.loading .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.footer{text-align:center;padding:40px 0 24px;color:var(--text3);font-size:.8rem}
+
+@media(max-width:600px){
+  .controls{flex-direction:column;align-items:stretch}
+  .model-grid{grid-template-columns:1fr}
+  .filter-bar{flex-direction:column}
+  .search-input{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Prompt Optimizer</h1>
+    <p>Enter a prompt and select models — get optimized versions tailored to each model's strengths</p>
+  </header>
+
+  <div class="input-section">
+    <label for="userPrompt">Your Prompt</label>
+    <textarea id="userPrompt" class="prompt-area" placeholder="Describe what you want to generate... e.g. 'A samurai walking through a neon-lit Tokyo alley in the rain at night'"></textarea>
+    <div class="controls">
+      <button class="btn btn-primary" id="optimizeBtn" onclick="optimizePrompts()">Optimize Prompts</button>
+      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+      <div style="flex:1"></div>
+      <div class="type-toggle">
+        <button class="active" onclick="setType('all',this)">All</button>
+        <button onclick="setType('video',this)">Video</button>
+        <button onclick="setType('image',this)">Image</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="model-section">
+    <h2>Select Models <span class="count" id="selectedCount">(0 selected)</span></h2>
+    <div class="filter-bar" id="filterBar"></div>
+    <div class="select-actions">
+      <button onclick="selectAllVisible()">Select All Visible</button>
+      <button onclick="deselectAll()">Deselect All</button>
+    </div>
+    <div class="model-grid" id="modelGrid"></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p style="color:var(--text2)">Optimizing prompts for selected models...</p>
+  </div>
+
+  <div class="results-section" id="resultsSection" style="display:none">
+    <h2>Optimized Prompts</h2>
+    <div id="resultsContainer"></div>
+  </div>
+
+  <div class="empty-state" id="emptyState">
+    <div class="icon">&#9889;</div>
+    <p>Enter a prompt above, select one or more models, and click "Optimize Prompts" to generate tailored versions.</p>
+  </div>
+</div>
+
+<footer class="footer">Prompt Optimizer &mdash; Tailored prompts for 69 AI generation models</footer>
+
+<script>
+const MODELS = [
+  // === VIDEO MODELS ===
+  {id:"seadance-2.5",name:"Seadance 2.5",type:"video",family:"Seadance",tags:["new","unlimited"],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance"},
+  {id:"minimax-h3",name:"MiniMax H3",type:"video",family:"MiniMax",tags:["new","unlimited"],desc:"2K cinematic video with native audio",provider:"MiniMax"},
+  {id:"seadance-2.0",name:"Seadance 2.0",type:"video",family:"Seadance",tags:[],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance"},
+  {id:"gemini-omni-flash",name:"Gemini Omni Flash",type:"video",family:"Gemini",tags:["new"],desc:"Conversational video generation by Google",provider:"Google"},
+  {id:"flux-3-video",name:"FLUX 3 Video",type:"video",family:"Flux",tags:["new","unlimited"],desc:"Native audio, 5-20s, from Black Forest Labs",provider:"Black Forest Labs"},
+  {id:"seadance-2.0-mini",name:"Seadance 2.0 Mini",type:"video",family:"Seadance",tags:["new"],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance"},
+  {id:"kling-3.0-omni-v",name:"Kling 3.0 Omni",type:"video",family:"Kling",tags:[],desc:"Enhanced multimodal references",provider:"Kuaishou"},
+  {id:"pixverse-c1",name:"PixVerse C1",type:"video",family:"PixVerse",tags:["new"],desc:"Great for short videos",provider:"PixVerse"},
+  {id:"pixverse-v6",name:"PixVerse V6",type:"video",family:"PixVerse",tags:["new"],desc:"Great for short videos",provider:"PixVerse"},
+  {id:"happyhorse-1.1",name:"HappyHorse 1.1",type:"video",family:"HappyHorse",tags:["new"],desc:"Cinematic videos with multi-shot narrative & native audio",provider:"HappyHorse"},
+  {id:"happyhorse",name:"HappyHorse",type:"video",family:"HappyHorse",tags:[],desc:"Cinematic videos with multi-shot narrative & native audio",provider:"HappyHorse"},
+  {id:"wan-2.7-v",name:"Wan 2.7",type:"video",family:"Wan",tags:[],desc:"Cinematic videos with audio & start/end frame control",provider:"Alibaba"},
+  {id:"veo-3.1",name:"Veo 3.1",type:"video",family:"Veo",tags:[],desc:"High fidelity videos with audio & 4K",provider:"Google DeepMind"},
+  {id:"kling-3.0",name:"Kling 3.0",type:"video",family:"Kling",tags:[],desc:"Enhanced audio, consistency & multi-shots",provider:"Kuaishou"},
+  {id:"seadance-1.5-pro",name:"Seadance 1.5 Pro",type:"video",family:"Seadance",tags:[],desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance"},
+  {id:"grok-imagine-1.5",name:"Grok Imagine 1.5",type:"video",family:"Grok Imagine",tags:["new","fast"],desc:"Fast generation of cinematic videos",provider:"xAI"},
+  {id:"grok-imagine-v",name:"Grok Imagine",type:"video",family:"Grok Imagine",tags:["fast"],desc:"Fast generation of cinematic videos",provider:"xAI"},
+  {id:"kling-2.6",name:"Kling 2.6",type:"video",family:"Kling",tags:[],desc:"Cinematic videos with audio & voice",provider:"Kuaishou"},
+  {id:"wan-2.6",name:"Wan 2.6",type:"video",family:"Wan",tags:[],desc:"Cinematic videos with audio & multi-shots",provider:"Alibaba"},
+  {id:"sora-2",name:"Sora 2",type:"video",family:"Sora",tags:[],desc:"Story-telling videos with audio",provider:"OpenAI"},
+  {id:"ltx-2.3",name:"LTX 2.3",type:"video",family:"LTX",tags:["fast"],desc:"Next-gen cinematic 4K videos up to 20s",provider:"Lightricks"},
+  {id:"ltx-2.3-audio",name:"LTX 2.3 Audio-to-Video",type:"video",family:"LTX",tags:[],desc:"Generate video from audio with LTX 2.3",provider:"Lightricks"},
+  {id:"kling-2.5",name:"Kling 2.5",type:"video",family:"Kling",tags:[],desc:"Great creativity with excellent value",provider:"Kuaishou"},
+  {id:"kling-o1-v",name:"Kling O1",type:"video",family:"Kling",tags:[],desc:"Great for multi-reference & video editing",provider:"Kuaishou"},
+  {id:"veo-3",name:"Veo 3",type:"video",family:"Veo",tags:[],desc:"High fidelity videos with audio",provider:"Google DeepMind"},
+  {id:"wan-2.5",name:"Wan 2.5",type:"video",family:"Wan",tags:[],desc:"Professional creative videos",provider:"Alibaba"},
+  {id:"hailuo-02",name:"Hailuo 02",type:"video",family:"Hailuo",tags:[],desc:"Great for motion & physical actions",provider:"MiniMax"},
+  {id:"hailuo-2.3",name:"Hailuo 2.3",type:"video",family:"Hailuo",tags:[],desc:"Great for cinematic & acting scenes",provider:"MiniMax"},
+  {id:"kling-2.1",name:"Kling 2.1",type:"video",family:"Kling",tags:[],desc:"Natural motion & great prompt adherence",provider:"Kuaishou"},
+  {id:"seadance-1",name:"Seadance 1",type:"video",family:"Seadance",tags:[],desc:"Narrative videos with multi-shots",provider:"ByteDance"},
+  {id:"vidu-q3",name:"Vidu Q3",type:"video",family:"Vidu",tags:[],desc:"Great for storyboards and adding references",provider:"Shengshu"},
+  {id:"pixverse-5",name:"PixVerse 5",type:"video",family:"PixVerse",tags:["fast"],desc:"Great for short videos",provider:"PixVerse"},
+  {id:"wan-2.2",name:"Wan 2.2",type:"video",family:"Wan",tags:[],desc:"Consistent aesthetic",provider:"Alibaba"},
+  {id:"vidu-q2",name:"Vidu Q2",type:"video",family:"Vidu",tags:[],desc:"Great for anime scenes and storyboards",provider:"Shengshu"},
+
+  // === IMAGE MODELS ===
+  {id:"gpt-image-2",name:"GPT Image 2",type:"image",family:"GPT Image",tags:["new"],desc:"OpenAI's next-gen image model",provider:"OpenAI"},
+  {id:"nano-banana-2-lite",name:"Nano Banana 2 Lite",type:"image",family:"Nano Banana",tags:["new","unlimited"],desc:"Google's high-efficiency image model",provider:"Google"},
+  {id:"nano-banana-2",name:"Nano Banana 2",type:"image",family:"Nano Banana",tags:["new"],desc:"Google's Gemini 3.1 Flash image model",provider:"Google"},
+  {id:"seedream-5.0-pro",name:"Seedream 5.0 Pro",type:"image",family:"Seedream",tags:["new"],desc:"ByteDance's flagship 5.0 image model",provider:"ByteDance"},
+  {id:"nano-banana-pro",name:"Nano Banana Pro",type:"image",family:"Nano Banana",tags:[],desc:"Google's premium image model",provider:"Google"},
+  {id:"recraft-v4",name:"Recraft V4",type:"image",family:"Recraft",tags:["new"],desc:"Recraft's image & SVG generation model",provider:"Recraft"},
+  {id:"wan-2.7-i",name:"Wan 2.7",type:"image",family:"Wan",tags:["new"],desc:"Alibaba's image model with facial control & text rendering",provider:"Alibaba"},
+  {id:"grok-imagine-image-2.0",name:"Grok Imagine Image 2.0",type:"image",family:"Grok Imagine",tags:["new","fast"],desc:"xAI's 2.0 image model — sharper text, precision editing",provider:"xAI"},
+  {id:"grok-imagine-i",name:"Grok Imagine",type:"image",family:"Grok Imagine",tags:["new","fast"],desc:"xAI's Aurora-powered image model",provider:"xAI"},
+  {id:"seedream-5.0-lite",name:"Seedream 5.0 Lite",type:"image",family:"Seedream",tags:[],desc:"ByteDance's lightweight 5.0 image model (2K/3K)",provider:"ByteDance"},
+  {id:"seedream-4.5",name:"Seedream 4.5",type:"image",family:"Seedream",tags:["fast"],desc:"ByteDance's advanced image model",provider:"ByteDance"},
+  {id:"kling-3.0-omni-i",name:"Kling 3.0 Omni",type:"image",family:"Kling",tags:[],desc:"Kling's advanced image model",provider:"Kuaishou"},
+  {id:"nano-banana",name:"Nano Banana",type:"image",family:"Nano Banana",tags:[],desc:"Google's standard image model",provider:"Google"},
+  {id:"seedream-4.0",name:"Seedream 4.0",type:"image",family:"Seedream",tags:[],desc:"ByteDance's standard image model",provider:"ByteDance"},
+  {id:"qwen-image-3.0",name:"Qwen Image 3.0",type:"image",family:"Qwen Image",tags:["new","unlimited"],desc:"Alibaba image generation with Standard and Pro modes",provider:"Alibaba"},
+  {id:"qwen-image-2",name:"Qwen Image 2",type:"image",family:"Qwen Image",tags:["fast"],desc:"Enhanced realism and improved text rendering",provider:"Alibaba"},
+  {id:"kling-o1-i",name:"Kling O1",type:"image",family:"Kling",tags:[],desc:"Multi-reference & visual input remix",provider:"Kuaishou"},
+  {id:"flux-kontext-pro",name:"Flux Kontext Pro",type:"image",family:"Flux",tags:[],desc:"Enhanced context consistency",provider:"Black Forest Labs"},
+  {id:"gpt-image-1.5",name:"GPT Image 1.5",type:"image",family:"GPT Image",tags:[],desc:"OpenAI's flagship image model",provider:"OpenAI"},
+  {id:"flux-2-pro",name:"Flux 2 Pro",type:"image",family:"Flux",tags:[],desc:"Enhanced speed & multi-reference",provider:"Black Forest Labs"},
+  {id:"openart-photorealistic",name:"OpenArt Photorealistic",type:"image",family:"OpenArt",tags:[],desc:"Lifelike portraits and realistic scene generation",provider:"OpenArt"},
+  {id:"z-image",name:"Z-Image",type:"image",family:"Z-Image",tags:[],desc:"Enhanced speed & iteration efficiency",provider:"Z-Image"},
+  {id:"qwen-image-max",name:"qwen-image-max",type:"image",family:"Qwen Image",tags:[],desc:"Enhanced realism and naturalness",provider:"Alibaba"},
+  {id:"qwen-image-plus",name:"qwen-image-plus",type:"image",family:"Qwen Image",tags:[],desc:"Excels at artistic styles & text on image",provider:"Alibaba"},
+  {id:"flux-2-klein",name:"Flux 2 Klein 9B",type:"image",family:"Flux",tags:[],desc:"Enhanced speed & real-time iteration",provider:"Black Forest Labs"},
+  {id:"flux-2-max",name:"Flux 2 Max",type:"image",family:"Flux",tags:[],desc:"Enhanced prompt adherence & logic",provider:"Black Forest Labs"},
+  {id:"flux-2-flex",name:"Flux 2 Flex",type:"image",family:"Flux",tags:[],desc:"For design experimentation & iteration",provider:"Black Forest Labs"},
+  {id:"flux-1-dev",name:"Flux 1 Dev",type:"image",family:"Flux",tags:[],desc:"Enhanced style fine-tuning",provider:"Black Forest Labs"},
+  {id:"flux-1.1-pro",name:"Flux 1.1 Pro",type:"image",family:"Flux",tags:[],desc:"Enhanced speed & efficiency",provider:"Black Forest Labs"},
+  {id:"flux-kontext-max",name:"Flux Kontext Max",type:"image",family:"Flux",tags:[],desc:"Enhanced prompt adherence",provider:"Black Forest Labs"},
+  {id:"juggernaut-flux-pro",name:"Juggernaut Flux Pro",type:"image",family:"Juggernaut",tags:[],desc:"Enhanced naturalism & fidelity",provider:"Juggernaut"},
+  {id:"openart-sdxl",name:"OpenArt SDXL",type:"image",family:"OpenArt",tags:[],desc:"SDXL tuned for versatile creative imagery",provider:"OpenArt"},
+  {id:"juggernaut-xl",name:"Juggernaut XL",type:"image",family:"Juggernaut",tags:[],desc:"SDXL with strong realism and detail",provider:"Juggernaut"},
+  {id:"dynavision-xl",name:"DynaVision XL",type:"image",family:"DynaVision",tags:[],desc:"Stylized 3D all-in-one SDXL checkpoint",provider:"DynaVision"},
+  {id:"flux-2-lora-realism",name:"Flux 2 LoRA Gallery Realism",type:"image",family:"Flux",tags:[],desc:"Enhanced photorealism",provider:"Black Forest Labs"},
+];
+
+// ── Optimization strategies per model family ──
+
+const VIDEO_STRATEGIES = {
+  Seadance: {
+    style: "cinematic",
+    tips: ["Structure as multi-shot scenes with [Shot 1], [Shot 2] markers","Describe audio/sound design explicitly","Use cinematic language: tracking shot, dolly zoom, crane shot","Mention transitions between shots"],
+    prefix: "",
+    suffix: ", cinematic quality, smooth transitions, multi-shot narrative, professional color grading, immersive audio design",
+    transform(p){return addCameraWork(addSceneStructure(p))}
+  },
+  MiniMax: {
+    style: "cinematic",
+    tips: ["Specify 2K resolution in prompt","Describe native audio elements","Include character emotions and dialogue cues","Detail scene atmosphere"],
+    prefix: "",
+    suffix: ", 2K resolution, native audio, cinematic composition, rich atmospheric detail, expressive character performance",
+    transform(p){return addAtmosphere(p)}
+  },
+  Gemini: {
+    style: "conversational",
+    tips: ["Use natural, conversational descriptions","Describe the scene as if telling a story","Be clear and direct about what you want","Include context and purpose"],
+    prefix: "",
+    suffix: ", natural motion, clear visual storytelling, well-composed scene",
+    transform(p){return p}
+  },
+  Flux: {
+    style: "detailed",
+    tips: ["Be extremely detailed and descriptive","Layer details: subject, action, environment, lighting, mood","Specify camera angle and lens type","Include artistic style references"],
+    prefix: "",
+    suffix: ", highly detailed, professional quality, sharp focus, masterful composition",
+    transform(p){return addDetailedLighting(p)}
+  },
+  Kling: {
+    style: "cinematic",
+    tips: ["Emphasize motion and consistency between shots","Describe camera movement explicitly","Good with multi-reference concepts","Specify audio/voice elements for 2.6+"],
+    prefix: "",
+    suffix: ", consistent character appearance, smooth natural motion, cinematic framing, professional audio",
+    transform(p){return addCameraWork(addMotionDetail(p))}
+  },
+  PixVerse: {
+    style: "concise",
+    tips: ["Keep prompts focused and concise","Best for short-form content (5-15s)","Describe one clear action or scene","Emphasize visual impact over complexity"],
+    prefix: "",
+    suffix: ", dynamic visual impact, vibrant colors, engaging short-form content",
+    transform(p){return p}
+  },
+  HappyHorse: {
+    style: "narrative",
+    tips: ["Structure as a mini-narrative with beginning, middle, end","Include character voice/dialogue cues","Describe scene transitions","Emphasize story arc within the video"],
+    prefix: "",
+    suffix: ", narrative-driven, multi-shot storytelling, native audio, emotional arc, cinematic pacing",
+    transform(p){return addNarrativeStructure(p)}
+  },
+  Wan: {
+    style: "detailed",
+    tips: ["Provide start/end frame descriptions for 2.7+","Describe aesthetic style precisely","Good with consistent visual styles","Specify frame control parameters"],
+    prefix: "",
+    suffix: ", consistent aesthetic, professional creative quality, smooth motion, artistic coherence",
+    transform(p){return addFrameControl(p)}
+  },
+  Veo: {
+    style: "cinematic",
+    tips: ["Describe scenes in high fidelity detail","Specify 4K quality elements for 3.1","Include natural ambient audio descriptions","Focus on realism and physical accuracy"],
+    prefix: "",
+    suffix: ", ultra-high fidelity, photorealistic rendering, natural ambient audio, physically accurate motion, 4K cinematic quality",
+    transform(p){return addDetailedLighting(addAtmosphere(p))}
+  },
+  "Grok Imagine": {
+    style: "fast",
+    tips: ["Prompts can be shorter — model is fast and responsive","Focus on the key visual concept","Include cinematic style keywords","Good for rapid iteration"],
+    prefix: "",
+    suffix: ", cinematic quality, vivid colors, dynamic composition",
+    transform(p){return p}
+  },
+  Sora: {
+    style: "narrative",
+    tips: ["Write prompts as story descriptions","Include character motivations and emotions","Describe the passage of time","Focus on narrative coherence and world-building"],
+    prefix: "",
+    suffix: ", story-driven, emotionally resonant, cohesive world-building, narrative continuity, immersive audio storytelling",
+    transform(p){return addNarrativeStructure(p)}
+  },
+  LTX: {
+    style: "cinematic",
+    tips: ["Optimized for up to 20-second clips","Specify 4K quality elements","For Audio-to-Video: describe visuals that match the audio mood","Fast generation — good for iteration"],
+    prefix: "",
+    suffix: ", next-gen cinematic quality, 4K resolution, smooth temporal coherence, professional grade",
+    transform(p){return addCameraWork(p)}
+  },
+  Hailuo: {
+    style: "action",
+    tips: ["Emphasize physical motion and actions","Describe body mechanics and movement flow","Good for action sequences and dance","Include environmental interaction details"],
+    prefix: "",
+    suffix: ", dynamic physical motion, natural body mechanics, cinematic action choreography, realistic physics",
+    transform(p){return addMotionDetail(p)}
+  },
+  Vidu: {
+    style: "storyboard",
+    tips: ["Structure prompts like storyboard panels","Include reference descriptions","Good for anime-style content (Q2)","Describe composition of each key frame"],
+    prefix: "",
+    suffix: ", storyboard-quality composition, clear visual narrative, reference-consistent, well-defined key frames",
+    transform(p){return addSceneStructure(p)}
+  },
+};
+
+const IMAGE_STRATEGIES = {
+  "GPT Image": {
+    style: "natural",
+    tips: ["Use natural language descriptions","Be specific about text rendering if needed","Describe composition and layout","Include artistic style references"],
+    prefix: "",
+    suffix: ", high quality, detailed, professional composition",
+    transform(p){return p}
+  },
+  "Nano Banana": {
+    style: "descriptive",
+    tips: ["Leverage Gemini's understanding of natural descriptions","Specify quality tier (standard vs premium)","Include detailed scene descriptions","Good with complex multi-element scenes"],
+    prefix: "",
+    suffix: ", high fidelity rendering, vivid detail, balanced composition, natural color palette",
+    transform(p){return addDetailedLighting(p)}
+  },
+  Seedream: {
+    style: "detailed",
+    tips: ["ByteDance's models respond well to layered descriptions","Specify resolution quality (2K/3K for Lite)","Include artistic style and medium","Detail texture and material properties"],
+    prefix: "",
+    suffix: ", masterful detail, refined artistic quality, rich textures, professional rendering",
+    transform(p){return addMaterialDetail(p)}
+  },
+  Recraft: {
+    style: "design",
+    tips: ["Excellent for SVG and vector-style output","Specify if you want vector/SVG style","Good for icons, illustrations, design assets","Include brand style parameters if relevant"],
+    prefix: "",
+    suffix: ", clean design, crisp lines, professional illustration quality, well-balanced composition",
+    transform(p){return p}
+  },
+  Wan: {
+    style: "controlled",
+    tips: ["Specify facial features for portrait control","Describe text to render if text-in-image needed","Include style and aesthetic direction","Good with controlled generation parameters"],
+    prefix: "",
+    suffix: ", precise facial detail, accurate text rendering, controlled generation, artistic coherence",
+    transform(p){return addDetailedLighting(p)}
+  },
+  "Grok Imagine": {
+    style: "fast",
+    tips: ["Fast generation — keep prompts clear and focused","Good for quick iteration on concepts","Describe the key visual elements","Include style direction upfront"],
+    prefix: "",
+    suffix: ", sharp detail, vivid rendering, clean composition",
+    transform(p){return p}
+  },
+  Kling: {
+    style: "reference",
+    tips: ["Good with multi-reference inputs","Describe visual remix concepts","Include style transfer keywords","Specify composition and framing"],
+    prefix: "",
+    suffix: ", reference-consistent, detailed rendering, artistic composition, visual coherence",
+    transform(p){return addDetailedLighting(p)}
+  },
+  "Qwen Image": {
+    style: "artistic",
+    tips: ["Excels at artistic styles and text on images","Specify art style explicitly","Good with text rendering in images","Include realism parameters for max variant"],
+    prefix: "",
+    suffix: ", artistic excellence, refined style, precise text rendering, natural realism",
+    transform(p){return addArtisticStyle(p)}
+  },
+  Flux: {
+    style: "precise",
+    tips: ["Extremely detailed prompts work best","Include technical photography terms","Specify exact lighting setup","Layer: subject → environment → lighting → style → quality","Kontext variants: include context/reference descriptions"],
+    prefix: "",
+    suffix: ", highly detailed, sharp focus, professional photography, masterful lighting, 8K quality",
+    transform(p){return addPhotographyTerms(p)}
+  },
+  "GPT Image": {
+    style: "natural",
+    tips: ["Natural language works best","Describe composition and layout clearly","Specify art style or medium","Include mood and atmosphere"],
+    prefix: "",
+    suffix: ", high quality, detailed rendering, professional composition",
+    transform(p){return p}
+  },
+  OpenArt: {
+    style: "photorealistic",
+    tips: ["Emphasize photorealism for Photorealistic variant","Include SDXL-compatible quality tags for SDXL variant","Describe materials and textures","Include lighting direction and quality"],
+    prefix: "",
+    suffix: ", photorealistic, lifelike detail, natural skin texture, professional studio lighting, 8K resolution",
+    transform(p){return addPhotographyTerms(addMaterialDetail(p))}
+  },
+  "Z-Image": {
+    style: "efficient",
+    tips: ["Good for rapid iteration","Keep prompts focused","Describe the core visual concept clearly","Include style keywords early in prompt"],
+    prefix: "",
+    suffix: ", high quality, efficient rendering, clean detail",
+    transform(p){return p}
+  },
+  Juggernaut: {
+    style: "realistic",
+    tips: ["Excels at naturalism and realism","Include skin texture and material detail","Describe natural lighting scenarios","SDXL tags work well for XL variant"],
+    prefix: "",
+    suffix: ", ultra-realistic, natural skin texture, subsurface scattering, professional photography, lifelike detail, 8K",
+    transform(p){return addPhotographyTerms(addMaterialDetail(p))}
+  },
+  DynaVision: {
+    style: "3d-stylized",
+    tips: ["Optimized for stylized 3D aesthetic","Describe 3D rendering style","Include material and shader references","Good for character art and product renders"],
+    prefix: "",
+    suffix: ", stylized 3D render, clean topology, vibrant materials, professional 3D lighting, Pixar-quality shading",
+    transform(p){return add3DStyle(p)}
+  },
+};
+
+// ── Prompt enhancement utilities ──
+
+function addCameraWork(p) {
+  const cameras = ["cinematic camera movement","smooth tracking shot","dynamic camera angle","professional cinematography"];
+  if (!/camera|shot|angle|tracking|dolly|crane|pan|zoom/i.test(p)) {
+    p += ". Cinematic camera work with smooth tracking movements";
+  }
+  return p;
+}
+function addMotionDetail(p) {
+  if (!/motion|movement|moving|walk|run|dance|action/i.test(p)) {
+    p += ", with fluid natural motion";
+  }
+  return p;
+}
+function addSceneStructure(p) {
+  if (!/scene|shot \d|panel/i.test(p)) {
+    p = "[Scene 1] " + p;
+  }
+  return p;
+}
+function addNarrativeStructure(p) {
+  if (!/beginning|then|finally|next|first|after/i.test(p)) {
+    const sentences = p.split(/[.!]/).filter(s => s.trim());
+    if (sentences.length === 1) {
+      p = "Opening on: " + p.trim() + ". The scene unfolds naturally with emotional depth";
+    }
+  }
+  return p;
+}
+function addAtmosphere(p) {
+  if (!/atmosphere|ambient|mood|tone|feeling/i.test(p)) {
+    p += ", rich atmospheric depth with immersive ambient detail";
+  }
+  return p;
+}
+function addFrameControl(p) {
+  if (!/start frame|end frame|beginning.*end/i.test(p)) {
+    p += ". Maintain consistent visual style from start to end";
+  }
+  return p;
+}
+function addDetailedLighting(p) {
+  if (!/light|lighting|illuminat|glow|shadow|sun|lamp|neon/i.test(p)) {
+    p += ", with dramatic natural lighting and soft shadows";
+  }
+  return p;
+}
+function addMaterialDetail(p) {
+  if (!/texture|material|surface|fabric|metal|glass|wood|skin/i.test(p)) {
+    p += ", with rich material textures and surface detail";
+  }
+  return p;
+}
+function addArtisticStyle(p) {
+  if (!/style|art|artistic|painting|illustration|render/i.test(p)) {
+    p += ", rendered in a refined artistic style";
+  }
+  return p;
+}
+function addPhotographyTerms(p) {
+  if (!/f\/|aperture|focal|lens|iso|shutter|bokeh|depth of field/i.test(p)) {
+    p += ", shot with a 35mm lens, shallow depth of field, natural bokeh";
+  }
+  return p;
+}
+function add3DStyle(p) {
+  if (!/3d|render|polygon|shader|topology|blender|unreal/i.test(p)) {
+    p += ", stylized 3D render with clean geometry and vibrant material shading";
+  }
+  return p;
+}
+
+// ── State ──
+
+let selectedModels = new Set();
+let currentTypeFilter = "all";
+let currentFamilyFilter = null;
+let searchTerm = "";
+
+// ── Render ──
+
+function getFamilies() {
+  const f = new Map();
+  MODELS.forEach(m => {
+    if (currentTypeFilter !== "all" && m.type !== currentTypeFilter) return;
+    if (!f.has(m.family)) f.set(m.family, 0);
+    f.set(m.family, f.get(m.family) + 1);
+  });
+  return f;
+}
+
+function renderFilterBar() {
+  const families = getFamilies();
+  const bar = document.getElementById("filterBar");
+  let html = '<input type="text" class="search-input" placeholder="Search models..." oninput="onSearch(this.value)" value="'+searchTerm+'">';
+  html += `<span class="family-chip ${!currentFamilyFilter?'active':''}" onclick="filterFamily(null)">All</span>`;
+  families.forEach((count, fam) => {
+    html += `<span class="family-chip ${currentFamilyFilter===fam?'active':''}" onclick="filterFamily('${fam}')">${fam} (${count})</span>`;
+  });
+  bar.innerHTML = html;
+}
+
+function getVisibleModels() {
+  return MODELS.filter(m => {
+    if (currentTypeFilter !== "all" && m.type !== currentTypeFilter) return false;
+    if (currentFamilyFilter && m.family !== currentFamilyFilter) return false;
+    if (searchTerm && !m.name.toLowerCase().includes(searchTerm) && !m.family.toLowerCase().includes(searchTerm) && !m.desc.toLowerCase().includes(searchTerm)) return false;
+    return true;
+  });
+}
+
+function renderModels() {
+  const grid = document.getElementById("modelGrid");
+  const visible = getVisibleModels();
+  grid.innerHTML = visible.map(m => {
+    const sel = selectedModels.has(m.id) ? "selected" : "";
+    const tags = m.tags.map(t => `<span class="tag tag-${t}">${t}</span>`).join("");
+    return `<div class="model-card ${sel}" onclick="toggleModel('${m.id}')" title="${m.desc}">
+      <div class="check">${sel?'&#10003;':''}</div>
+      <div class="info">
+        <div class="name">${m.name}</div>
+        <div class="desc">${m.desc}</div>
+        ${tags?`<div class="tags">${tags}</div>`:''}
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("selectedCount").textContent = `(${selectedModels.size} selected)`;
+}
+
+function render() { renderFilterBar(); renderModels(); }
+
+// ── Actions ──
+
+function toggleModel(id) {
+  if (selectedModels.has(id)) selectedModels.delete(id); else selectedModels.add(id);
+  renderModels();
+}
+
+function setType(type, btn) {
+  currentTypeFilter = type;
+  currentFamilyFilter = null;
+  document.querySelectorAll(".type-toggle button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  render();
+}
+
+function filterFamily(fam) {
+  currentFamilyFilter = fam;
+  render();
+}
+
+function onSearch(val) {
+  searchTerm = val.toLowerCase();
+  renderModels();
+}
+
+function selectAllVisible() {
+  getVisibleModels().forEach(m => selectedModels.add(m.id));
+  renderModels();
+}
+
+function deselectAll() {
+  selectedModels.clear();
+  renderModels();
+}
+
+function clearAll() {
+  document.getElementById("userPrompt").value = "";
+  selectedModels.clear();
+  document.getElementById("resultsSection").style.display = "none";
+  document.getElementById("emptyState").style.display = "block";
+  renderModels();
+}
+
+function copyPrompt(btn, id) {
+  const el = document.getElementById("prompt-" + id);
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    btn.textContent = "Copied!";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 1500);
+  });
+}
+
+// ── Optimization Engine ──
+
+function optimizeForModel(basePrompt, model) {
+  const strategies = model.type === "video" ? VIDEO_STRATEGIES : IMAGE_STRATEGIES;
+  const strategy = strategies[model.family] || { suffix: "", transform: p => p, tips: [] };
+
+  let prompt = basePrompt.trim();
+  if (prompt.endsWith(".")) prompt = prompt.slice(0, -1);
+
+  if (strategy.transform) prompt = strategy.transform(prompt);
+  if (strategy.prefix) prompt = strategy.prefix + prompt;
+  if (strategy.suffix) prompt = prompt + strategy.suffix;
+
+  prompt = prompt.replace(/\s{2,}/g, " ").replace(/,\s*,/g, ",").trim();
+  if (!prompt.endsWith(".")) prompt += ".";
+
+  return { optimized: prompt, tips: strategy.tips || [] };
+}
+
+function optimizePrompts() {
+  const userPrompt = document.getElementById("userPrompt").value.trim();
+  if (!userPrompt) { document.getElementById("userPrompt").focus(); return; }
+  if (selectedModels.size === 0) { alert("Please select at least one model."); return; }
+
+  const loading = document.getElementById("loading");
+  const resultsSection = document.getElementById("resultsSection");
+  const container = document.getElementById("resultsContainer");
+  const empty = document.getElementById("emptyState");
+
+  loading.classList.add("show");
+  resultsSection.style.display = "none";
+  empty.style.display = "none";
+
+  setTimeout(() => {
+    const results = [];
+    MODELS.filter(m => selectedModels.has(m.id)).forEach(m => {
+      const r = optimizeForModel(userPrompt, m);
+      results.push({ model: m, ...r });
+    });
+
+    container.innerHTML = results.map((r, i) => {
+      const typeClass = r.model.type === "video" ? "type-video" : "type-image";
+      const typeLabel = r.model.type === "video" ? "VIDEO" : "IMAGE";
+      const tipsHtml = r.tips.length ? `<details class="changes"><summary>Optimization tips for ${r.model.family}</summary><ul>${r.tips.map(t=>`<li>${t}</li>`).join("")}</ul></details>` : "";
+      return `<div class="result-card">
+        <div class="result-header" onclick="this.parentElement.querySelector('.result-body').classList.toggle('collapsed')">
+          <h3>${r.model.name} <span class="model-type ${typeClass}">${typeLabel}</span></h3>
+          <button class="copy-btn" onclick="event.stopPropagation();copyPrompt(this,'${i}')">Copy</button>
+        </div>
+        <div class="result-body">
+          <div class="optimized-prompt" id="prompt-${i}">${escapeHtml(r.optimized)}</div>
+          ${tipsHtml}
+        </div>
+      </div>`;
+    }).join("");
+
+    loading.classList.remove("show");
+    resultsSection.style.display = "block";
+    resultsSection.scrollIntoView({ behavior: "smooth" });
+  }, 400);
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ── Init ──
+render();
+</script>
+</body>
+</html>
