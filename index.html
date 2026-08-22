@@ -145,6 +145,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .result-header .model-type{font-size:.6rem;padding:2px 8px;border-radius:var(--radius);font-weight:500;letter-spacing:.12em}
 .type-video{background:var(--teal);color:#fff}
 .type-image{background:var(--contrast-bg);color:var(--contrast-fg)}
+.type-text{background:var(--deep-teal);color:#fff}
 .result-header .copy-btn{padding:6px 14px;border-radius:var(--radius);border:1px solid var(--ink);background:none;color:var(--ink);font-size:.66rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:var(--sans)}
 .result-header .copy-btn:hover{background:var(--ink);color:var(--paper)}
 .result-header .copy-btn.copied{border-color:var(--teal);background:var(--teal);color:#fff}
@@ -237,7 +238,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   <div class="lockup">Professional&nbsp;&nbsp;Services</div>
   <div class="rule"></div>
   <h1>Prompt Optimizer</h1>
-  <p>Enter a prompt, select your models, and get research-backed optimized versions tailored to each AI video and image generation model.</p>
+  <p>Enter a prompt, select your models, and get research-backed optimized versions tailored to each AI video, image and text model.</p>
 </header>
 <div class="container">
 
@@ -253,6 +254,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
         <button class="active" onclick="setType('all',this)">All</button>
         <button onclick="setType('video',this)">Video</button>
         <button onclick="setType('image',this)">Image</button>
+        <button onclick="setType('text',this)">Text</button>
       </div>
     </div>
   </div>
@@ -305,7 +307,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   <div class="wordmark">GBX</div>
   <div class="lockup">Professional&nbsp;&nbsp;Services</div>
   <div class="rule"></div>
-  Prompt Optimizer. Research-backed prompt engineering for 69 AI generation models.<br>
+  Prompt Optimizer. Research-backed prompt engineering for 78 AI models.<br>
   GBX PS PTY LTD &copy; 2026
 </footer>
 
@@ -384,6 +386,17 @@ const MODELS = [
   {id:"juggernaut-xl",name:"Juggernaut XL",type:"image",family:"Juggernaut",desc:"SDXL with strong realism and detail",provider:"Juggernaut",spec:{photo:9,port:9,illus:7}},
   {id:"dynavision-xl",name:"DynaVision XL",type:"image",family:"DynaVision",desc:"Stylized 3D all-in-one SDXL checkpoint",provider:"DynaVision",spec:{illus:9,design:7}},
   {id:"flux-2-lora-realism",name:"Flux 2 LoRA Gallery Realism",type:"image",family:"Flux",desc:"Enhanced photorealism",provider:"Black Forest Labs",spec:{photo:10,port:9}},
+
+  // === TEXT / LLM MODELS ===
+  {id:"claude-opus-5",name:"Claude Opus 5",type:"text",family:"Claude",desc:"Anthropic's most capable model for deep creative and coding work",provider:"Anthropic",spec:{game:9,write:10,world:9,brain:8,follow:10,long:10}},
+  {id:"claude-sonnet-5",name:"Claude Sonnet 5",type:"text",family:"Claude",desc:"Fast, capable Claude for creative work and app building",provider:"Anthropic",spec:{game:9,write:9,world:9,brain:8,follow:9,long:9}},
+  {id:"claude-haiku-4-5",name:"Claude Haiku 4.5",type:"text",family:"Claude",desc:"Quick, affordable Claude for drafts and iteration",provider:"Anthropic",spec:{game:7,write:7,world:7,brain:7,follow:8,long:7}},
+  {id:"gpt-5-thinking",name:"ChatGPT (GPT-5 Thinking)",type:"text",family:"ChatGPT",desc:"OpenAI's reasoning model; strong one-shot builds from a spec",provider:"OpenAI",spec:{game:9,write:6,world:7,brain:8,follow:9,long:7}},
+  {id:"gpt-5-instant",name:"ChatGPT (GPT-5.1 Instant)",type:"text",family:"ChatGPT",desc:"Fast GPT for iteration and punchy copy",provider:"OpenAI",spec:{game:8,write:7,world:7,brain:8,follow:9,long:7}},
+  {id:"gpt-4o",name:"ChatGPT (GPT-4o)",type:"text",family:"ChatGPT",desc:"OpenAI's multimodal chat model for quick creative work",provider:"OpenAI",spec:{game:7,write:6,world:6,brain:8,follow:8,long:6}},
+  {id:"gemini-3-pro",name:"Gemini 3 Pro",type:"text",family:"Gemini",desc:"Google's flagship; top-ranked at one-shot web games",provider:"Google",spec:{game:10,write:8,world:8,brain:8,follow:9,long:10}},
+  {id:"gemini-3-flash",name:"Gemini 3 Flash",type:"text",family:"Gemini",desc:"Fast Gemini for cheap, quick iteration",provider:"Google",spec:{game:8,write:7,world:7,brain:7,follow:8,long:9}},
+  {id:"grok-4-1",name:"Grok 4.1",type:"text",family:"Grok",desc:"xAI's model; unconventional ideation and worldbuilding",provider:"xAI",spec:{game:7,write:9,world:9,brain:9,follow:7,long:6}},
 ];
 
 const SPECIALTIES = {
@@ -406,6 +419,14 @@ const SPECIALTIES = {
     illus: "Illustration & anime",
     adh: "Complex prompt adherence",
     speed: "Speed & iteration"
+  },
+  text: {
+    game: "Game & app building",
+    write: "Creative writing",
+    world: "Worldbuilding & narrative",
+    brain: "Brainstorming & ideation",
+    follow: "Instruction & format control",
+    long: "Long documents & lore"
   }
 };
 
@@ -1083,6 +1104,174 @@ const IMAGE_STRATEGIES = {
 };
 
 // ═══════════════════════════════════════════════════════
+// TEXT / LLM OPTIMIZATION STRATEGIES (Research-backed)
+// Unlike image/video models, LLM prompts are restructured into
+// the architecture each model family responds best to.
+// ═══════════════════════════════════════════════════════
+
+function isGamePrompt(p) {
+  return /\b(game|platformer|shooter|arcade|roguelike|rpg|tower.?defen[cs]e|snake|tetris|pong|breakout|side.?scroller|top.?down|puzzle game|playable|game.?play|speedrun|high.?score)\b/i.test(p);
+}
+
+const GAME_CONSTRAINTS_CORE = [
+  "One self-contained HTML file: inline CSS, vanilla JavaScript, no external libraries, no build step.",
+  "No image or audio files of any kind; draw all graphics with canvas primitives and synthesize all sound with the Web Audio API, so the file runs offline from a double-click.",
+  "requestAnimationFrame with a fixed timestep so game speed is identical on any machine.",
+  "Keyboard and touch controls, shown on screen at load.",
+  "Score visible on screen from the first build; high score saved in localStorage; restart fully resets all state.",
+  "Expose tunable values (speed, gravity, spawn rates) as commented constants at the top of the script."
+];
+
+const TEXT_STRATEGIES = {
+
+  // ── CLAUDE (Anthropic) ──
+  Claude: {
+    negativePrompt: null,
+    tips: [
+      "Claude follows instructions literally; state the ambition level ('go beyond the basics, fully-featured') or you get the minimum",
+      "Structure prompts with XML tags: <task>, <context>, <constraints>, <examples>; Claude is trained to parse them",
+      "Give Claude a role in the first line; one sentence measurably focuses tone and quality",
+      "Put long reference material at the top and the actual request at the end (up to ~30% quality gain on long inputs)",
+      "Attach the why to every hard constraint ('no external assets, because this must run offline'); Claude generalizes from rationale",
+      "Say what to do, not what to avoid: 'write flowing prose paragraphs' beats 'do not use bullet points'",
+      "For creative voice, paste a 2-3 paragraph writing sample to match rather than adjectives like 'vivid'",
+      "Fight generic output with explicit aesthetic direction: named palette, typography, motion; ban the safe defaults",
+      "Provide 3-5 diverse examples in <example> tags when format matters",
+      "End with a self-check: 'Before finishing, verify the result against the constraints above'",
+      "Use plain firm language; ALL-CAPS and 'CRITICAL: YOU MUST' cause over-triggering on newer Claude models",
+      "For big builds, chain: design doc first message, implementation second, one targeted feature per message after"
+    ],
+    transform(p, model) {
+      if (isGamePrompt(p)) {
+        return "You are a senior game developer and designer who ships polished, playable browser games.\n\n"
+          + "<task>\n" + p + "\nDeliver a complete, playable first version.\n</task>\n\n"
+          + "<constraints>\n" + GAME_CONSTRAINTS_CORE.map(c => "- " + c).join("\n") + "\n</constraints>\n\n"
+          + "<requirements>\n"
+          + "- Define the core loop, exact controls, and explicit win/lose conditions before writing code.\n"
+          + "- Collision must be precise: no tunneling through or sticking to edges.\n"
+          + "- Go beyond the basics: make it feel complete and fully-featured, with satisfying game feel (difficulty ramp, particles, screen shake on impact).\n"
+          + "- Commit to a distinctive visual style: bold palette with sharp accents rather than timid defaults.\n"
+          + "</requirements>\n\n"
+          + "Before finishing, mentally play one full session and verify: controls respond, the lose condition triggers, and restart fully resets the game.";
+      }
+      return "You are an expert creative collaborator with deep experience in writing, design, and building interactive work.\n\n"
+        + "<task>\n" + p + "\n</task>\n\n"
+        + "<guidelines>\n"
+        + "- Commit to distinctive, specific choices rather than safe generic ones.\n"
+        + "- Ground the work in concrete detail and mechanism, not abstraction.\n"
+        + "- Go beyond the basics: deliver a complete, fully-realized result.\n"
+        + "</guidelines>\n\n"
+        + "If anything is ambiguous, make the most reasonable assumption and note it briefly at the end. Before finishing, verify the result against the task above.";
+    }
+  },
+
+  // ── CHATGPT (OpenAI) ──
+  ChatGPT: {
+    negativePrompt: null,
+    tips: [
+      "Structure prompts with Markdown headers: # Role and Objective, # Instructions, # Output Format, # Context",
+      "GPT-5 burns reasoning on contradictions; scan your prompt and resolve any conflicting instructions before sending",
+      "In long prompts, state critical instructions at the beginning AND repeat them at the end",
+      "Reasoning models (GPT-5 Thinking) want a high-level goal like briefing a senior colleague; skip 'think step by step'",
+      "Fast chat models (Instant, 4o) want explicit steps spelled out: 'First plan..., then build..., then verify'",
+      "Control verbosity explicitly: 'no preamble, no recap, at most 3 sentences after the code'",
+      "Add persistence lines for multi-step work: 'keep going until fully resolved; make reasonable assumptions rather than asking'",
+      "Ban the AI-voice patterns by name: 'avoid not-just-X-but-Y constructions; replace rhetorical emphasis with a fact, example, or mechanism'",
+      "Anchor creative voice with a 100-300 word sample to match, never adjectives alone",
+      "For iteration turns, scope the edit: name the exact element to change and cap the blast radius ('change only the jump physics')",
+      "Use a self-reflection rubric for one-shot builds: 'first define what makes a world-class result, then meet that bar'",
+      "Re-state formatting and style rules every few messages in long chats; compliance decays"
+    ],
+    transform(p, model) {
+      const thinking = model.id === "gpt-5-thinking";
+      if (isGamePrompt(p)) {
+        return "# Role and Objective\nYou are a senior game developer. Build exactly what is specified below; where something is unspecified, choose the most reasonable option and state it after the code.\n\n"
+          + "# Task\n" + p + "\n\n"
+          + "# Requirements\n" + GAME_CONSTRAINTS_CORE.map(c => "- " + c).join("\n") + "\n"
+          + "- Define the core loop, exact controls (keyboard and touch), and explicit win and lose states.\n"
+          + "- Precise collision: no tunneling through or sticking to edges.\n\n"
+          + "# Output Format\nThe complete HTML file in one code block, then at most 3 sentences on how to play. No preamble.\n\n"
+          + "# Final Instructions\nKeep going until the game is complete and playable; do not stop at a partial implementation. Done when: the game starts on first input, the lose condition triggers, and restart fully resets the score and state."
+          + (thinking ? "" : "\nFirst plan the game structure step by step, then write the code, then verify it against the requirements.");
+      }
+      return "# Role and Objective\nYou are an expert creative partner. Deliver a complete, polished result for the task below.\n\n"
+        + "# Task\n" + p + "\n\n"
+        + "# Style Rules\n"
+        + "- Avoid balance-by-template constructions such as 'not just X, but Y' and similar contrastive reframes.\n"
+        + "- Replace rhetorical emphasis with a fact, example, mechanism, or image.\n"
+        + "- Vary sentence length; no triple-bullet openings; avoid stock words like tapestry, delve, testament.\n\n"
+        + "# Output Format\nDeliver the complete piece with no preamble and no closing recap.\n\n"
+        + "# Final Instructions\nKeep going until the task is fully resolved. Where anything is ambiguous, make the most reasonable assumption and note it at the end."
+        + (thinking ? "" : "\nFirst outline your approach briefly, then produce the full result.");
+    }
+  },
+
+  // ── GEMINI (Google) ──
+  Gemini: {
+    negativePrompt: null,
+    tips: [
+      "Use the PTCF structure Google recommends: Persona, Task, Context, Format",
+      "Be concise and direct; Gemini 3 over-analyzes verbose, persuasion-heavy prompts, so keep instructions tight imperatives",
+      "Context first, ask last: put all reference material above and the instruction at the very end",
+      "Gemini defaults to terse output; explicitly ask for length or a conversational voice when you want it",
+      "Include 1-2 few-shot examples with identical formatting; inconsistent example formatting produces malformed output",
+      "Separate instructions from data with XML-style tags or Markdown headers",
+      "Top-ranked at one-shot web games: give the full spec in one structured prompt and it follows every part",
+      "Exploit the 1M-token context: paste an entire lore bible or design doc as context for consistent continuations",
+      "Kill AI voice explicitly: 'avoid corporate jargon; if a sentence sounds like a template, rewrite it'",
+      "If output disappoints, rephrase or reorder the prompt rather than adding pleading; strip filler words entirely",
+      "End with a self-check: 'verify the result runs without errors and meets every requirement above'"
+    ],
+    transform(p, model) {
+      if (isGamePrompt(p)) {
+        return "Persona: You are a senior HTML5 game developer and game-feel expert.\n\n"
+          + "Task: Build a complete, playable browser game in a single self-contained index.html.\n\n"
+          + "Context:\n" + p + "\n\nConstraints:\n" + GAME_CONSTRAINTS_CORE.map(c => "- " + c).join("\n")
+          + "\n- Define the core loop, exact controls, and explicit win and lose states.\n- Precise collision with no tunneling or sticking.\n\n"
+          + "Format: one complete HTML code block, then a 3-bullet summary of controls and rules. Before finishing, verify the game runs without console errors and every requirement above is met.";
+      }
+      return "Persona: You are an expert creative collaborator.\n\n"
+        + "Task: Deliver a complete, polished result for the request below.\n\n"
+        + "Context:\n" + p + "\n\n"
+        + "Format: deliver the full result directly, with the length the work deserves rather than a summary. Avoid template-sounding phrasing; if a sentence sounds corporate or generic, rewrite it. Before finishing, verify every part of the request has been addressed.";
+    }
+  },
+
+  // ── GROK (xAI) ──
+  Grok: {
+    negativePrompt: null,
+    tips: [
+      "Iterate fast instead of perfecting: three quick attempts with refinements beat one 30-minute mega-prompt",
+      "Be surgical with context; include only the relevant material, never a whole project dump",
+      "Grok is literal: convert every adjective into a specification ('fun' becomes 'tight controls, escalating waves, combo multiplier')",
+      "Lock tone explicitly ('direct, no jokes') or Grok keeps its default wit",
+      "Counter its confidence bias: require assumptions listed separately from confirmed behavior",
+      "Structure with the community template: Role, Context, Goal, Constraints, Output Format, Tone",
+      "Standout at worldbuilding systems: ask for histories, faction agendas, timelines, and family trees explicitly",
+      "Lean into unconventional ideation: 'give me 10 mechanics no shipped game has tried'",
+      "For code, get the working core loop first with placeholder shapes; polish in separate turns",
+      "Steer with short corrective follow-ups: 'tighten this', 'fix the collision bug, change nothing else'",
+      "For prose, supply a voice sample; Grok's default register drifts flat or jokey without one"
+    ],
+    transform(p, model) {
+      if (isGamePrompt(p)) {
+        return "Role: You are a rapid-prototyping game developer. Tone: direct, no jokes in code or comments.\n\n"
+          + "Goal: " + p + "\n\n"
+          + "Constraints:\n" + GAME_CONSTRAINTS_CORE.map(c => "- " + c).join("\n")
+          + "\n- Working core loop first: placeholder shapes are fine, polish comes in later turns.\n- Explicit controls, win/lose conditions, visible score, working restart.\n\n"
+          + "Output: one complete code block, then a 5-bullet changelog. List any assumptions you made separately from confirmed behavior.\n\n"
+          + "We will iterate in short follow-ups, one change per message, so keep the code easy to modify.";
+      }
+      return "Role: You are an expert creative collaborator. Tone: direct and specific.\n\n"
+        + "Goal: " + p + "\n\n"
+        + "Constraints:\n- Be concrete and specific; no generic filler.\n- Commit to distinctive choices and name them.\n\n"
+        + "Output: the complete result, then any assumptions you made listed separately from what was specified.\n\n"
+        + "We will refine in short follow-ups, so structure the result so parts can be revised independently.";
+    }
+  },
+};
+
+// ═══════════════════════════════════════════════════════
 // STATE & RENDERING
 // ═══════════════════════════════════════════════════════
 
@@ -1248,10 +1437,18 @@ function copyNeg(btn, id) {
 // ═══════════════════════════════════════════════════════
 
 function optimizeForModel(basePrompt, model) {
-  const strategies = model.type === "video" ? VIDEO_STRATEGIES : IMAGE_STRATEGIES;
+  const strategies = model.type === "video" ? VIDEO_STRATEGIES
+    : model.type === "image" ? IMAGE_STRATEGIES : TEXT_STRATEGIES;
   const strategy = strategies[model.family] || { transform: p => p, tips: [] };
 
   let prompt = basePrompt.trim();
+
+  if (model.type === "text") {
+    // LLM prompts are multi-line structured templates; keep formatting intact
+    if (strategy.transform) prompt = strategy.transform(prompt, model);
+    return { optimized: prompt, negativePrompt: null, tips: strategy.tips || [] };
+  }
+
   if (prompt.endsWith(".")) prompt = prompt.slice(0, -1);
 
   if (strategy.transform) prompt = strategy.transform(prompt, model);
@@ -1288,8 +1485,8 @@ function optimizePrompts() {
     });
 
     container.innerHTML = results.map((r, i) => {
-      const typeClass = r.model.type === "video" ? "type-video" : "type-image";
-      const typeLabel = r.model.type === "video" ? "VIDEO" : "IMAGE";
+      const typeClass = r.model.type === "video" ? "type-video" : r.model.type === "image" ? "type-image" : "type-text";
+      const typeLabel = r.model.type.toUpperCase();
       const negHtml = r.negativePrompt ? `<div class="neg-prompt"><div class="neg-label">Negative Prompt <button class="copy-btn" onclick="event.stopPropagation();copyNeg(this,'${i}')" style="margin-left:8px;font-size:.7rem;padding:2px 8px">Copy</button></div><span id="neg-${i}">${escapeHtml(r.negativePrompt)}</span></div>` : '';
       const tipsHtml = r.tips.length ? `<details class="changes"><summary>Research-backed tips for ${r.model.name} (${r.model.family})</summary><ul>${r.tips.map(t=>`<li>${t}</li>`).join("")}</ul></details>` : "";
       return `<div class="result-card">
@@ -1324,7 +1521,28 @@ function escapeHtml(s) {
 const QUIZ = [
   { id: "type", q: "What are you creating?", options: [
     { label: "A video", value: "video" },
-    { label: "An image", value: "image" }
+    { label: "An image", value: "image" },
+    { label: "Text with an AI assistant (games, writing, ideas)", value: "text" }
+  ]},
+  { id: "kind", q: "What best describes what you are making?",
+    showIf: a => a.type && a.type.value === "text", options: [
+    { label: "A game or interactive app", weights: { game: 3, follow: 1 } },
+    { label: "Fiction or creative writing", weights: { write: 3 } },
+    { label: "Worldbuilding, lore or narrative design", weights: { world: 3, long: 1 } },
+    { label: "Brainstorming ideas and concepts", weights: { brain: 3 } },
+    { label: "A design document or structured plan", weights: { follow: 2, long: 2, world: 1 } }
+  ]},
+  { id: "priorities", q: "What matters most to you?", sub: "Pick up to two.", multi: true,
+    showIf: a => a.type && a.type.value === "text", options: [
+    { label: "The best possible writing voice", weights: { write: 2 } },
+    { label: "Code that reliably runs first try", weights: { game: 2, follow: 1 } },
+    { label: "Handling lots of material (lore, drafts, code)", weights: { long: 2 } },
+    { label: "Unexpected, original ideas", weights: { brain: 2, world: 1 } }
+  ]},
+  { id: "material", q: "How much source material will you provide?",
+    showIf: a => a.type && a.type.value === "text", options: [
+    { label: "A lot: lore bibles, drafts or existing code", weights: { long: 2 } },
+    { label: "Just my prompt", weights: {} }
   ]},
   { id: "kind", q: "What best describes what you are making?",
     showIf: a => a.type && a.type.value === "video", options: [
@@ -1368,7 +1586,8 @@ const QUIZ = [
     { label: "Yes, keeping a character consistent from references", weights: { edit: 2, adh: 1 } },
     { label: "No, generating from scratch", weights: {} }
   ]},
-  { id: "tradeoff", q: "Speed or quality?", options: [
+  { id: "tradeoff", q: "Speed or quality?",
+    showIf: a => a.type && a.type.value !== "text", options: [
     { label: "Best possible quality, speed is no concern", weights: {} },
     { label: "A good balance", weights: { speed: 1 } },
     { label: "Fastest results possible", weights: { speed: 3 } }
@@ -1512,7 +1731,7 @@ function useWizardModels() {
   selectedModels = new Set(window._wizTop || []);
   currentTypeFilter = window._wizType || "all";
   currentFamilyFilter = null;
-  const idx = { all: 0, video: 1, image: 2 }[currentTypeFilter];
+  const idx = { all: 0, video: 1, image: 2, text: 3 }[currentTypeFilter];
   document.querySelectorAll(".type-toggle button").forEach((b, i) => b.classList.toggle("active", i === idx));
   render();
   closeWizard();
