@@ -1,0 +1,2 @@
+# Packaged skill build artifact (source lives in .claude/skills/prompt-optimizer/)
+*.skill
