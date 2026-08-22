@@ -17,6 +17,7 @@
   --ink:#1A1A1A;--ink2:#55524B;--ink3:#8A8578;
   --line:#E5E1D6;--teal-tint:rgba(46,139,110,.07);
   --contrast-bg:var(--charcoal);--contrast-fg:#fff;
+  --chip-bg:var(--charcoal);--chip-fg:#FFFFFF;
   --accent-text:var(--deep-teal);
   --radius:2px;
   --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
@@ -31,6 +32,7 @@
   --ink:#F3F1EA;--ink2:#B3AFA4;--ink3:#7E7A70;
   --line:#2B2A26;--teal-tint:rgba(46,139,110,.16);
   --contrast-bg:#F3F1EA;--contrast-fg:#0A0A0A;
+  --chip-bg:#F6F3EC;--chip-fg:#1A1A1A;
   --accent-text:#4BA98B;
   color-scheme:dark;
 }
@@ -93,7 +95,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .model-card .name .name-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
 .model-card .desc{font-size:.75rem;color:var(--ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spec-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.spec-chip{font-size:.6rem;padding:2px 7px;border-radius:var(--radius);background:var(--soft);color:var(--ink2);font-weight:500;white-space:nowrap;letter-spacing:.04em}
+.spec-chip{font-size:.6rem;padding:2px 7px;border-radius:var(--radius);background:var(--chip-bg);color:var(--chip-fg);font-weight:500;white-space:nowrap;letter-spacing:.04em}
 .spec-chip.top{background:var(--teal);color:#fff}
 .spec-score{font-family:var(--mono);font-size:.72rem;font-weight:500;color:var(--teal);white-space:nowrap;flex-shrink:0}
 .spec-score.tier-good{color:var(--ink2)}
@@ -107,8 +109,9 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 
 .legend{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;margin-bottom:14px;padding:12px 14px;background:var(--soft);border-radius:var(--radius)}
 .legend-item{display:inline-flex;align-items:center;gap:7px;font-size:.72rem;color:var(--ink2)}
-.legend .spec-chip{background:var(--surface)}
-.legend .spec-chip.top{background:var(--teal)}
+.dark-only{display:none}
+[data-theme="dark"] .dark-only{display:inline}
+[data-theme="dark"] .light-only{display:none}
 
 .results-section{margin-top:40px}
 .results-section h2{font-family:var(--serif);font-size:1.9rem;font-weight:400;margin-bottom:18px}
@@ -243,7 +246,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
     </div>
     <div class="legend">
       <span class="legend-item"><span class="spec-chip top">Teal tag</span> the model's strongest specialty, based on our research into each model</span>
-      <span class="legend-item"><span class="spec-chip">Cream tag</span> other areas where the model also performs well</span>
+      <span class="legend-item"><span class="spec-chip"><span class="light-only">Black tag</span><span class="dark-only">Cream tag</span></span> other areas where the model also performs well</span>
       <span class="legend-item"><span class="spec-score">&#9733; 9/10</span> our specialty rating, shown when a specialty is selected above</span>
     </div>
     <div class="model-grid" id="modelGrid"></div>
