@@ -113,6 +113,30 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 [data-theme="dark"] .dark-only{display:inline}
 [data-theme="dark"] .light-only{display:none}
 
+.wizard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 28px;margin-bottom:28px}
+.wizard-head{display:flex;justify-content:space-between;align-items:center}
+.wizard-head .section-label{margin-bottom:0}
+.wizard-close{background:none;border:none;color:var(--ink3);font-size:1.4rem;cursor:pointer;line-height:1;padding:2px 6px}
+.wizard-close:hover{color:var(--ink)}
+.wiz-progress{display:flex;gap:6px;margin:14px 0 18px}
+.wiz-dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.wiz-dot.done{background:var(--deep-teal)}
+.wiz-dot.current{background:var(--teal)}
+.wiz-question{font-family:var(--serif);font-size:1.5rem;font-weight:400;margin-bottom:4px}
+.wiz-sub{font-size:.8rem;color:var(--ink3);margin-bottom:14px}
+.wiz-options{display:grid;gap:8px;margin-top:12px}
+.wiz-option{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:13px 16px;font-family:var(--sans);font-size:.9rem;color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s}
+.wiz-option:hover{border-color:var(--teal)}
+.wiz-option.selected{border-color:var(--teal);background:var(--teal-tint)}
+.wiz-nav{display:flex;gap:10px;margin-top:18px;align-items:center;flex-wrap:wrap}
+.wiz-result{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.wiz-result:last-of-type{border-bottom:none}
+.wiz-rank{font-family:var(--serif);font-size:1.7rem;color:var(--teal);line-height:1.1;min-width:26px}
+.wiz-result .rname{font-weight:600;font-size:.95rem}
+.wiz-pct{font-family:var(--mono);color:var(--teal);font-size:.8rem;margin-left:8px}
+.wiz-reasons{font-size:.8rem;color:var(--ink2);margin-top:4px;line-height:1.55}
+.wiz-runners{font-size:.78rem;color:var(--ink3);margin-top:14px;line-height:1.6}
+
 .results-section{margin-top:40px}
 .results-section h2{font-family:var(--serif);font-size:1.9rem;font-weight:400;margin-bottom:18px}
 .result-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:16px;overflow:hidden}
@@ -222,6 +246,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
     <textarea id="userPrompt" class="prompt-area" placeholder="Describe what you want to generate... e.g. 'A samurai walking through a neon-lit Tokyo alley in the rain at night'"></textarea>
     <div class="controls">
       <button class="btn btn-primary" id="optimizeBtn" onclick="optimizePrompts()">Optimize Prompts</button>
+      <button class="btn btn-secondary" onclick="startWizard()">Help Me Choose</button>
       <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
       <div style="flex:1"></div>
       <div class="type-toggle">
@@ -230,6 +255,14 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
         <button onclick="setType('image',this)">Image</button>
       </div>
     </div>
+  </div>
+
+  <div class="wizard" id="wizard" hidden>
+    <div class="wizard-head">
+      <span class="section-label">Model Finder</span>
+      <button class="wizard-close" onclick="closeWizard()" aria-label="Close model finder">&times;</button>
+    </div>
+    <div id="wizardBody"></div>
   </div>
 
   <div class="model-section">
@@ -1280,6 +1313,212 @@ function optimizePrompts() {
 
 function escapeHtml(s) {
   return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ═══════════════════════════════════════════════════════
+// MODEL FINDER WIZARD
+// Weighted scoring quiz over the specialty ratings: each answer
+// adds weight to spec dimensions; models rank by weighted match.
+// ═══════════════════════════════════════════════════════
+
+const QUIZ = [
+  { id: "type", q: "What are you creating?", options: [
+    { label: "A video", value: "video" },
+    { label: "An image", value: "image" }
+  ]},
+  { id: "kind", q: "What best describes what you are making?",
+    showIf: a => a.type && a.type.value === "video", options: [
+    { label: "A cinematic scene with realistic lighting and mood", weights: { cin: 3, mot: 1 } },
+    { label: "A story told across multiple shots or scenes", weights: { story: 3, con: 2 } },
+    { label: "An anime or stylized piece", weights: { anime: 3 } },
+    { label: "A physical action, sports or movement-heavy scene", weights: { mot: 3, cin: 1 } },
+    { label: "A short product or social media clip", weights: { speed: 2, cin: 1 } }
+  ]},
+  { id: "kind", q: "What best describes what you are making?",
+    showIf: a => a.type && a.type.value === "image", options: [
+    { label: "A photorealistic shot", weights: { photo: 3 } },
+    { label: "A portrait of a person", weights: { port: 3, photo: 1 } },
+    { label: "A logo, icon or design asset", weights: { design: 3, text: 1 } },
+    { label: "An illustration or anime artwork", weights: { illus: 3 } },
+    { label: "A graphic where text must read correctly", weights: { text: 3, design: 1 } }
+  ]},
+  { id: "priorities", q: "What matters most to you?", sub: "Pick up to two.", multi: true,
+    showIf: a => a.type && a.type.value === "video", options: [
+    { label: "Lifelike realism", weights: { cin: 2 } },
+    { label: "Characters staying consistent", weights: { con: 2 } },
+    { label: "Precise control, references and editing", weights: { ref: 2 } },
+    { label: "Fast, affordable iteration", weights: { speed: 2 } }
+  ]},
+  { id: "priorities", q: "What matters most to you?", sub: "Pick up to two.", multi: true,
+    showIf: a => a.type && a.type.value === "image", options: [
+    { label: "Lifelike realism", weights: { photo: 2 } },
+    { label: "Following complex prompts faithfully", weights: { adh: 2 } },
+    { label: "Precise editing control", weights: { edit: 2 } },
+    { label: "Fast, affordable iteration", weights: { speed: 2 } }
+  ]},
+  { id: "audio", q: "Do you need audio in the result?",
+    showIf: a => a.type && a.type.value === "video", options: [
+    { label: "Yes, spoken dialogue", weights: { aud: 3 } },
+    { label: "Yes, ambient sound or music", weights: { aud: 2 } },
+    { label: "No, silent is fine", weights: {} }
+  ]},
+  { id: "editing", q: "Are you starting from an existing image or references?",
+    showIf: a => a.type && a.type.value === "image", options: [
+    { label: "Yes, editing an existing image", weights: { edit: 3 } },
+    { label: "Yes, keeping a character consistent from references", weights: { edit: 2, adh: 1 } },
+    { label: "No, generating from scratch", weights: {} }
+  ]},
+  { id: "tradeoff", q: "Speed or quality?", options: [
+    { label: "Best possible quality, speed is no concern", weights: {} },
+    { label: "A good balance", weights: { speed: 1 } },
+    { label: "Fastest results possible", weights: { speed: 3 } }
+  ]}
+];
+
+let wizAnswers = {};
+let wizStep = 0;
+
+function activeQuestions() {
+  return QUIZ.filter(q => !q.showIf || q.showIf(wizAnswers));
+}
+
+function startWizard() {
+  wizAnswers = {};
+  wizStep = 0;
+  const w = document.getElementById("wizard");
+  w.removeAttribute("hidden");
+  renderWizard();
+  w.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function closeWizard() {
+  document.getElementById("wizard").setAttribute("hidden", "");
+}
+
+function renderWizard() {
+  const qs = activeQuestions();
+  if (wizStep >= qs.length) { renderWizardResults(); return; }
+  const q = qs[wizStep];
+  const current = wizAnswers[q.id];
+  const dots = qs.map((_, i) =>
+    `<span class="wiz-dot ${i < wizStep ? 'done' : i === wizStep ? 'current' : ''}"></span>`).join("");
+  const opts = q.options.map((o, i) => {
+    const sel = q.multi
+      ? Array.isArray(current) && current.some(c => c.label === o.label)
+      : current && current.label === o.label;
+    return `<button type="button" class="wiz-option ${sel ? 'selected' : ''}" onclick="answerWizard(${i})">${o.label}</button>`;
+  }).join("");
+  let nav = "";
+  if (wizStep > 0) nav += `<button class="action-btn" onclick="wizBack()">Back</button>`;
+  if (q.multi) nav += `<button class="btn btn-primary" onclick="wizNext()">Continue</button>`;
+  document.getElementById("wizardBody").innerHTML = `
+    <div class="wiz-progress">${dots}</div>
+    <div class="wiz-question">${q.q}</div>
+    ${q.sub ? `<div class="wiz-sub">${q.sub}</div>` : ""}
+    <div class="wiz-options">${opts}</div>
+    <div class="wiz-nav">${nav}</div>`;
+}
+
+function answerWizard(optIndex) {
+  const qs = activeQuestions();
+  const q = qs[wizStep];
+  const opt = q.options[optIndex];
+  if (q.multi) {
+    let cur = Array.isArray(wizAnswers[q.id]) ? wizAnswers[q.id] : [];
+    if (cur.some(c => c.label === opt.label)) cur = cur.filter(c => c.label !== opt.label);
+    else if (cur.length < 2) cur = cur.concat([opt]);
+    wizAnswers[q.id] = cur;
+    renderWizard();
+    return;
+  }
+  wizAnswers[q.id] = opt;
+  pruneStaleAnswers();
+  wizStep++;
+  renderWizard();
+}
+
+function wizNext() { wizStep++; renderWizard(); }
+
+function wizBack() { wizStep = Math.max(0, wizStep - 1); renderWizard(); }
+
+function pruneStaleAnswers() {
+  // Changing an early answer (e.g. video vs image) can swap which
+  // questions are active; drop answers for questions no longer shown.
+  const validIds = new Set(activeQuestions().map(q => q.id));
+  Object.keys(wizAnswers).forEach(id => { if (!validIds.has(id)) delete wizAnswers[id]; });
+}
+
+function scoreWizard() {
+  const type = wizAnswers.type.value;
+  const weights = {};
+  activeQuestions().forEach(q => {
+    const ans = wizAnswers[q.id];
+    if (!ans) return;
+    (Array.isArray(ans) ? ans : [ans]).forEach(o => {
+      if (o.weights) Object.entries(o.weights).forEach(([k, v]) => { weights[k] = (weights[k] || 0) + v; });
+    });
+  });
+  const totalWeight = Object.values(weights).reduce((s, v) => s + v, 0) || 1;
+  const ranked = MODELS.filter(m => m.type === type).map(m => {
+    let score = 0;
+    const contributions = [];
+    Object.entries(weights).forEach(([k, v]) => {
+      const r = (m.spec && m.spec[k]) || 0;
+      score += v * r;
+      if (r > 0) contributions.push({ dim: k, rating: r, value: v * r });
+    });
+    contributions.sort((a, b) => b.value - a.value);
+    return { m, score, pct: Math.round(score / (totalWeight * 10) * 100), contributions };
+  }).sort((a, b) => b.score - a.score);
+  return { ranked, type };
+}
+
+function wizardReasons(r, type) {
+  const top = r.contributions.slice(0, 2)
+    .map(c => `${c.rating}/10 for ${SPECIALTIES[type][c.dim]}`);
+  if (!top.length) return "A solid all-round match for your answers.";
+  return `Rates ${top.join(" and ")}, matching what you told us matters.`;
+}
+
+function renderWizardResults() {
+  const { ranked, type } = scoreWizard();
+  const top3 = ranked.slice(0, 3);
+  const runners = ranked.slice(3, 7);
+  const rows = top3.map((r, i) => `
+    <div class="wiz-result">
+      <div class="wiz-rank">${i + 1}</div>
+      <div>
+        <div class="rname">${r.m.name}<span class="wiz-pct">${r.pct}% match</span></div>
+        <div class="wiz-reasons">${r.m.desc}. ${wizardReasons(r, type)}</div>
+      </div>
+    </div>`).join("");
+  const runnersHtml = runners.length
+    ? `<div class="wiz-runners">Also worth considering: ${runners.map(r => `${r.m.name} (${r.pct}%)`).join(", ")}</div>`
+    : "";
+  document.getElementById("wizardBody").innerHTML = `
+    <div class="wiz-question">Our recommendations</div>
+    <div class="wiz-sub">Ranked by how each model's research-backed strengths match your answers.</div>
+    ${rows}
+    ${runnersHtml}
+    <div class="wiz-nav">
+      <button class="btn btn-primary" onclick="useWizardModels()">Use these ${top3.length} models</button>
+      <button class="action-btn" onclick="startWizard()">Start over</button>
+    </div>`;
+  window._wizTop = top3.map(r => r.m.id);
+  window._wizType = type;
+}
+
+function useWizardModels() {
+  selectedModels = new Set(window._wizTop || []);
+  currentTypeFilter = window._wizType || "all";
+  currentFamilyFilter = null;
+  const idx = { all: 0, video: 1, image: 2 }[currentTypeFilter];
+  document.querySelectorAll(".type-toggle button").forEach((b, i) => b.classList.toggle("active", i === idx));
+  render();
+  closeWizard();
+  const promptEl = document.getElementById("userPrompt");
+  promptEl.scrollIntoView({ behavior: "smooth", block: "center" });
+  promptEl.focus();
 }
 
 // ═══════════════════════════════════════════════════════
