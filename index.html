@@ -354,7 +354,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   <div class="wordmark">GBX</div>
   <div class="lockup">Professional&nbsp;&nbsp;Services</div>
   <div class="rule"></div>
-  Prompt Optimizer. Research-backed prompt engineering for 79 AI models.<br>
+  Prompt Optimizer. Research-backed prompt engineering for 84 AI models.<br>
   GBX PS PTY LTD &copy; 2026
 </footer>
 
@@ -373,15 +373,19 @@ const MODELS = [
   {id:"pixverse-v6",name:"PixVerse V6",type:"video",family:"PixVerse",desc:"Great for short videos",provider:"PixVerse",spec:{speed:9,anime:8,mot:7,cin:7}},
   {id:"happyhorse-1.1",name:"HappyHorse 1.1",type:"video",family:"HappyHorse",desc:"Cinematic videos with multi-shot narrative & native audio",provider:"HappyHorse",spec:{story:9,aud:9,cin:8,con:8}},
   {id:"happyhorse",name:"HappyHorse",type:"video",family:"HappyHorse",desc:"Cinematic videos with multi-shot narrative & native audio",provider:"HappyHorse",spec:{story:8,aud:8,cin:7,con:7}},
+  {id:"wan-3.0-v",name:"Wan 3.0",type:"video",family:"Wan",desc:"~30s videos from documents, slides, spreadsheets & web pages",provider:"Alibaba",spec:{ref:9,story:9,cin:8,aud:8,mot:8,con:8}},
   {id:"wan-2.7-v",name:"Wan 2.7",type:"video",family:"Wan",desc:"Cinematic videos with audio & start/end frame control",provider:"Alibaba",spec:{ref:9,cin:8,aud:8,mot:8,con:8}},
   {id:"veo-3.1",name:"Veo 3.1",type:"video",family:"Veo",desc:"High fidelity videos with audio & 4K",provider:"Google DeepMind",spec:{cin:10,aud:10,mot:9,con:9,story:9}},
+  {id:"veo-3.1-fast",name:"Veo 3.1 Fast",type:"video",family:"Veo",desc:"Faster Veo at high quality",provider:"Google DeepMind",spec:{cin:9,aud:9,mot:8,con:8,speed:8}},
+  {id:"veo-3.1-lite",name:"Veo 3.1 Lite",type:"video",family:"Veo",desc:"Most cost-effective Veo tier",provider:"Google DeepMind",spec:{cin:8,aud:8,speed:9,mot:7}},
   {id:"kling-3.0",name:"Kling 3.0",type:"video",family:"Kling",desc:"Enhanced audio, consistency & multi-shots",provider:"Kuaishou",spec:{cin:9,mot:9,con:9,aud:9,story:9}},
   {id:"seadance-1.5-pro",name:"Seedance 1.5 Pro",type:"video",family:"Seedance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{cin:8,story:8,aud:8,mot:8}},
   {id:"grok-imagine-1.5",name:"Grok Imagine 1.5",type:"video",family:"Grok Imagine",desc:"Fast generation of cinematic videos",provider:"xAI",spec:{speed:10,cin:7,mot:7}},
   {id:"grok-imagine-v",name:"Grok Imagine",type:"video",family:"Grok Imagine",desc:"Fast generation of cinematic videos",provider:"xAI",spec:{speed:9,cin:6,mot:6}},
   {id:"kling-2.6",name:"Kling 2.6",type:"video",family:"Kling",desc:"Cinematic videos with audio & voice",provider:"Kuaishou",spec:{aud:9,cin:8,mot:8,con:8}},
   {id:"wan-2.6",name:"Wan 2.6",type:"video",family:"Wan",desc:"Cinematic videos with audio & multi-shots",provider:"Alibaba",spec:{cin:8,aud:8,story:8,mot:7}},
-  {id:"sora-2",name:"Sora 2",type:"video",family:"Sora",desc:"Story-telling videos with audio",provider:"OpenAI",spec:{story:10,aud:9,cin:9,mot:8,con:8}},
+  {id:"sora-2",name:"Sora 2",type:"video",family:"Sora",desc:"Story-telling videos with audio (API sunsetting ~Sep 2026 — verify)",provider:"OpenAI",spec:{story:10,aud:9,cin:9,mot:8,con:8}},
+  {id:"ltx-2.5",name:"LTX 2.5",type:"video",family:"LTX",desc:"Open-weight multishot with cross-cut consistency & 4K HDR",provider:"Lightricks",spec:{speed:9,cin:8,mot:8,aud:8,story:8}},
   {id:"ltx-2.3",name:"LTX 2.3",type:"video",family:"LTX",desc:"Next-gen cinematic 4K videos up to 20s",provider:"Lightricks",spec:{speed:9,cin:8,mot:7}},
   {id:"ltx-2.3-audio",name:"LTX 2.3 Audio-to-Video",type:"video",family:"LTX",desc:"Generate video from audio with LTX 2.3",provider:"Lightricks",spec:{aud:10,cin:7}},
   {id:"kling-2.5",name:"Kling 2.5",type:"video",family:"Kling",desc:"Great creativity with excellent value",provider:"Kuaishou",spec:{mot:8,cin:8,speed:7,con:7}},
@@ -403,7 +407,7 @@ const MODELS = [
   {id:"nano-banana-2",name:"Nano Banana 2",type:"image",family:"Nano Banana",desc:"Google's Gemini 3.1 Flash image model",provider:"Google",spec:{edit:10,text:9,photo:9,adh:9,port:8}},
   {id:"seedream-5.0-pro",name:"Seedream 5.0 Pro",type:"image",family:"Seedream",desc:"ByteDance's flagship 5.0 image model",provider:"ByteDance",spec:{photo:9,text:9,adh:9,port:9,edit:8}},
   {id:"nano-banana-pro",name:"Nano Banana Pro",type:"image",family:"Nano Banana",desc:"Google's premium image model",provider:"Google",spec:{edit:10,text:10,photo:9,adh:9,design:8}},
-  {id:"recraft-v4",name:"Recraft V4",type:"image",family:"Recraft",desc:"Recraft's image & SVG generation model",provider:"Recraft",spec:{design:10,text:9,illus:9,photo:7}},
+  {id:"recraft-v4-1",name:"Recraft V4.1",type:"image",family:"Recraft",desc:"Recraft's image & native SVG model (V4.1 Vector/Utility/Pro tiers)",provider:"Recraft",spec:{design:10,text:9,illus:9,photo:7}},
   {id:"wan-2.7-i",name:"Wan 2.7",type:"image",family:"Wan",desc:"Alibaba's image model with facial control & text rendering",provider:"Alibaba",spec:{port:9,text:9,photo:8}},
   {id:"grok-imagine-image-2.0",name:"Grok Imagine Image 2.0",type:"image",family:"Grok Imagine",desc:"xAI's 2.0 image model with sharper text and precision editing",provider:"xAI",spec:{speed:9,text:8,edit:8,photo:8}},
   {id:"grok-imagine-i",name:"Grok Imagine",type:"image",family:"Grok Imagine",desc:"xAI's Aurora-powered image model",provider:"xAI",spec:{speed:9,photo:7,illus:7}},
@@ -417,6 +421,7 @@ const MODELS = [
   {id:"kling-o1-i",name:"Kling O1",type:"image",family:"Kling",desc:"Multi-reference & visual input remix",provider:"Kuaishou",spec:{edit:9,adh:7}},
   {id:"flux-kontext-pro",name:"Flux Kontext Pro",type:"image",family:"Flux",desc:"Enhanced context consistency",provider:"Black Forest Labs",spec:{edit:10,photo:8,text:7}},
   {id:"gpt-image-1.5",name:"GPT Image 1.5",type:"image",family:"GPT Image",desc:"OpenAI's flagship image model",provider:"OpenAI",spec:{adh:9,text:9,edit:9,design:8,photo:8}},
+  {id:"flux-3",name:"FLUX 3",type:"image",family:"Flux",desc:"Unified multimodal model (early access)",provider:"Black Forest Labs",spec:{photo:9,adh:9,text:8,edit:8}},
   {id:"flux-2-pro",name:"Flux 2 Pro",type:"image",family:"Flux",desc:"Enhanced speed & multi-reference",provider:"Black Forest Labs",spec:{photo:9,adh:9,text:8,edit:8,speed:7}},
   {id:"openart-photorealistic",name:"OpenArt Photorealistic",type:"image",family:"OpenArt",desc:"Lifelike portraits and realistic scene generation",provider:"OpenArt",spec:{photo:9,port:9}},
   {id:"z-image",name:"Z-Image",type:"image",family:"Z-Image",desc:"Enhanced speed & iteration efficiency",provider:"Z-Image",spec:{speed:9,photo:8,text:7}},
@@ -439,12 +444,12 @@ const MODELS = [
   {id:"claude-opus-5",name:"Claude Opus 5",type:"text",family:"Claude",desc:"Anthropic's flagship for deep creative and coding work",provider:"Anthropic",spec:{game:9,write:10,world:9,brain:8,follow:10,long:10}},
   {id:"claude-sonnet-5",name:"Claude Sonnet 5",type:"text",family:"Claude",desc:"Fast, capable Claude for creative work and app building",provider:"Anthropic",spec:{game:9,write:9,world:9,brain:8,follow:9,long:9}},
   {id:"claude-haiku-4-5",name:"Claude Haiku 4.5",type:"text",family:"Claude",desc:"Quick, affordable Claude for drafts and iteration",provider:"Anthropic",spec:{game:7,write:7,world:7,brain:7,follow:8,long:7}},
-  {id:"gpt-5-thinking",name:"ChatGPT (GPT-5 Thinking)",type:"text",family:"ChatGPT",desc:"OpenAI's reasoning model; strong one-shot builds from a spec",provider:"OpenAI",spec:{game:9,write:6,world:7,brain:8,follow:9,long:7}},
-  {id:"gpt-5-instant",name:"ChatGPT (GPT-5.1 Instant)",type:"text",family:"ChatGPT",desc:"Fast GPT for iteration and punchy copy",provider:"OpenAI",spec:{game:8,write:7,world:7,brain:8,follow:9,long:7}},
-  {id:"gpt-4o",name:"ChatGPT (GPT-4o)",type:"text",family:"ChatGPT",desc:"OpenAI's multimodal chat model for quick creative work",provider:"OpenAI",spec:{game:7,write:6,world:6,brain:8,follow:8,long:6}},
+  {id:"gpt-5-6-sol",name:"ChatGPT (GPT-5.6 Sol)",type:"text",family:"ChatGPT",desc:"OpenAI's flagship reasoning tier; strong one-shot builds from a spec",provider:"OpenAI",spec:{game:9,write:6,world:7,brain:8,follow:9,long:7}},
+  {id:"gpt-5-6-terra",name:"ChatGPT (GPT-5.6 Terra)",type:"text",family:"ChatGPT",desc:"OpenAI's balanced everyday tier",provider:"OpenAI",spec:{game:8,write:7,world:7,brain:8,follow:9,long:7}},
+  {id:"gpt-5-6-luna",name:"ChatGPT (GPT-5.6 Luna)",type:"text",family:"ChatGPT",desc:"OpenAI's fast, cost-efficient tier for iteration",provider:"OpenAI",spec:{game:7,write:6,world:6,brain:8,follow:8,long:6}},
   {id:"gemini-3-pro",name:"Gemini 3 Pro",type:"text",family:"Gemini",desc:"Google's flagship; top-ranked at one-shot web games",provider:"Google",spec:{game:10,write:8,world:8,brain:8,follow:9,long:10}},
-  {id:"gemini-3-flash",name:"Gemini 3 Flash",type:"text",family:"Gemini",desc:"Fast Gemini for cheap, quick iteration",provider:"Google",spec:{game:8,write:7,world:7,brain:7,follow:8,long:9}},
-  {id:"grok-4-1",name:"Grok 4.1",type:"text",family:"Grok",desc:"xAI's model; unconventional ideation and worldbuilding",provider:"xAI",spec:{game:7,write:9,world:9,brain:9,follow:7,long:6}},
+  {id:"gemini-3-7-flash",name:"Gemini 3.7 Flash",type:"text",family:"Gemini",desc:"Fast Gemini for cheap, quick iteration",provider:"Google",spec:{game:8,write:7,world:7,brain:7,follow:8,long:9}},
+  {id:"grok-4-6",name:"Grok 4.6",type:"text",family:"Grok",desc:"xAI's model; unconventional ideation and worldbuilding",provider:"xAI",spec:{game:7,write:9,world:9,brain:9,follow:7,long:6}},
 ];
 
 const SPECIALTIES = {
@@ -1285,8 +1290,9 @@ const TEXT_STRATEGIES = {
       "Structure prompts with Markdown headers: # Role and Objective, # Instructions, # Output Format, # Context",
       "GPT-5 burns reasoning on contradictions; scan your prompt and resolve any conflicting instructions before sending",
       "In long prompts, state critical instructions at the beginning AND repeat them at the end",
-      "Reasoning models (GPT-5 Thinking) want a high-level goal like briefing a senior colleague; skip 'think step by step'",
-      "Fast chat models (Instant, 4o) want explicit steps spelled out: 'First plan..., then build..., then verify'",
+      "Current family is GPT-5.6 (Sol = flagship reasoning, Terra = balanced, Luna = fast); the older GPT-5 Thinking/Instant and GPT-4o names are superseded",
+      "Reasoning tier (GPT-5.6 Sol) wants a high-level goal like briefing a senior colleague; skip 'think step by step'",
+      "Fast tiers (GPT-5.6 Luna/Terra) want explicit steps spelled out: 'First plan..., then build..., then verify'",
       "Control verbosity explicitly: 'no preamble, no recap, at most 3 sentences after the code'",
       "Add persistence lines for multi-step work: 'keep going until fully resolved; make reasonable assumptions rather than asking'",
       "Ban the AI-voice patterns by name: 'avoid not-just-X-but-Y constructions; replace rhetorical emphasis with a fact, example, or mechanism'",
@@ -1296,7 +1302,7 @@ const TEXT_STRATEGIES = {
       "Re-state formatting and style rules every few messages in long chats; compliance decays"
     ],
     transform(p, model) {
-      const thinking = model.id === "gpt-5-thinking";
+      const thinking = model.id === "gpt-5-6-sol";
       if (isGamePrompt(p)) {
         return "# Role and Objective\nYou are a senior game developer. Build exactly what is specified below; where something is unspecified, choose the most reasonable option and state it after the code.\n\n"
           + "# Task\n" + p + "\n\n"
@@ -1323,6 +1329,7 @@ const TEXT_STRATEGIES = {
   Gemini: {
     negativePrompt: null,
     tips: [
+      "Current models: Gemini 3 Pro (flagship), Gemini 3.7 Flash (fast tier, Aug 2026)",
       "Use the PTCF structure Google recommends: Persona, Task, Context, Format",
       "Be concise and direct; Gemini 3 over-analyzes verbose, persuasion-heavy prompts, so keep instructions tight imperatives",
       "Context first, ask last: put all reference material above and the instruction at the very end",
