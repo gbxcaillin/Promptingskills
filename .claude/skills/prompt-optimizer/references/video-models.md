@@ -33,6 +33,7 @@ Tips:
 - Describe transitions as physical events: circular wipes, vertical car-door cuts, flash-to-white
 - Specify exposure/stock effects: fine grain, halation, VHS glitches, scanlines, chromatic aberration
 - Up to 7,000-character prompts supported
+- H3 base weights (33B) were open-sourced in Aug 2026 under the MiniMax H3 Community License
 
 ### Gemini
 Negative prompt: null (not supported — rewrite negatives as positives)
@@ -105,6 +106,7 @@ Tips:
 - CFG scheduling: start at 7 for composition, lower to 4 for detail pass
 - For image-to-video: prompt ONLY motion and camera; the image defines entity, scene, and style
 - Maintain consistent visual style from start to end with explicit style anchoring
+- Wan 3.0 (Aug 2026) can generate ~30s videos from documents, slides, spreadsheets, and web pages, in addition to text and image inputs
 
 ### Veo
 Negative prompt: "blurry, low quality, distorted, glitchy, unnatural motion"
@@ -117,6 +119,7 @@ Tips:
 - Excels at water physics, fabric, lighting reflections, and professional cinematography terms
 - Always generates audio; specify exactly what you want to hear, including 'silence' if needed
 - Veo 3.1 has 40-60% improved frame consistency over Veo 3
+- Tiers: Veo 3.1 (flagship), Veo 3.1 Fast (faster at high quality), Veo 3.1 Lite (most cost-effective), plus Veo 3
 
 ### Grok Imagine
 Negative prompt: null (not supported — rewrite negatives as positives)
@@ -128,11 +131,13 @@ Tips:
 - Camera: push in, pull back, orbit, pan, rise, static. Use 'camera not moving' (not 'stable camera') to lock frame
 - Native audio: physical impacts (footsteps, door slams) work best; emotion-led prompts often produce music only
 - Speed modifiers: 'quickly', 'violently', 'with large amplitude', 'powerfully'
-- Video resolution: 480p or 720p, duration 6-30 seconds
+- Video resolution: up to 1080p (native since the July 2026 update), duration 6-30 seconds
+- July 2026 update adds text-to-video (previously image-to-video only), voice reference for face and voice consistency across scenes, and up to 7 reference anchors for scene control
 
 ### Sora
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
+- Availability (verify before relying on it): OpenAI shut down the Sora app in April 2026 and the Sora 2 API is scheduled to sunset around late September 2026
 - 2-5 sentences structured as: scene / cinematography / actions / audio
 - Sora treats prompts as 'creative wish lists, not contracts'; same prompt yields different results each time
 - Shorter clips (4s) follow instructions more reliably; stitch two 4s clips rather than one 8s clip
@@ -154,6 +159,7 @@ Tips:
 - Duration: 6-20s on Fast tier, 6-10s on Pro tier. FPS: 24 (cinematic), 48/50 (slow-mo)
 - For multi-shot (LTX-2.5): name transitions explicitly; 'hard cut transitions to', 'dissolve', 'match cut'
 - Physical cues for emotion: 'shoulders drop, jaw tightens'; not labeled emotions
+- LTX-2.5 (Aug 2026, 22B open weights) adds native multishot with cross-cut consistency, auto duration prediction, and native 4K HDR output
 
 ### Hailuo
 Negative prompt: "cartoon, anime, illustration, blur, distort, low quality, jitter"

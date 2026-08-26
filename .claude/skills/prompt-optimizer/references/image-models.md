@@ -13,7 +13,8 @@ Each family below lists its **negative prompt** behavior and research-backed
   throughout" not "no blur"). Where a base negative set is given, include it.
 - Map any unlisted model to its closest family (any SDXL checkpoint →
   Juggernaut/OpenArt SDXL conventions; any Midjourney-style service → lead with
-  subject, name camera/lens and lighting, commit to one aesthetic).
+  subject, name camera/lens and lighting, commit to one aesthetic; Midjourney's
+  current default model is V8.2).
 
 ### Flux
 Negative prompt: null (not supported — rewrite negatives as positives)
@@ -30,6 +31,7 @@ Tips:
 - 30-80 words ideal. Elements beyond ~80 words get progressively ignored
 - Kontext models: three-part edit structure; what to change, how, what to preserve
 - For photorealism: specify camera body + lens + lighting setup, not 'realistic photo'
+- FLUX 3 (early access, July 2026) is a unified multimodal model; the FLUX.2 guidance here still applies to current image work
 
 ### GPT Image
 Negative prompt: null (not supported — rewrite negatives as positives)
@@ -78,6 +80,7 @@ Tips:
 - Good for: icons, illustrations, design assets, brand materials, vector graphics
 - Include brand style parameters if relevant
 - Specify composition clearly: 'centered', 'rule of thirds', 'symmetrical layout'
+- Current version is V4.1 (V4.1, V4.1 Vector, V4.1 Utility, V4.1 Pro at 2048x2048); V4.1 Vector is the native production-SVG generator
 
 ### Wan
 Negative prompt: "blurry, distorted, low quality, deformed hands, unnatural proportions"

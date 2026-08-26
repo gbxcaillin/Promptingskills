@@ -107,8 +107,8 @@ case). Reliable fixes are structural constraints, not cleverer wishes.
 |-------|:---:|:---:|:---:|:---:|:---:|:---:|
 | Claude (Opus/Fable) | 10 | 9 | 9–10 | 8–9 | 10 | 10 |
 | Gemini 3 Pro | 8 | 10 | 8 | 8 | 9 | 10 |
-| ChatGPT / GPT-5 | 6 | 9 | 7 | 8 | 9 | 7 |
-| Grok 4.1 | 9 | 7 | 9 | 9 | 7 | 6 |
+| ChatGPT / GPT-5.6 | 6 | 9 | 7 | 8 | 9 | 7 |
+| Grok 4.6 | 9 | 7 | 9 | 9 | 7 | 6 |
 
 Rough guide: Claude for prose and agentic coding; Gemini for one-shot web games
 and huge-context work; GPT for spec-to-working-code; Grok for wild ideation and
@@ -135,11 +135,12 @@ Tips:
 ### ChatGPT
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
+- Current family is GPT-5.6 (Sol = flagship reasoning, Terra = balanced, Luna = fast); the older GPT-5 Thinking/Instant and GPT-4o names are superseded
 - Structure prompts with Markdown headers: # Role and Objective, # Instructions, # Output Format, # Context
-- GPT-5 burns reasoning on contradictions; scan your prompt and resolve any conflicting instructions before sending
+- GPT burns reasoning on contradictions; scan your prompt and resolve any conflicting instructions before sending
 - In long prompts, state critical instructions at the beginning AND repeat them at the end
-- Reasoning models (GPT-5 Thinking) want a high-level goal like briefing a senior colleague; skip 'think step by step'
-- Fast chat models (Instant, 4o) want explicit steps spelled out: 'First plan..., then build..., then verify'
+- Reasoning tier (GPT-5.6 Sol) wants a high-level goal like briefing a senior colleague; skip 'think step by step'
+- Fast tiers (GPT-5.6 Luna/Terra) want explicit steps spelled out: 'First plan..., then build..., then verify'
 - Control verbosity explicitly: 'no preamble, no recap, at most 3 sentences after the code'
 - Add persistence lines for multi-step work: 'keep going until fully resolved; make reasonable assumptions rather than asking'
 - Ban the AI-voice patterns by name: 'avoid not-just-X-but-Y constructions; replace rhetorical emphasis with a fact, example, or mechanism'
@@ -151,6 +152,7 @@ Tips:
 ### Gemini
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
+- Current models: Gemini 3 Pro (flagship), Gemini 3.7 Flash (fast tier, Aug 2026)
 - Use the PTCF structure Google recommends: Persona, Task, Context, Format
 - Be concise and direct; Gemini 3 over-analyzes verbose, persuasion-heavy prompts, so keep instructions tight imperatives
 - Context first, ask last: put all reference material above and the instruction at the very end
