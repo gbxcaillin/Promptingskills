@@ -117,7 +117,29 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .spec-chip.top{background:var(--teal);color:#fff}
 .spec-score{font-family:var(--mono);font-size:.72rem;font-weight:500;color:var(--teal);white-space:nowrap;flex-shrink:0}
 .spec-score.tier-good{color:var(--ink2)}
+.spec-score .adj{margin-left:6px;font-size:.66rem}
+.spec-score .adj.up{color:var(--teal)}
+.spec-score .adj.down{color:var(--red)}
 .sort-note{font-size:.75rem;color:var(--ink3);font-style:italic;width:100%}
+
+/* Community sentiment layer */
+.reception{display:inline-flex;align-items:center;gap:5px;font-size:.6rem;font-weight:500;letter-spacing:.06em;padding:2px 7px;border-radius:var(--radius);white-space:nowrap;border:1px solid transparent;cursor:help}
+.reception .dot{width:6px;height:6px;border-radius:50%}
+.rc-gap{background:rgba(248,113,113,.12);color:var(--red);border-color:rgba(248,113,113,.3)}
+.rc-gap .dot{background:var(--red)}
+.rc-sleeper{background:var(--teal-tint);color:var(--accent-text);border-color:rgba(46,139,110,.3)}
+.rc-sleeper .dot{background:var(--teal)}
+.rc-loved{background:rgba(52,211,153,.12);color:var(--green);border-color:rgba(52,211,153,.3)}
+.rc-loved .dot{background:var(--green)}
+.rc-mixed{background:var(--soft);color:var(--ink2);border-color:var(--line)}
+.rc-mixed .dot{background:var(--ink3)}
+.rc-hype{background:rgba(251,191,36,.12);color:var(--yellow);border-color:rgba(251,191,36,.3)}
+.rc-hype .dot{background:var(--yellow)}
+.sentiment-note{margin-top:14px;padding:12px 14px;background:var(--soft);border-left:2px solid var(--ink3);border-radius:0;font-size:.82rem;line-height:1.5;color:var(--ink2)}
+.sentiment-note .s-label{display:block;font-size:.62rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px}
+.sort-toggle{display:inline-flex;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.sort-toggle button{background:var(--surface);border:none;color:var(--ink2);font-family:var(--sans);font-size:.62rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:7px 11px;cursor:pointer}
+.sort-toggle button.active{background:var(--teal);color:#fff}
 
 .filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
 .family-select{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);color:var(--ink);padding:9px 12px;font-size:.88rem;max-width:100%;cursor:pointer;font-family:var(--sans)}
@@ -317,7 +339,8 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
     <div class="legend">
       <span class="legend-item"><span class="spec-chip top">Teal tag</span> the model's strongest specialty, based on our research into each model</span>
       <span class="legend-item"><span class="spec-chip"><span class="light-only">Black tag</span><span class="dark-only">Cream tag</span></span> other areas where the model also performs well</span>
-      <span class="legend-item"><span class="spec-score">&#9733; 9/10</span> our specialty rating, shown when a specialty is selected above</span>
+      <span class="legend-item"><span class="spec-score">&#9733; 9/10</span> our research-based capability rating, shown when a specialty is selected above</span>
+      <span class="legend-item"><span class="reception rc-sleeper"><span class="dot"></span>Sleeper</span> community reception (separate from capability); &#9650;/&#9660; shows how sentiment nudges the score. Community-sourced, dated, and volatile.</span>
     </div>
     <div class="model-grid" id="modelGrid"></div>
   </div>
@@ -436,8 +459,8 @@ const MODELS = [
   {id:"juggernaut-flux-pro",name:"Juggernaut Flux Pro",type:"image",family:"Juggernaut",desc:"Enhanced naturalism & fidelity",provider:"Juggernaut",spec:{photo:9,port:9}},
   {id:"openart-sdxl",name:"OpenArt SDXL",type:"image",family:"OpenArt",desc:"SDXL tuned for versatile creative imagery",provider:"OpenArt",spec:{illus:8,photo:7,design:7}},
   {id:"juggernaut-xl",name:"Juggernaut XL",type:"image",family:"Juggernaut",desc:"SDXL with strong realism and detail",provider:"Juggernaut",spec:{photo:9,port:9,illus:7}},
-  {id:"mai-image-2-5-pro",name:"MAI-Image 2.5 Pro",type:"image",family:"MAI Image",desc:"Microsoft's quality-first model; top-tier text & editing",provider:"Microsoft",spec:{text:10,edit:9,photo:10,adh:9,port:9,design:8}},
-  {id:"mai-image-2-5",name:"MAI-Image 2.5",type:"image",family:"MAI Image",desc:"Microsoft's image model; #2 image editing on Arena",provider:"Microsoft",spec:{text:10,edit:9,photo:9,adh:8,port:8,design:8}},
+  {id:"mai-image-2-5-pro",name:"MAI-Image 2.5 Pro",type:"image",family:"MAI Image",desc:"Microsoft's quality-first model; strong text & editing on the arena",provider:"Microsoft",spec:{text:9,edit:9,photo:9,adh:8,port:8,design:8}},
+  {id:"mai-image-2-5",name:"MAI-Image 2.5",type:"image",family:"MAI Image",desc:"Microsoft's image model; top-3 image editing on Arena",provider:"Microsoft",spec:{text:9,edit:8,photo:8,adh:8,port:7,design:7}},
   {id:"dynavision-xl",name:"DynaVision XL",type:"image",family:"DynaVision",desc:"Stylized 3D all-in-one SDXL checkpoint",provider:"DynaVision",spec:{illus:9,design:7}},
   {id:"flux-2-lora-realism",name:"Flux 2 LoRA Gallery Realism",type:"image",family:"Flux",desc:"Enhanced photorealism",provider:"Black Forest Labs",spec:{photo:10,port:9}},
 
@@ -483,6 +506,60 @@ const SPECIALTIES = {
     follow: "Instruction & format control",
     long: "Long documents & lore"
   }
+};
+
+// ═══════════════════════════════════════════════════════
+// COMMUNITY SENTIMENT LAYER (separate from capability specs)
+// Sourced from community/reviews (late Aug 2026). Volatile and
+// subjective — kept apart from the research-based star ratings.
+// mood: gap (falls short of billing) | sleeper (beats billing) |
+//       loved | mixed | hype (unproven). adj: high-confidence
+// per-dimension nudges applied only in the community-adjusted view.
+// ═══════════════════════════════════════════════════════
+const SENTIMENT_DATE = "Aug 2026";
+const SENTIMENT = {
+  // — Text / LLM —
+  "claude-opus-5": {mood:"gap", note:"Top-tier capability but users report over-confidence and hallucination on long factual/agentic tasks (a calibration tradeoff) plus verbose output — 'the best model many have tried and the one they least enjoy working with'.", adj:{follow:-2, brain:-1}},
+  "claude-fable-5": {mood:"loved", note:"Leads blind creative-writing tests for voice and risk; caveat: doesn't preserve a specific personal voice as well as a tuned Sonnet.", adj:{write:1, world:1}},
+  "claude-sonnet-5": {mood:"loved", note:"Reviewers say it wins writing quality and instruction-following outright at a large price undercut; the uplift felt like polish, not a paradigm.", adj:{write:1, follow:1}},
+  "claude-haiku-4-5": {mood:"sleeper", note:"Punches above its price on coding and 'vibe coding'; a common fallback when pricier models stall.", adj:{game:1}},
+  "gpt-5-6-sol": {mood:"mixed", note:"Strong long-horizon coding lane; headline benchmark leadership is contested by users as partly test-gamed.", adj:{game:1}},
+  "gpt-5-6-luna": {mood:"mixed", note:"Fast and cheap, but repetitive phrasing and shallow structure on long-form creative.", adj:{write:-1}},
+  "gemini-3-1-pro": {mood:"gap", note:"Big reasoning and long-document gains, but users report reduced warmth/creativity and in-session drift — it drops constraints and contradicts itself over long sessions.", adj:{write:-1, follow:-1, long:1}},
+  "gemini-3-7-flash": {mood:"sleeper", note:"A genuine value pick for low-cost coding and agents; reviewers caution before accepting its edits unattended in production.", adj:{game:1, follow:1}},
+  "grok-4-6": {mood:"gap", note:"Best-in-class real-time research and price, but 'robotic' creative writing and weaker real-world coding than benchmarks imply.", adj:{write:-1, game:-1, brain:1}},
+  // — Image —
+  "juggernaut-flux-pro": {mood:"sleeper", note:"Credited with fixing Flux's 'wax skin' — best-in-class believable portraits from simple prompts.", adj:{port:2, photo:1}},
+  "juggernaut-xl": {mood:"mixed", note:"Still loved for local, uncensored photoreal work; SDXL-era weak prompt adherence and in-image text.", adj:{adh:-1}},
+  "gpt-image-2": {mood:"gap", note:"#1 on the arena, but imprecise for exact graphic design/layout and prone to shading degradation after repeated edits; text and realism are genuinely strong.", adj:{design:-2, edit:-1, text:1, photo:1}},
+  "nano-banana-2": {mood:"mixed", note:"Best-in-class text and prompt adherence; a loud, persistent 'flat/cartoonish' realism complaint and aggressive non-configurable safety.", adj:{photo:-1, text:1, adh:1}},
+  "seedream-5.0-pro": {mood:"gap", note:"Cheaper and less restrictive with strong spatial reasoning, but portraits reportedly regressed vs 4.5 and a banding artifact went unfixed for weeks.", adj:{port:-1, edit:-1, adh:1}},
+  "seedream-4.5": {mood:"loved", note:"Excellent multi-script/dense typography and 10-reference editing — the portrait-realism edge over 5.0 Pro.", adj:{text:1}},
+  "qwen-image-3.0": {mood:"sleeper", note:"Headline strength is dense text, infographics and non-Latin scripts across 12 languages; launched with no weights/benchmarks, drawing skepticism.", adj:{text:2}},
+  "recraft-v4-1": {mood:"sleeper", note:"The only model with native editable SVG/vector output; uneven on anatomy and detailed prompts.", adj:{design:2, port:-1, speed:1}},
+  "z-image": {mood:"sleeper", note:"Photoreal in under 3s on a 6B consumer-GPU model — the efficiency darling of the local crowd.", adj:{speed:2, adh:1}},
+  "grok-imagine-i": {mood:"gap", note:"Image quality is fine, but heavy over-censorship and a new paywall erased its free/uncensored differentiator; sentiment soured hard.", adj:{}},
+  "grok-imagine-image-2.0": {mood:"gap", note:"Sharper text and editing, but the over-censorship and paywall backlash dominates community mood.", adj:{}},
+  "flux-2-pro": {mood:"mixed", note:"Strong 8-10 reference-image consistency; lingering 'plastic/wax skin' in portraits from the Flux lineage.", adj:{port:-1, edit:1}},
+  "flux-2-max": {mood:"mixed", note:"Excellent prompt adherence and multi-reference, but the Flux 'wax skin' portrait signature persists.", adj:{port:-1}},
+  "flux-3": {mood:"hype", note:"Image access barely released as of Aug 2026 — benchmark and 'foundation model' framing runs ahead of real-world evidence. Treat cautiously.", adj:{}},
+  "mai-image-2-5-pro": {mood:"hype", note:"Launched top-3 on the arena with documented text-rendering and editing gains, but organic community adoption and hands-on sentiment are still thin — benchmark-strong, mindshare-light.", adj:{}},
+  "mai-image-2-5": {mood:"hype", note:"Strong arena editing scores but almost no organic community discussion yet; treat the ratings as benchmark-derived until real-world use accumulates.", adj:{}},
+  // — Video —
+  "hailuo-2.3": {mood:"gap", note:"Marketed 'physics champion' but community reports frequent morphing failures and unwanted background music baked into audio (Trustpilot ~1.4/5).", adj:{mot:-1, aud:-1}},
+  "seedance-2.5": {mood:"mixed", note:"Loved for its multimodal reference control and 30s single-pass; identity drift on long clips, advertised 4K unseen by reviewers, and censorship burns credits on rejections.", adj:{ref:2, con:-1}},
+  "kling-3.0": {mood:"loved", note:"The pragmatic community favorite for realistic humans and value; lip-sync widely panned past ~5s and failed generations burn credits with no refund.", adj:{aud:-1}},
+  "kling-3.0-omni-v": {mood:"loved", note:"Praised for cloth/hair/liquid physics and reliable human animation; same lip-sync-past-5s and burned-credit gripes.", adj:{aud:-1}},
+  "veo-3.1": {mood:"loved", note:"Consensus quality leader, but the short 8s clip ceiling and strict, non-overridable contextual censorship are the top professional complaints.", adj:{story:-1}},
+  "veo-3.1-fast": {mood:"gap", note:"Value tier, but bug reports of 'random nonsense' outputs that ignore the inputs and burn credits.", adj:{}},
+  "sora-2": {mood:"gap", note:"Genuinely strong audio sync and physics, but widely felt as 'dumbed down' after launch, guardrails 'out of control', and the API is sunsetting.", adj:{}},
+  "ltx-2.5": {mood:"sleeper", note:"The open-source darling: only open model with native single-pass audio+video and 4K HDR, runs on a 32GB consumer GPU; raw fidelity still trails closed flagships.", adj:{speed:2}},
+  "pixverse-v6": {mood:"sleeper", note:"Fast, action-heavy anime with clean line art beats its billing; not a realism leader.", adj:{anime:2}},
+  "pixverse-c1": {mood:"sleeper", note:"The cinematic-continuity sibling; strong stylized/anime output, quality ceiling below flagships.", adj:{anime:1}},
+  "vidu-q3": {mood:"sleeper", note:"Standout multi-reference (up to 7 images) character consistency across angles and cuts — the clearest differentiator for recurring-character work.", adj:{ref:2, con:2}},
+  "vidu-q2": {mood:"sleeper", note:"Same reference-consistency strength as Q3 at lower fidelity.", adj:{ref:1, con:1}},
+  "grok-imagine-v": {mood:"mixed", note:"Cheapest fast loop with native audio for vertical social; 720p ceiling and no provenance make it weak for client deliverables.", adj:{speed:2}},
+  "grok-imagine-1.5": {mood:"mixed", note:"Fast, cheap iteration with audio; not for polished client work needing 1080p, provenance, or asset retention.", adj:{speed:2}}
 };
 
 // ═══════════════════════════════════════════════════════
@@ -1426,6 +1503,13 @@ let currentTypeFilter = "all";
 let currentFamilyFilter = null;
 let currentSpecialty = null; // "video:mot", "image:photo", etc.
 let searchTerm = "";
+let sortByAdjusted = false; // capability vs community-adjusted ranking
+
+const MOOD_LABEL = {gap:"Reality gap", sleeper:"Sleeper", loved:"Loved", mixed:"Mixed", hype:"Unproven hype"};
+
+function clampScore(n){ return Math.max(1, Math.min(10, n)); }
+function sentAdj(id, dim){ const s = SENTIMENT[id]; return (s && s.adj && s.adj[dim]) || 0; }
+function scoreFor(m, dim){ const base = (m.spec && m.spec[dim]) || 0; return sortByAdjusted ? clampScore(base + sentAdj(m.id, dim)) : base; }
 
 function getFamilies() {
   const f = new Map();
@@ -1450,10 +1534,16 @@ function renderSpecialtyChips() {
   });
   if (currentSpecialty) {
     const [t, k] = currentSpecialty.split(':');
-    html += `<span class="sort-note">Showing ${t} models rated for &ldquo;${SPECIALTIES[t][k]}&rdquo;, sorted best to worst</span>`;
+    html += `<span class="sort-note" style="width:auto">Showing ${t} models rated for &ldquo;${SPECIALTIES[t][k]}&rdquo;, best to worst</span>`;
+    html += `<span class="sort-toggle" role="group" aria-label="Ranking basis">
+      <button class="${!sortByAdjusted?'active':''}" onclick="setSort(false)">Capability</button>
+      <button class="${sortByAdjusted?'active':''}" onclick="setSort(true)">Community-adjusted</button>
+    </span>`;
   }
   el.innerHTML = html;
 }
+
+function setSort(adj){ sortByAdjusted = adj; render(); }
 
 function renderFamilySelect() {
   const families = getFamilies();
@@ -1475,9 +1565,15 @@ function getVisibleModels() {
   if (currentSpecialty) {
     const [t, k] = currentSpecialty.split(':');
     list = list.filter(m => m.type === t && m.spec && m.spec[k]);
-    list.sort((a, b) => b.spec[k] - a.spec[k]);
+    list.sort((a, b) => scoreFor(b, k) - scoreFor(a, k));
   }
   return list;
+}
+
+function receptionChip(m) {
+  const s = SENTIMENT[m.id];
+  if (!s) return '';
+  return `<span class="reception rc-${s.mood}" title="${escapeHtml(s.note)}"><span class="dot"></span>${MOOD_LABEL[s.mood]}</span>`;
 }
 
 function topSpecs(m, n) {
@@ -1494,8 +1590,15 @@ function renderModels() {
     const sel = selectedModels.has(m.id) ? "selected" : "";
     let scoreBadge = '';
     if (specKey && m.spec && m.spec[specKey]) {
-      const s = m.spec[specKey];
-      scoreBadge = `<span class="spec-score ${s < 8 ? 'tier-good' : ''}" title="${SPECIALTIES[m.type][specKey]}: ${s}/10">&#9733; ${s}/10</span>`;
+      const base = m.spec[specKey];
+      const delta = sentAdj(m.id, specKey);
+      let adjHtml = '';
+      if (delta) {
+        const shown = clampScore(base + delta);
+        adjHtml = `<span class="adj ${delta > 0 ? 'up' : 'down'}" title="Community-adjusted: ${shown}/10 (${delta > 0 ? '+' : ''}${delta})">${delta > 0 ? '&#9650;' : '&#9660;'}${shown}</span>`;
+      }
+      const shownBase = sortByAdjusted && delta ? clampScore(base + delta) : base;
+      scoreBadge = `<span class="spec-score ${shownBase < 8 ? 'tier-good' : ''}" title="${SPECIALTIES[m.type][specKey]}: ${base}/10">&#9733; ${base}/10${adjHtml}</span>`;
     }
     const chips = topSpecs(m, 3).map((label, i) =>
       `<span class="spec-chip ${i === 0 ? 'top' : ''}">${label}</span>`).join("");
@@ -1505,6 +1608,7 @@ function renderModels() {
         <div class="name"><span class="name-text">${m.name}</span>${scoreBadge}</div>
         <div class="desc">${m.desc}</div>
         ${chips?`<div class="spec-chips">${chips}</div>`:''}
+        ${receptionChip(m) ? `<div class="spec-chips">${receptionChip(m)}</div>` : ''}
       </div>
     </div>`;
   }).join("");
@@ -1655,6 +1759,7 @@ function optimizePrompts() {
             <span class="section-label">How to prompt ${escapeHtml(r.model.name)}</span>
             <p class="guide-lead">The research behind this model. Use it to shape the example on the left into your own prompt.</p>
             ${tipsHtml}
+            ${SENTIMENT[r.model.id] ? `<div class="sentiment-note"><span class="s-label">Real-world reception &middot; ${SENTIMENT_DATE}</span>${escapeHtml(SENTIMENT[r.model.id].note)}</div>` : ''}
           </div>
         </div>
       </div>`;

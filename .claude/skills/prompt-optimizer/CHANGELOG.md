@@ -3,6 +3,22 @@
 Dated entries summarizing what each refresh changed. Newest first.
 See MAINTENANCE.md for the update procedure.
 
+## 2026-08-26 — sentiment layer + corrections
+- Added a new provider: Microsoft MAI Image (MAI-Image-2.5, 2.5 Pro) with
+  sourced prompting tips; ratings tempered from benchmark-inflated values and
+  flagged as "unproven hype" in the sentiment layer (strong arena scores, thin
+  real-world adoption).
+- Correction: Gemini flagship is 3.1 Pro (the bare "3 Pro" endpoint retired);
+  found on a forced re-sweep.
+- Added a "Real-world reception" section to each reference file: community
+  sentiment (mood + note + high-confidence rating nudges), dated and volatile,
+  kept SEPARATE from the capability tips. Notable calls: Opus 5 reality gap
+  (hallucination/over-confidence on long tasks), Fable 5/Sonnet 5 loved,
+  Juggernaut Flux Pro / Z-Image / Recraft / Vidu / LTX 2.5 / PixVerse sleepers,
+  GPT Image 2 / Seedream 5.0 Pro / Hailuo 2.3 / Sora 2 reality gaps.
+- (Web app also gained a community-sentiment layer: reception chips, a
+  Capability vs Community-adjusted ranking toggle, and reception notes.)
+
 ## 2026-08-26 — model refresh
 Text/LLM:
 - ChatGPT: family updated to GPT-5.6 (Sol flagship / Terra / Luna), superseding

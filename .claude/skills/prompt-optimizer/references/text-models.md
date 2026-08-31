@@ -180,3 +180,30 @@ Tips:
 - Steer with short corrective follow-ups: 'tighten this', 'fix the collision bug, change nothing else'
 - For prose, supply a voice sample; Grok's default register drifts flat or jokey without one
 
+
+## Real-world reception (community sentiment — Aug 2026, volatile)
+
+Separate from the capability tips above; these are community/reviewer signals,
+dated and subjective. Weight them as directional, not measured.
+
+- **Claude Opus 5** — reality gap: over-confidence/hallucination on long
+  factual & agentic tasks (a calibration tradeoff) plus verbose output; top
+  capability, "least enjoyable to work with". Nudge: instruction-following and
+  brainstorming down.
+- **Claude Fable 5** — loved: leads blind creative-writing tests; caveat, does
+  not preserve a specific personal voice. Nudge: writing, worldbuilding up.
+- **Claude Sonnet 5** — loved: wins writing quality and instruction-following
+  at a large price undercut. Nudge: writing, instruction up.
+- **Claude Haiku 4.5** — sleeper: punches above its price on coding/vibe-coding.
+- **GPT-5.6 Sol** — mixed: strong long-horizon coding; benchmark leadership
+  contested as partly test-gamed. Nudge: coding up.
+- **GPT-5.6 Luna** — mixed: repetitive, shallow on long-form creative. Nudge:
+  writing down.
+- **Gemini 3.1 Pro** — reality gap: reasoning gains but reduced warmth and
+  in-session drift (drops constraints); excellent long-doc/code review. Nudge:
+  writing and instruction down, long documents up.
+- **Gemini 3.7 Flash** — sleeper: value pick for low-cost coding/agents; caution
+  before accepting edits unattended. Nudge: coding, instruction up.
+- **Grok 4.6** — reality gap: best-in-class real-time research; "robotic"
+  writing and weaker real-world coding than benchmarks imply. Nudge: writing and
+  coding down, brainstorming up.

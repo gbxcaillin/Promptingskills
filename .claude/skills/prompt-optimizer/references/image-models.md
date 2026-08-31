@@ -33,6 +33,17 @@ Tips:
 - For photorealism: specify camera body + lens + lighting setup, not 'realistic photo'
 - FLUX 3 (early access, July 2026) is a unified multimodal model; the FLUX.2 guidance here still applies to current image work
 
+### MAI Image
+Negative prompt: null (not supported — rewrite negatives as positives)
+Tips:
+- Microsoft's first-party model (MAI-Image-2.5, MAI-Image-2.5-Pro; Pro is the quality-first tier)
+- Write flowing natural-language descriptions, not comma-separated keyword tags
+- Order subject -> style -> lighting -> composition -> mood; layer details together
+- Put literal in-image text in single quotes with placement and style; text rendering is a standout strength (top-2 image editing on the arena)
+- Specify camera/lens, lighting, and materials explicitly for photoreal or cinematic output
+- For edits, describe one precise change and end with what must stay unchanged; surgical, layout-preserving edits with strong identity consistency
+- Output caps at ~1 megapixel (~1024x1024); available via Azure AI Foundry, Copilot/PowerPoint, and OpenRouter
+
 ### GPT Image
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
@@ -176,3 +187,35 @@ Tips:
 - Best for text rendering (labels, posters, packaging, signage), photoreal hero/product imagery, portraits, and precise editing
 - Output caps at ~1 megapixel (~1024x1024); available via Azure AI Foundry, Copilot/PowerPoint, and OpenRouter
 
+
+## Real-world reception (community sentiment — Aug 2026, volatile)
+
+Separate from the capability tips above; community/reviewer signals, dated and
+subjective.
+
+- **Juggernaut Flux Pro** — sleeper: fixes Flux's "wax skin"; best-in-class
+  simple-prompt portraits.
+- **Juggernaut XL** — mixed: loved for local uncensored photoreal; SDXL-era weak
+  prompt/text adherence.
+- **GPT Image 2** — reality gap: #1 on the arena but imprecise for exact graphic
+  design/layout and degrades after repeated edits; text and realism strong.
+- **Nano Banana 2** — mixed: best-in-class text/adherence; loud "flat/cartoonish"
+  realism complaint; aggressive non-configurable safety.
+- **Seedream 5.0 Pro** — reality gap: cheaper/less restrictive with strong
+  adherence, but portraits regressed vs 4.5 and a banding artifact went unfixed.
+- **Seedream 4.5** — loved: excellent dense typography and 10-reference editing;
+  the portrait edge over 5.0.
+- **Qwen Image 3.0** — sleeper: dense text/infographics across 12 languages;
+  launched with no weights/benchmarks, drawing skepticism.
+- **Recraft V4.1** — sleeper: only model with native editable SVG; uneven on
+  anatomy/detailed prompts.
+- **Z-Image** — sleeper: photoreal in under 3s on consumer GPUs.
+- **Grok Imagine Image 2.0** — reality gap: quality fine, but over-censorship and
+  a paywall erased the free/uncensored differentiator.
+- **MAI-Image 2.5 / 2.5 Pro** — unproven hype: launched top-3 on the arena (text/editing gains) but organic adoption and hands-on sentiment are thin; treat ratings as benchmark-derived until real use accumulates.
+- **Flux 2 Pro / Max** — mixed: strong multi-reference consistency; lingering
+  "plastic/wax skin" in portraits.
+- **FLUX 3** — unproven hype: image access barely released; benchmark framing
+  ahead of real-world evidence. Treat cautiously.
+- **Midjourney V8.2** — loved: top aesthetic quality and --sref/--cref
+  consistency; historically weak literal text/prompt precision; billing gripes.

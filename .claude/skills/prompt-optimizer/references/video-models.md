@@ -186,3 +186,33 @@ Tips:
 - Fast whips, wild handheld, and hyper-detailed reflections cause shimmer; avoid them
 - For best faces: use Image-to-Video with high-quality Start Frame instead of text-to-video
 
+
+## Real-world reception (community sentiment — Aug 2026, volatile)
+
+Separate from the capability tips above; community/reviewer signals, dated and
+subjective. The video-model web surface is heavily polluted with SEO/AI-written
+"review" pages — treat magnitudes as ±1 uncertain.
+
+- **Hailuo 2.3** — reality gap: marketed "physics champion" vs frequent morphing
+  failures and unwanted background music (Trustpilot ~1.4/5).
+- **Seedance 2.5** — mixed: loved multimodal reference control; identity drift on
+  long clips, advertised 4K unseen, censorship burns credits.
+- **Kling 3.0 / 3.0 Omni** — loved: community favorite for realistic humans and
+  value; lip-sync weak past ~5s, failed gens burn credits.
+- **Veo 3.1** — loved: quality leader; short 8s ceiling and strict contextual
+  censorship are the top pro gripes.
+- **Veo 3.1 Fast** — reality gap: reports of "random nonsense" outputs that
+  ignore inputs and burn credits.
+- **Sora 2** — reality gap: strong sync/physics but "dumbed down" post-launch,
+  heavy guardrails, and sunsetting.
+- **LTX 2.5** — sleeper: open-source darling; only open native audio+video and 4K
+  HDR, runs on a 32GB GPU; raw fidelity trails closed flagships.
+- **PixVerse V6 / C1** — sleeper: anime/action with clean line art beats its
+  billing; not a realism leader.
+- **Vidu Q3 / Q2** — sleeper: standout multi-reference character consistency
+  across angles and cuts.
+- **Grok Imagine 1.5** — mixed: cheapest fast loop with audio; 720p ceiling and
+  no provenance make it weak for client deliverables.
+- **Cross-cutting gripes** across paid models: credits burned on failed/filtered
+  generations with no refund; lip-sync degrading past ~5s; censorship tightening
+  after the 2026 Hollywood-vs-ByteDance IP fights.
