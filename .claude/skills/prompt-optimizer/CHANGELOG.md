@@ -24,6 +24,12 @@ Video:
 Sources recorded in the update conversation; some items (Sora sunset date, a few
 API GA dates) were flagged for direct verification.
 
+## 2026-08-26 — re-sweep additions
+- Gemini: flagship corrected to 3.1 Pro (bare "3 Pro" retired).
+- Added Microsoft MAI Image family (MAI-Image-2.5, 2.5-Pro) — top-3
+  text-to-image / #2 image editing on LMArena; standout text rendering.
+- Ideogram 4 seen in one roundup but not primary-sourced; not added.
+
 ## 2026-08-22 — initial release
 - Video: Seedance, MiniMax, Hailuo, Kling, Veo, Sora, Wan, LTX, PixVerse, Vidu,
   HappyHorse, Gemini video, Grok Imagine.

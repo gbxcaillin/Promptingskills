@@ -58,7 +58,7 @@ conventions are shared within a family, not per version:
 | Type | Families (see reference file) |
 |------|-------------------------------|
 | Video | Seedance, MiniMax/Hailuo, Kling, Veo, Sora, Wan, LTX, PixVerse, Vidu, HappyHorse, Gemini video, Grok Imagine |
-| Image | Flux, GPT Image, Nano Banana, Seedream, Qwen Image, Recraft, Kling, Wan, Grok Imagine, Juggernaut, DynaVision, OpenArt, Z-Image |
+| Image | Flux, GPT Image, Nano Banana, Seedream, Qwen Image, Recraft, MAI Image, Kling, Wan, Grok Imagine, Juggernaut, DynaVision, OpenArt, Z-Image |
 | Text/LLM | Claude, ChatGPT/GPT, Gemini, Grok |
 
 If the exact model isn't in the references, pick the closest family (e.g. any

@@ -163,3 +163,16 @@ Tips:
 - Good for character art, product renders, stylized scenes
 - Don't fight the 3D style; lean into it. Describe the scene, not the rendering technique
 
+### MAI Image
+Negative prompt: null (not documented — exclude unwanted elements by phrasing positively; when editing, state what to leave unchanged)
+Tips:
+- Microsoft's first-party model (MAI-Image-2.5, MAI-Image-2.5-Pro; Pro is the quality-first tier); ranks top-3 text-to-image and #2 image editing on the LMArena human-preference leaderboard
+- Write flowing natural-language descriptions, NOT comma-separated keyword tags
+- Order the prompt subject -> style -> lighting -> composition -> mood; layer details together
+- Put literal in-image text in single quotes with placement and style; text rendering is its standout strength
+- Specify camera/lens, lighting, and materials explicitly for photoreal or cinematic output
+- State the style register up front: 'editorial product photography', 'architectural visualization', 'Ghibli-inspired'
+- For edits, describe one precise change and end with what must stay unchanged; it does surgical, layout-preserving edits with strong identity consistency
+- Best for text rendering (labels, posters, packaging, signage), photoreal hero/product imagery, portraits, and precise editing
+- Output caps at ~1 megapixel (~1024x1024); available via Azure AI Foundry, Copilot/PowerPoint, and OpenRouter
+

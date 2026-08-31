@@ -354,7 +354,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   <div class="wordmark">GBX</div>
   <div class="lockup">Professional&nbsp;&nbsp;Services</div>
   <div class="rule"></div>
-  Prompt Optimizer. Research-backed prompt engineering for 84 AI models.<br>
+  Prompt Optimizer. Research-backed prompt engineering for 86 AI models.<br>
   GBX PS PTY LTD &copy; 2026
 </footer>
 
@@ -436,6 +436,8 @@ const MODELS = [
   {id:"juggernaut-flux-pro",name:"Juggernaut Flux Pro",type:"image",family:"Juggernaut",desc:"Enhanced naturalism & fidelity",provider:"Juggernaut",spec:{photo:9,port:9}},
   {id:"openart-sdxl",name:"OpenArt SDXL",type:"image",family:"OpenArt",desc:"SDXL tuned for versatile creative imagery",provider:"OpenArt",spec:{illus:8,photo:7,design:7}},
   {id:"juggernaut-xl",name:"Juggernaut XL",type:"image",family:"Juggernaut",desc:"SDXL with strong realism and detail",provider:"Juggernaut",spec:{photo:9,port:9,illus:7}},
+  {id:"mai-image-2-5-pro",name:"MAI-Image 2.5 Pro",type:"image",family:"MAI Image",desc:"Microsoft's quality-first model; top-tier text & editing",provider:"Microsoft",spec:{text:10,edit:9,photo:10,adh:9,port:9,design:8}},
+  {id:"mai-image-2-5",name:"MAI-Image 2.5",type:"image",family:"MAI Image",desc:"Microsoft's image model; #2 image editing on Arena",provider:"Microsoft",spec:{text:10,edit:9,photo:9,adh:8,port:8,design:8}},
   {id:"dynavision-xl",name:"DynaVision XL",type:"image",family:"DynaVision",desc:"Stylized 3D all-in-one SDXL checkpoint",provider:"DynaVision",spec:{illus:9,design:7}},
   {id:"flux-2-lora-realism",name:"Flux 2 LoRA Gallery Realism",type:"image",family:"Flux",desc:"Enhanced photorealism",provider:"Black Forest Labs",spec:{photo:10,port:9}},
 
@@ -1216,6 +1218,30 @@ const IMAGE_STRATEGIES = {
       r = r.replace(/\b(photorealistic|photograph|realistic photo|real photo)\b[,\s]*/gi, '');
       if (!hasLighting(r)) r += moodLight(r, model);
       r += ', stylized 3D character design, vibrant materials, expressive features, clean geometry';
+      return r;
+    }
+  },
+
+  // ── MAI IMAGE (Microsoft) ──
+  "MAI Image": {
+    negativePrompt: null,
+    tips: [
+      "Microsoft's first-party model (MAI-Image-2.5, MAI-Image-2.5-Pro; Pro is the quality-first tier)",
+      "Write flowing natural-language descriptions, NOT comma-separated keyword tags",
+      "Order the prompt subject -> style -> lighting -> composition -> mood; layer details together",
+      "Put literal in-image text in single quotes with placement and style; text rendering is its standout strength (top-2 image editing on Arena)",
+      "Specify camera/lens, lighting, and materials explicitly for photoreal or cinematic output",
+      "State the style register up front: 'editorial product photography', 'architectural visualization', 'Ghibli-inspired'",
+      "For edits, describe one precise change and end with what must stay unchanged; it does surgical, layout-preserving edits with strong identity consistency",
+      "No documented negative prompt; exclude unwanted elements by phrasing them positively",
+      "Output caps at ~1 megapixel (~1024x1024); available via Azure AI Foundry, Copilot/PowerPoint, and OpenRouter"
+    ],
+    transform(p, model) {
+      let r = stripQualityTags(p);
+      r = wrapQuotedText(r);
+      if (!hasLighting(r)) r += moodLight(r, model);
+      if (!hasPhotography(r) && !hasStyle(r)) r += ', editorial photography, shot on an 85mm lens with shallow depth of field';
+      r += ', sharp detail, professional composition';
       return r;
     }
   },
