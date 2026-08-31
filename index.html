@@ -137,6 +137,11 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .rc-hype .dot{background:var(--yellow)}
 .sentiment-note{margin-top:14px;padding:12px 14px;background:var(--soft);border-left:2px solid var(--ink3);border-radius:0;font-size:.82rem;line-height:1.5;color:var(--ink2)}
 .sentiment-note .s-label{display:block;font-size:.62rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px}
+.free-badge{display:inline-flex;align-items:center;gap:4px;background:#F5C518;color:#111;font-weight:700;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:var(--radius);text-decoration:none;border:1px solid #d9a900;box-shadow:0 0 0 1px rgba(245,197,24,.35)}
+.free-badge:hover{background:#ffd633;color:#000}
+.free-badge .star{font-size:.7em}
+.guide-free{margin-top:12px;font-size:.8rem;color:var(--ink2);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.guide-free a{color:#111}
 .sort-toggle{display:inline-flex;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
 .sort-toggle button{background:var(--surface);border:none;color:var(--ink2);font-family:var(--sans);font-size:.62rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:7px 11px;cursor:pointer}
 .sort-toggle button.active{background:var(--teal);color:#fff}
@@ -341,6 +346,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
       <span class="legend-item"><span class="spec-chip"><span class="light-only">Black tag</span><span class="dark-only">Cream tag</span></span> other areas where the model also performs well</span>
       <span class="legend-item"><span class="spec-score">&#9733; 9/10</span> our research-based capability rating, shown when a specialty is selected above</span>
       <span class="legend-item"><span class="reception rc-sleeper"><span class="dot"></span>Sleeper</span> community reception (separate from capability); &#9650;/&#9660; shows how sentiment nudges the score. Community-sourced, dated, and volatile.</span>
+      <span class="legend-item"><span class="free-badge"><span class="star">&#9733;</span>Free</span> official free access (provider's own app/site or open weights); links out to it. Checked Aug 2026 &mdash; availability may change.</span>
     </div>
     <div class="model-grid" id="modelGrid"></div>
   </div>
@@ -560,6 +566,19 @@ const SENTIMENT = {
   "vidu-q2": {mood:"sleeper", note:"Same reference-consistency strength as Q3 at lower fidelity.", adj:{ref:1, con:1}},
   "grok-imagine-v": {mood:"mixed", note:"Cheapest fast loop with native audio for vertical social; 720p ceiling and no provenance make it weak for client deliverables.", adj:{speed:2}},
   "grok-imagine-1.5": {mood:"mixed", note:"Fast, cheap iteration with audio; not for polished client work needing 1080p, provenance, or asset retention.", adj:{speed:2}}
+};
+
+// ═══════════════════════════════════════════════════════
+// OFFICIAL FREE ACCESS (timestamped, official sources only)
+// url must be a first-party provider page/app/console or the
+// model's official Hugging Face/Civitai repo for open weights —
+// never a third-party "free key" aggregator. Free tiers change,
+// so this is dated and links out for the user to verify.
+// ═══════════════════════════════════════════════════════
+const FREE_CHECKED = "Aug 2026";
+const FREE_ACCESS = {
+  // populated from research below (keyed by model id):
+  // "<id>": {url:"https://…", how:"Free tier on …"}
 };
 
 // ═══════════════════════════════════════════════════════
@@ -1576,6 +1595,12 @@ function receptionChip(m) {
   return `<span class="reception rc-${s.mood}" title="${escapeHtml(s.note)}"><span class="dot"></span>${MOOD_LABEL[s.mood]}</span>`;
 }
 
+function freeBadge(m) {
+  const f = FREE_ACCESS[m.id];
+  if (!f) return '';
+  return `<a class="free-badge" href="${f.url}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" title="${escapeHtml(f.how)} — official source, checked ${FREE_CHECKED}. Free access may change; opens the provider's own page."><span class="star">&#9733;</span>Free</a>`;
+}
+
 function topSpecs(m, n) {
   if (!m.spec) return [];
   return Object.entries(m.spec).sort((a, b) => b[1] - a[1]).slice(0, n)
@@ -1608,7 +1633,7 @@ function renderModels() {
         <div class="name"><span class="name-text">${m.name}</span>${scoreBadge}</div>
         <div class="desc">${m.desc}</div>
         ${chips?`<div class="spec-chips">${chips}</div>`:''}
-        ${receptionChip(m) ? `<div class="spec-chips">${receptionChip(m)}</div>` : ''}
+        ${(receptionChip(m) || freeBadge(m)) ? `<div class="spec-chips">${freeBadge(m)}${receptionChip(m)}</div>` : ''}
       </div>
     </div>`;
   }).join("");
@@ -1760,6 +1785,7 @@ function optimizePrompts() {
             <p class="guide-lead">The research behind this model. Use it to shape the example on the left into your own prompt.</p>
             ${tipsHtml}
             ${SENTIMENT[r.model.id] ? `<div class="sentiment-note"><span class="s-label">Real-world reception &middot; ${SENTIMENT_DATE}</span>${escapeHtml(SENTIMENT[r.model.id].note)}</div>` : ''}
+            ${FREE_ACCESS[r.model.id] ? `<div class="guide-free">${freeBadge(r.model)}<span>${escapeHtml(FREE_ACCESS[r.model.id].how)} &middot; <a href="${FREE_ACCESS[r.model.id].url}" target="_blank" rel="noopener noreferrer">open official page</a> &middot; checked ${FREE_CHECKED}</span></div>` : ''}
           </div>
         </div>
       </div>`;
