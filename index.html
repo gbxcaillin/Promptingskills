@@ -304,6 +304,46 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   .brand-band h1{font-size:1.7rem}
   .brand-band p{display:none}
 }
+/* Top navigation between the optimizer and the model directory */
+.main-nav{display:flex;justify-content:center;gap:4px;background:var(--surface);border-bottom:1px solid var(--line);padding:0 12px;position:sticky;top:0;z-index:30}
+.nav-tab{appearance:none;background:none;border:none;border-bottom:2px solid transparent;color:var(--ink2);font-family:var(--sans);font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:15px 22px;cursor:pointer;transition:color .2s,border-color .2s;white-space:nowrap}
+.nav-tab:hover{color:var(--ink)}
+.nav-tab.active{color:var(--accent-text);border-bottom-color:var(--teal)}
+.view[hidden]{display:none}
+/* Model directory */
+.dir-intro{margin:8px 0 20px}
+.dir-intro h2{font-family:var(--serif);font-weight:500;font-size:1.9rem;margin:0 0 6px;letter-spacing:.01em}
+.dir-intro p{color:var(--ink2);font-size:.95rem;max-width:64ch;margin:0}
+.dir-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.dir-sort{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);color:var(--ink);padding:9px 12px;font-size:.88rem;cursor:pointer;font-family:var(--sans)}
+.dir-sort:focus{outline:none;border-color:var(--teal)}
+.dir-count{font-size:.72rem;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;margin:0 0 18px}
+.dir-list{display:flex;flex-direction:column;gap:14px}
+.dir-card{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:18px 20px}
+.dir-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:3px}
+.dir-name{font-weight:600;font-size:1.05rem}
+.dir-top .model-type{font-size:.58rem;padding:2px 7px;border-radius:var(--radius);font-weight:600;letter-spacing:.1em}
+.dir-top .dual-score{margin-left:auto}
+.dir-meta{font-size:.78rem;color:var(--ink3);margin-bottom:9px;letter-spacing:.02em}
+.dir-desc{color:var(--ink2);font-size:.9rem;line-height:1.5;margin-bottom:12px}
+.dir-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:4px}
+.dir-label{display:block;font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:14px 0 7px}
+.dir-ratings{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0 18px}
+.dir-rating{display:flex;justify-content:space-between;gap:10px;font-size:.82rem;padding:4px 0;border-bottom:1px dotted var(--line)}
+.dir-rating .rlabel{color:var(--ink2)}
+.dir-rating .rval{font-family:var(--mono);font-weight:600;color:var(--accent-text);white-space:nowrap}
+.dir-rating .rval .radj{margin-left:5px;font-size:.9em}
+.dir-rating .rval .radj.up{color:var(--green)}
+.dir-rating .rval .radj.down{color:var(--red)}
+.dir-note{background:var(--soft);border-left:2px solid var(--ink3);padding:10px 13px;font-size:.84rem;line-height:1.5;color:var(--ink2)}
+.dir-note .n-mood{font-weight:600;color:var(--ink)}
+.dir-free{font-size:.84rem;color:var(--ink2);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.dir-free a{color:var(--accent-text)}
+.dir-empty{padding:36px 16px;text-align:center;color:var(--ink3)}
+@media(max-width:600px){
+  .nav-tab{padding:14px 14px;font-size:.66rem;letter-spacing:.06em}
+  .dir-top .dual-score{margin-left:0;width:100%}
+}
 </style>
 </head>
 <body>
@@ -315,7 +355,13 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   <h1>Prompt Optimizer</h1>
   <p>Enter a prompt, select your models, and get research-backed optimized versions tailored to each AI video, image and text model.</p>
 </header>
+<nav class="main-nav" role="tablist" aria-label="Sections">
+  <button class="nav-tab active" id="tab-optimizer" role="tab" aria-selected="true" onclick="showView('optimizer',this)">Prompt Optimizer</button>
+  <button class="nav-tab" id="tab-directory" role="tab" aria-selected="false" onclick="showView('directory',this)">Model Directory</button>
+</nav>
 <div class="container">
+
+ <div id="view-optimizer" class="view" role="tabpanel" aria-labelledby="tab-optimizer">
 
   <div class="finder-card" id="finderCard">
     <div class="finder-copy">
@@ -392,6 +438,36 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
     <div class="icon-rule"></div>
     <p>Pick what you're making and choose your models above, then write your prompt and click "Optimize Prompts".</p>
   </div>
+
+ </div><!-- /view-optimizer -->
+
+ <div id="view-directory" class="view" role="tabpanel" aria-labelledby="tab-directory" hidden>
+   <div class="dir-intro">
+     <span class="section-label">Reference</span>
+     <h2>Model Directory</h2>
+     <p>Every model in one place with its full details &mdash; capability ratings across each specialty, the advertised vs. community-sentiment scores, real-world reception, and where to use it free. Do your own research and draw your own conclusions.</p>
+   </div>
+   <div class="dir-controls">
+     <div class="type-toggle">
+       <button class="active" onclick="setDirType('all',this)">All</button>
+       <button onclick="setDirType('video',this)">Video</button>
+       <button onclick="setDirType('image',this)">Image</button>
+       <button onclick="setDirType('text',this)">Text</button>
+     </div>
+     <input type="text" class="search-input" placeholder="Search models..." oninput="onDirSearch(this.value)">
+     <select class="dir-sort" onchange="setDirSort(this.value)" aria-label="Sort models">
+       <option value="type">Sort: Type, then name</option>
+       <option value="name">Sort: Name (A&ndash;Z)</option>
+       <option value="adv">Sort: Advertised score (high&ndash;low)</option>
+       <option value="sent">Sort: Sentiment score (high&ndash;low)</option>
+       <option value="lift">Sort: Sentiment lift (biggest first)</option>
+     </select>
+     <button class="action-btn free-toggle" id="dirFreeToggle" aria-pressed="false" onclick="toggleDirFree(this)"><span class="star">&#9733;</span> Free only</button>
+   </div>
+   <p class="dir-count" id="dirCount"></p>
+   <div class="dir-list" id="directoryList"></div>
+ </div><!-- /view-directory -->
+
 </div>
 
 <footer class="footer">
@@ -1791,6 +1867,104 @@ function toggleFreeOnly(btn) {
   btn.classList.toggle('active', freeOnly);
   btn.setAttribute('aria-pressed', freeOnly ? 'true' : 'false');
   renderModels();
+}
+
+// ═══════════════════════════════════════════════════════
+// TAB NAVIGATION + MODEL DIRECTORY (self-service research view)
+// ═══════════════════════════════════════════════════════
+let dirType = 'all', dirSearch = '', dirSort = 'type', dirFreeOnly = false;
+
+function showView(view, btn) {
+  document.querySelectorAll('.view').forEach(v => v.hidden = (v.id !== 'view-' + view));
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    const on = t === btn;
+    t.classList.toggle('active', on);
+    t.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  if (view === 'directory') { renderDirectory(); window.scrollTo({ top: 0, behavior: 'auto' }); }
+}
+
+function setDirType(t, btn) {
+  dirType = t;
+  document.querySelectorAll('#view-directory .type-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDirectory();
+}
+function onDirSearch(v) { dirSearch = v.toLowerCase(); renderDirectory(); }
+function setDirSort(v) { dirSort = v; renderDirectory(); }
+function toggleDirFree(btn) {
+  dirFreeOnly = !dirFreeOnly;
+  btn.classList.toggle('active', dirFreeOnly);
+  btn.setAttribute('aria-pressed', dirFreeOnly ? 'true' : 'false');
+  renderDirectory();
+}
+
+function getDirModels() {
+  const advOf = m => { const a = advMean(m); return a == null ? 0 : a; };
+  const sentOf = m => { const s = sentMean(m); return s == null ? 0 : s; };
+  const typeOrder = { video: 0, image: 1, text: 2 };
+  let list = MODELS.filter(m => {
+    if (dirType !== 'all' && m.type !== dirType) return false;
+    if (dirFreeOnly && !FREE_ACCESS[m.id]) return false;
+    if (dirSearch) {
+      const hay = (m.name + ' ' + m.family + ' ' + (m.provider || '') + ' ' + (m.desc || '')).toLowerCase();
+      if (!hay.includes(dirSearch)) return false;
+    }
+    return true;
+  });
+  if (dirSort === 'name') list.sort((a, b) => a.name.localeCompare(b.name));
+  else if (dirSort === 'adv') list.sort((a, b) => advOf(b) - advOf(a) || a.name.localeCompare(b.name));
+  else if (dirSort === 'sent') list.sort((a, b) => sentOf(b) - sentOf(a) || a.name.localeCompare(b.name));
+  else if (dirSort === 'lift') list.sort((a, b) => (sentOf(b) - advOf(b)) - (sentOf(a) - advOf(a)) || a.name.localeCompare(b.name));
+  else list.sort((a, b) => (typeOrder[a.type] - typeOrder[b.type]) || advOf(b) - advOf(a) || a.name.localeCompare(b.name));
+  return list;
+}
+
+function dirRatings(m) {
+  if (!m.spec) return '';
+  const rows = Object.entries(m.spec).sort((a, b) => b[1] - a[1]).map(([k, v]) => {
+    const label = (SPECIALTIES[m.type] && SPECIALTIES[m.type][k]) || k;
+    const d = sentAdj(m.id, k);
+    let adj = '';
+    if (d) {
+      const shown = clampScore(v + d);
+      adj = `<span class="radj ${d > 0 ? 'up' : 'down'}" title="Community-adjusted: ${shown}/10 (${d > 0 ? '+' : ''}${d})">${d > 0 ? '&#9650;' : '&#9660;'}${shown}</span>`;
+    }
+    return `<div class="dir-rating"><span class="rlabel">${escapeHtml(label)}</span><span class="rval">${v}/10${adj}</span></div>`;
+  }).join('');
+  return `<span class="dir-label">Capability ratings (our research &middot; 1&ndash;10)</span><div class="dir-ratings">${rows}</div>`;
+}
+
+function directoryCard(m) {
+  const info = receptionInfo(m);
+  const chips = receptionChip(m) ? `<div class="dir-chips">${receptionChip(m)}</div>` : '';
+  const noteHtml = (info && info.hasSent)
+    ? `<span class="dir-label">Real-world reception &middot; ${SENTIMENT_DATE}</span><div class="dir-note"><span class="n-mood">${info.label}.</span> ${escapeHtml(info.note)}</div>`
+    : '';
+  const f = FREE_ACCESS[m.id];
+  const freeHtml = f
+    ? `<span class="dir-label">Free access</span><div class="dir-free">${freeBadge(m)}<span>${escapeHtml(f.how)} &middot; <a href="${f.url}" target="_blank" rel="noopener noreferrer">open official page</a> &middot; checked ${FREE_CHECKED}</span></div>`
+    : '';
+  return `<div class="dir-card">
+    <div class="dir-top">
+      <span class="dir-name">${m.name}</span>
+      <span class="model-type type-${m.type}">${m.type.toUpperCase()}</span>
+      ${dualScoreHtml(m, null)}
+    </div>
+    <div class="dir-meta">${escapeHtml(m.family)} &middot; ${escapeHtml(m.provider || 'Unknown provider')}</div>
+    <div class="dir-desc">${escapeHtml(m.desc || '')}</div>
+    ${chips}
+    ${dirRatings(m)}
+    ${noteHtml}
+    ${freeHtml}
+  </div>`;
+}
+
+function renderDirectory() {
+  const list = getDirModels();
+  const el = document.getElementById('directoryList');
+  el.innerHTML = list.length ? list.map(directoryCard).join('') : '<div class="dir-empty">No models match your filters.</div>';
+  document.getElementById('dirCount').textContent = list.length + ' of ' + MODELS.length + ' models';
 }
 
 function selectAllVisible() {
