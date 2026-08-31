@@ -447,7 +447,7 @@ const MODELS = [
   {id:"gpt-5-6-sol",name:"ChatGPT (GPT-5.6 Sol)",type:"text",family:"ChatGPT",desc:"OpenAI's flagship reasoning tier; strong one-shot builds from a spec",provider:"OpenAI",spec:{game:9,write:6,world:7,brain:8,follow:9,long:7}},
   {id:"gpt-5-6-terra",name:"ChatGPT (GPT-5.6 Terra)",type:"text",family:"ChatGPT",desc:"OpenAI's balanced everyday tier",provider:"OpenAI",spec:{game:8,write:7,world:7,brain:8,follow:9,long:7}},
   {id:"gpt-5-6-luna",name:"ChatGPT (GPT-5.6 Luna)",type:"text",family:"ChatGPT",desc:"OpenAI's fast, cost-efficient tier for iteration",provider:"OpenAI",spec:{game:7,write:6,world:6,brain:8,follow:8,long:6}},
-  {id:"gemini-3-pro",name:"Gemini 3 Pro",type:"text",family:"Gemini",desc:"Google's flagship; top-ranked at one-shot web games",provider:"Google",spec:{game:10,write:8,world:8,brain:8,follow:9,long:10}},
+  {id:"gemini-3-1-pro",name:"Gemini 3.1 Pro",type:"text",family:"Gemini",desc:"Google's flagship; top-ranked at one-shot web games",provider:"Google",spec:{game:10,write:8,world:8,brain:8,follow:9,long:10}},
   {id:"gemini-3-7-flash",name:"Gemini 3.7 Flash",type:"text",family:"Gemini",desc:"Fast Gemini for cheap, quick iteration",provider:"Google",spec:{game:8,write:7,world:7,brain:7,follow:8,long:9}},
   {id:"grok-4-6",name:"Grok 4.6",type:"text",family:"Grok",desc:"xAI's model; unconventional ideation and worldbuilding",provider:"xAI",spec:{game:7,write:9,world:9,brain:9,follow:7,long:6}},
 ];
@@ -1329,7 +1329,7 @@ const TEXT_STRATEGIES = {
   Gemini: {
     negativePrompt: null,
     tips: [
-      "Current models: Gemini 3 Pro (flagship), Gemini 3.7 Flash (fast tier, Aug 2026)",
+      "Current models: Gemini 3.1 Pro (flagship), Gemini 3.7 Flash (fast tier, Aug 2026)",
       "Use the PTCF structure Google recommends: Persona, Task, Context, Format",
       "Be concise and direct; Gemini 3 over-analyzes verbose, persuasion-heavy prompts, so keep instructions tight imperatives",
       "Context first, ask last: put all reference material above and the instruction at the very end",

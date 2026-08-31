@@ -106,7 +106,7 @@ case). Reliable fixes are structural constraints, not cleverer wishes.
 | Model | Creative writing | Game/app coding | Worldbuilding | Brainstorming | Instruction-following | Long documents |
 |-------|:---:|:---:|:---:|:---:|:---:|:---:|
 | Claude (Opus/Fable) | 10 | 9 | 9–10 | 8–9 | 10 | 10 |
-| Gemini 3 Pro | 8 | 10 | 8 | 8 | 9 | 10 |
+| Gemini 3.1 Pro | 8 | 10 | 8 | 8 | 9 | 10 |
 | ChatGPT / GPT-5.6 | 6 | 9 | 7 | 8 | 9 | 7 |
 | Grok 4.6 | 9 | 7 | 9 | 9 | 7 | 6 |
 
@@ -152,7 +152,7 @@ Tips:
 ### Gemini
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
-- Current models: Gemini 3 Pro (flagship), Gemini 3.7 Flash (fast tier, Aug 2026)
+- Current models: Gemini 3.1 Pro (flagship), Gemini 3.7 Flash (fast tier, Aug 2026)
 - Use the PTCF structure Google recommends: Persona, Task, Context, Format
 - Be concise and direct; Gemini 3 over-analyzes verbose, persuasion-heavy prompts, so keep instructions tight imperatives
 - Context first, ask last: put all reference material above and the instruction at the very end
