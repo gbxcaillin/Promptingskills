@@ -120,6 +120,16 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .spec-score .adj{margin-left:6px;font-size:.66rem}
 .spec-score .adj.up{color:var(--teal)}
 .spec-score .adj.down{color:var(--red)}
+/* Dual score: advertised (capability) vs sentiment (community) */
+.dual-score{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;white-space:nowrap}
+.ds{display:inline-flex;align-items:baseline;gap:3px;font-family:var(--mono);font-size:.72rem;font-weight:600;padding:1px 6px;border-radius:var(--radius);border:1px solid var(--line);line-height:1.3}
+.ds-cap{font-size:.5rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;opacity:.7}
+.ds-adv{color:var(--accent-text);border-color:rgba(46,139,110,.3);background:var(--teal-tint)}
+.ds-sent.up{color:var(--green);border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.1)}
+.ds-sent.down{color:var(--red);border-color:rgba(248,113,113,.35);background:rgba(248,113,113,.1)}
+.ds-sent.even{color:var(--ink2);border-color:var(--line);background:var(--soft)}
+.guide-scores{display:flex;align-items:center;gap:10px;margin:2px 0 12px}
+.guide-scores .gs-note{font-size:.7rem;color:var(--ink3);letter-spacing:.04em}
 .sort-note{font-size:.75rem;color:var(--ink3);font-style:italic;width:100%}
 
 /* Community sentiment layer */
@@ -140,6 +150,10 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .free-badge{display:inline-flex;align-items:center;gap:4px;background:#F5C518;color:#111;font-weight:700;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:var(--radius);text-decoration:none;border:1px solid #d9a900;box-shadow:0 0 0 1px rgba(245,197,24,.35)}
 .free-badge:hover{background:#ffd633;color:#000}
 .free-badge .star{font-size:.7em}
+.free-toggle .star{color:#F5C518;font-size:.85em}
+.free-toggle.active{background:#F5C518;color:#111;border-color:#d9a900;font-weight:700}
+.free-toggle.active:hover{background:#ffd633;color:#000}
+.free-toggle.active .star{color:#111}
 .guide-free{margin-top:12px;font-size:.8rem;color:var(--ink2);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .guide-free a{color:#111}
 .sort-toggle{display:inline-flex;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
@@ -338,14 +352,15 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
     <div class="filter-bar">
       <select class="family-select" id="familySelect" onchange="filterFamily(this.value || null)"></select>
       <input type="text" class="search-input" placeholder="Search models..." oninput="onSearch(this.value)">
+      <button class="action-btn free-toggle" id="freeToggle" aria-pressed="false" onclick="toggleFreeOnly(this)"><span class="star">&#9733;</span> Free only</button>
       <button class="action-btn" onclick="selectAllVisible()">Select all visible</button>
       <button class="action-btn" onclick="deselectAll()">Deselect all</button>
     </div>
     <div class="legend">
       <span class="legend-item"><span class="spec-chip top">Teal tag</span> the model's strongest specialty, based on our research into each model</span>
       <span class="legend-item"><span class="spec-chip"><span class="light-only">Black tag</span><span class="dark-only">Cream tag</span></span> other areas where the model also performs well</span>
-      <span class="legend-item"><span class="spec-score">&#9733; 9/10</span> our research-based capability rating, shown when a specialty is selected above</span>
-      <span class="legend-item"><span class="reception rc-sleeper"><span class="dot"></span>Sleeper</span> community reception (separate from capability); &#9650;/&#9660; shows how sentiment nudges the score. Community-sourced, dated, and volatile.</span>
+      <span class="legend-item"><span class="dual-score"><span class="ds ds-adv">8.4<span class="ds-cap">adv</span></span><span class="ds ds-sent up">&#9650;8.7<span class="ds-cap">sent</span></span></span> two scores per model &mdash; <strong>adv</strong> is our research-based capability rating, <strong>sent</strong> is that same rating shifted by community reception (&#9650; above / &#9660; below). Pick a specialty to score that one dimension.</span>
+      <span class="legend-item"><span class="reception rc-sleeper"><span class="dot"></span>Sleeper</span> a computed tag: the sentiment score lands <em>above</em> the advertised score &mdash; a possible best or near-best-in-class pick. Community-sourced, dated, and volatile.</span>
       <span class="legend-item"><span class="free-badge"><span class="star">&#9733;</span>Free</span> official free access (provider's own app/site or open weights); links out to it. Checked Aug 2026 &mdash; availability may change.</span>
     </div>
     <div class="model-grid" id="modelGrid"></div>
@@ -553,7 +568,7 @@ const SENTIMENT = {
   "mai-image-2-5": {mood:"hype", note:"Strong arena editing scores but almost no organic community discussion yet; treat the ratings as benchmark-derived until real-world use accumulates.", adj:{}},
   // — Video —
   "hailuo-2.3": {mood:"gap", note:"Marketed 'physics champion' but community reports frequent morphing failures and unwanted background music baked into audio (Trustpilot ~1.4/5).", adj:{mot:-1, aud:-1}},
-  "seedance-2.5": {mood:"mixed", note:"Loved for its multimodal reference control and 30s single-pass; identity drift on long clips, advertised 4K unseen by reviewers, and censorship burns credits on rejections.", adj:{ref:2, con:-1}},
+  "seadance-2.5": {mood:"mixed", note:"Loved for its multimodal reference control and 30s single-pass; identity drift on long clips, advertised 4K unseen by reviewers, and censorship burns credits on rejections.", adj:{ref:2, con:-1}},
   "kling-3.0": {mood:"loved", note:"The pragmatic community favorite for realistic humans and value; lip-sync widely panned past ~5s and failed generations burn credits with no refund.", adj:{aud:-1}},
   "kling-3.0-omni-v": {mood:"loved", note:"Praised for cloth/hair/liquid physics and reliable human animation; same lip-sync-past-5s and burned-credit gripes.", adj:{aud:-1}},
   "veo-3.1": {mood:"loved", note:"Consensus quality leader, but the short 8s clip ceiling and strict, non-overridable contextual censorship are the top professional complaints.", adj:{story:-1}},
@@ -1581,12 +1596,62 @@ let currentFamilyFilter = null;
 let currentSpecialty = null; // "video:mot", "image:photo", etc.
 let searchTerm = "";
 let sortByAdjusted = false; // capability vs community-adjusted ranking
+let freeOnly = false; // show only models with official free access
 
 const MOOD_LABEL = {gap:"Reality gap", sleeper:"Sleeper", loved:"Loved", mixed:"Mixed", hype:"Unproven hype"};
 
 function clampScore(n){ return Math.max(1, Math.min(10, n)); }
 function sentAdj(id, dim){ const s = SENTIMENT[id]; return (s && s.adj && s.adj[dim]) || 0; }
 function scoreFor(m, dim){ const base = (m.spec && m.spec[dim]) || 0; return sortByAdjusted ? clampScore(base + sentAdj(m.id, dim)) : base; }
+
+// Two headline scores per model: "advertised" = our research-based capability,
+// "sentiment" = that same rating shifted by community reception. Aggregates are
+// means across the model's own specialty dimensions.
+function specDims(m){ return m.spec ? Object.keys(m.spec) : []; }
+function advMean(m){ const d = specDims(m); return d.length ? d.reduce((s,k)=>s+m.spec[k],0)/d.length : null; }
+function sentMean(m){ const d = specDims(m); return d.length ? d.reduce((s,k)=>s+clampScore(m.spec[k]+sentAdj(m.id,k)),0)/d.length : null; }
+function fmt1(n){ return (Math.round(n*10)/10).toFixed(1); }
+
+// Computed reception. Sleeper is the one computed tag the user asked for: it is
+// ADDED whenever the sentiment score lands above the advertised score ("maybe
+// best or near-best in class"). Otherwise we keep the hand-authored qualitative
+// mood (gap / loved / mixed / hype / an authored sleeper whose deltas net out).
+function receptionInfo(m){
+  const adv = advMean(m);
+  if (adv == null) return null;
+  const hasSent = !!SENTIMENT[m.id];
+  const sent = hasSent ? sentMean(m) : adv;
+  const diff = sent - adv;
+  if (!hasSent) return { adv, sent, diff, hasSent:false, mood:null, label:null, note:"" };
+  const hand = SENTIMENT[m.id].mood;
+  let mood, label;
+  if (diff > 0.001){ mood = "sleeper"; label = "Sleeper"; }
+  else { mood = hand; label = MOOD_LABEL[hand]; }
+  return { adv, sent, diff, hasSent:true, mood, label, note: SENTIMENT[m.id].note };
+}
+
+// Dual score pill. With a specialty selected the scores are that one dimension
+// (integers); otherwise the overall means (one decimal).
+function dualScoreHtml(m, dim){
+  const info = receptionInfo(m);
+  if (!info) return '';
+  let adv, sent, decimals;
+  if (dim && m.spec && m.spec[dim]){
+    adv = m.spec[dim]; sent = clampScore(m.spec[dim] + sentAdj(m.id, dim)); decimals = false;
+  } else {
+    adv = info.adv; sent = info.sent; decimals = true;
+  }
+  const advTxt = decimals ? fmt1(adv) : adv;
+  const advPill = `<span class="ds ds-adv" title="Advertised: our research-based capability rating">${advTxt}<span class="ds-cap">adv</span></span>`;
+  if (!info.hasSent) return `<span class="dual-score">${advPill}</span>`;
+  const d = sent - adv;
+  const dir = d > 0.001 ? 'up' : d < -0.001 ? 'down' : 'even';
+  const arrow = dir === 'up' ? '&#9650;' : dir === 'down' ? '&#9660;' : '';
+  const sentTxt = decimals ? fmt1(sent) : sent;
+  const dTxt = decimals ? (d>0?'+':'') + fmt1(d) : (d>0?'+':'') + d;
+  const sentPill = `<span class="ds ds-sent ${dir}" title="Community sentiment rating (${dTxt} vs advertised)">${arrow}${sentTxt}<span class="ds-cap">sent</span></span>`;
+  return `<span class="dual-score">${advPill}${sentPill}</span>`;
+}
 
 function getFamilies() {
   const f = new Map();
@@ -1637,6 +1702,7 @@ function getVisibleModels() {
     if (currentTypeFilter !== "all" && m.type !== currentTypeFilter) return false;
     if (currentFamilyFilter && m.family !== currentFamilyFilter) return false;
     if (searchTerm && !m.name.toLowerCase().includes(searchTerm) && !m.family.toLowerCase().includes(searchTerm) && !m.desc.toLowerCase().includes(searchTerm)) return false;
+    if (freeOnly && !FREE_ACCESS[m.id]) return false;
     return true;
   });
   if (currentSpecialty) {
@@ -1648,9 +1714,11 @@ function getVisibleModels() {
 }
 
 function receptionChip(m) {
-  const s = SENTIMENT[m.id];
-  if (!s) return '';
-  return `<span class="reception rc-${s.mood}" title="${escapeHtml(s.note)}"><span class="dot"></span>${MOOD_LABEL[s.mood]}</span>`;
+  const info = receptionInfo(m);
+  if (!info || !info.mood) return '';
+  let note = info.note;
+  if (info.mood === 'sleeper') note = 'Community rates it above its advertised level — a possible best or near-best-in-class pick. ' + note;
+  return `<span class="reception rc-${info.mood}" title="${escapeHtml(note)}"><span class="dot"></span>${info.label}</span>`;
 }
 
 function freeBadge(m) {
@@ -1671,18 +1739,7 @@ function renderModels() {
   const specKey = currentSpecialty ? currentSpecialty.split(':')[1] : null;
   grid.innerHTML = visible.map(m => {
     const sel = selectedModels.has(m.id) ? "selected" : "";
-    let scoreBadge = '';
-    if (specKey && m.spec && m.spec[specKey]) {
-      const base = m.spec[specKey];
-      const delta = sentAdj(m.id, specKey);
-      let adjHtml = '';
-      if (delta) {
-        const shown = clampScore(base + delta);
-        adjHtml = `<span class="adj ${delta > 0 ? 'up' : 'down'}" title="Community-adjusted: ${shown}/10 (${delta > 0 ? '+' : ''}${delta})">${delta > 0 ? '&#9650;' : '&#9660;'}${shown}</span>`;
-      }
-      const shownBase = sortByAdjusted && delta ? clampScore(base + delta) : base;
-      scoreBadge = `<span class="spec-score ${shownBase < 8 ? 'tier-good' : ''}" title="${SPECIALTIES[m.type][specKey]}: ${base}/10">&#9733; ${base}/10${adjHtml}</span>`;
-    }
+    const scoreBadge = dualScoreHtml(m, specKey);
     const chips = topSpecs(m, 3).map((label, i) =>
       `<span class="spec-chip ${i === 0 ? 'top' : ''}">${label}</span>`).join("");
     return `<div class="model-card ${sel}" onclick="toggleModel('${m.id}')" title="${m.desc}; Best for: ${topSpecs(m, 3).join(', ')}">
@@ -1726,6 +1783,13 @@ function filterSpecialty(val) {
 
 function onSearch(val) {
   searchTerm = val.toLowerCase();
+  renderModels();
+}
+
+function toggleFreeOnly(btn) {
+  freeOnly = !freeOnly;
+  btn.classList.toggle('active', freeOnly);
+  btn.setAttribute('aria-pressed', freeOnly ? 'true' : 'false');
   renderModels();
 }
 
@@ -1841,6 +1905,7 @@ function optimizePrompts() {
           <div class="result-guide">
             <span class="section-label">How to prompt ${escapeHtml(r.model.name)}</span>
             <p class="guide-lead">The research behind this model. Use it to shape the example on the left into your own prompt.</p>
+            <div class="guide-scores">${dualScoreHtml(r.model, null)}<span class="gs-note">advertised capability vs community sentiment</span></div>
             ${tipsHtml}
             ${SENTIMENT[r.model.id] ? `<div class="sentiment-note"><span class="s-label">Real-world reception &middot; ${SENTIMENT_DATE}</span>${escapeHtml(SENTIMENT[r.model.id].note)}</div>` : ''}
             ${FREE_ACCESS[r.model.id] ? `<div class="guide-free">${freeBadge(r.model)}<span>${escapeHtml(FREE_ACCESS[r.model.id].how)} &middot; <a href="${FREE_ACCESS[r.model.id].url}" target="_blank" rel="noopener noreferrer">open official page</a> &middot; checked ${FREE_CHECKED}</span></div>` : ''}
