@@ -577,8 +577,66 @@ const SENTIMENT = {
 // ═══════════════════════════════════════════════════════
 const FREE_CHECKED = "Aug 2026";
 const FREE_ACCESS = {
-  // populated from research below (keyed by model id):
-  // "<id>": {url:"https://…", how:"Free tier on …"}
+  // — Text / LLM (only the model the free tier actually serves) —
+  "claude-sonnet-5": {url:"https://claude.ai", how:"Free tier on claude.ai (usage-limited)"},
+  "claude-haiku-4-5": {url:"https://claude.ai", how:"Free for all users on claude.ai"},
+  "gpt-5-6-luna": {url:"https://chatgpt.com", how:"Free-tier default model in ChatGPT"},
+  "gemini-3-1-pro": {url:"https://aistudio.google.com", how:"Free to try in Google AI Studio (no free API tier)"},
+  "gemini-3-7-flash": {url:"https://aistudio.google.com", how:"Free in Google AI Studio"},
+  // — Image —
+  "gpt-image-2": {url:"https://chatgpt.com", how:"Free in ChatGPT, all plans (daily cap)"},
+  "nano-banana-2": {url:"https://gemini.google.com", how:"Free in the Gemini app + AI Studio (daily cap)"},
+  "nano-banana-2-lite": {url:"https://gemini.google.com", how:"Free in the Gemini app (daily cap)"},
+  "nano-banana-pro": {url:"https://gemini.google.com", how:"Free in the Gemini app + AI Studio (daily cap)"},
+  "nano-banana": {url:"https://gemini.google.com", how:"Free in the Gemini app (daily cap)"},
+  "seedream-5.0-pro": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina (flagship draws more per image)"},
+  "seedream-5.0-lite": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina"},
+  "seedream-4.5": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina"},
+  "seedream-4.0": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina"},
+  "qwen-image-3.0": {url:"https://chat.qwen.ai", how:"Free daily image quota on chat.qwen.ai"},
+  "qwen-image-2": {url:"https://chat.qwen.ai", how:"Free daily image quota on chat.qwen.ai"},
+  "qwen-image-max": {url:"https://chat.qwen.ai", how:"Free daily image quota on chat.qwen.ai"},
+  "qwen-image-plus": {url:"https://chat.qwen.ai", how:"Free daily image quota on chat.qwen.ai"},
+  "recraft-v4-1": {url:"https://www.recraft.ai", how:"Free tier ~50 credits/day (outputs public, non-commercial)"},
+  "kling-3.0-omni-i": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked, personal use)"},
+  "kling-o1-i": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked, personal use)"},
+  "juggernaut-xl": {url:"https://civitai.com/models/133005", how:"Open weights on Civitai / Hugging Face — run it yourself"},
+  "juggernaut-flux-pro": {url:"https://huggingface.co/RunDiffusion", how:"Open weights on Civitai / Hugging Face — run it yourself"},
+  "dynavision-xl": {url:"https://civitai.com/models/122606", how:"Open SDXL checkpoint — run it yourself"},
+  "openart-photorealistic": {url:"https://openart.ai", how:"Free plan with daily free generations"},
+  "openart-sdxl": {url:"https://openart.ai", how:"Free plan with daily free generations"},
+  "z-image": {url:"https://huggingface.co/Tongyi-MAI/Z-Image-Turbo", how:"Open weights (Apache 2.0); free demo on Hugging Face"},
+  "flux-2-klein": {url:"https://huggingface.co/black-forest-labs", how:"Open weights on Hugging Face (Klein-4B is Apache 2.0)"},
+  "flux-1-dev": {url:"https://huggingface.co/black-forest-labs", how:"Open weights on Hugging Face (non-commercial) — run it yourself"},
+  "mai-image-2-5": {url:"https://copilot.microsoft.com", how:"Free in Microsoft Copilot (with a Microsoft account)"},
+  // — Video —
+  "seadance-2.5": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina / Jimeng (ByteDance)"},
+  "seadance-2.0": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina / Jimeng"},
+  "seadance-2.0-mini": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina / Jimeng"},
+  "seadance-1.5-pro": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina / Jimeng"},
+  "seadance-1": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina / Jimeng"},
+  "minimax-h3": {url:"https://huggingface.co/MiniMaxAI/MiniMax-H3", how:"Open weights on Hugging Face (license restricts local use in US/EU/UK/SK)"},
+  "hailuo-02": {url:"https://hailuoai.video", how:"Free daily trial credits on the Hailuo app"},
+  "hailuo-2.3": {url:"https://hailuoai.video", how:"Free daily trial credits on the Hailuo app"},
+  "kling-3.0-omni-v": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked)"},
+  "kling-3.0": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked)"},
+  "kling-2.6": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked)"},
+  "kling-2.5": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked)"},
+  "kling-o1-v": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked)"},
+  "kling-2.1": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked)"},
+  "veo-3.1": {url:"https://labs.google/flow", how:"Free daily credits on Google Flow (not free in the Gemini app; 8s cap)"},
+  "veo-3.1-fast": {url:"https://labs.google/flow", how:"Free daily credits on Google Flow"},
+  "veo-3.1-lite": {url:"https://labs.google/flow", how:"Free daily credits on Google Flow"},
+  "veo-3": {url:"https://labs.google/flow", how:"Free daily credits on Google Flow"},
+  "gemini-omni-flash": {url:"https://labs.google/flow", how:"Free on Google Flow (paid inside the Gemini app)"},
+  "pixverse-c1": {url:"https://pixverse.ai", how:"Free plan: signup bonus + 60 daily credits (watermarked)"},
+  "pixverse-v6": {url:"https://pixverse.ai", how:"Free plan: signup bonus + 60 daily credits (watermarked)"},
+  "pixverse-5": {url:"https://pixverse.ai", how:"Free plan: signup bonus + 60 daily credits (watermarked)"},
+  "vidu-q3": {url:"https://www.vidu.com", how:"Free recurring credit allowance (watermarked, personal use)"},
+  "vidu-q2": {url:"https://www.vidu.com", how:"Free recurring credit allowance (watermarked, personal use)"},
+  "ltx-2.5": {url:"https://huggingface.co/Lightricks/LTX-2.5", how:"Open weights on Hugging Face (free under $10M revenue)"},
+  "ltx-2.3": {url:"https://huggingface.co/Lightricks", how:"Open weights on Hugging Face (free under $10M revenue)"},
+  "ltx-2.3-audio": {url:"https://huggingface.co/Lightricks", how:"Open weights on Hugging Face (free under $10M revenue)"}
 };
 
 // ═══════════════════════════════════════════════════════
