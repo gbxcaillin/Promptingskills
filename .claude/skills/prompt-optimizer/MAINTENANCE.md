@@ -9,10 +9,11 @@ Run it roughly quarterly, or whenever you hear of a notable new model.
 
 ## What to change vs. preserve
 
-**Only refresh the model data.** Everything volatile lives in three files:
+**Only refresh the model data.** Everything volatile lives in four files:
 
 - `references/video-models.md`
 - `references/image-models.md`
+- `references/audio-models.md`
 - `references/text-models.md`
 
 **Never rewrite the method.** `SKILL.md` (the workflow, the "guide is the
@@ -34,6 +35,11 @@ class of models adopts) — and even then, change the minimum.
    - **Image** — Black Forest Labs (Flux), OpenAI (GPT Image), Google (Nano
      Banana / Gemini image), ByteDance (Seedream), Alibaba (Qwen Image),
      Recraft, Midjourney docs, SDXL checkpoint pages (Juggernaut, DynaVision).
+   - **Audio/music** — Suno, Udio, ElevenLabs (music/TTS/SFX), Stability AI
+     (Stable Audio), Google DeepMind (Lyria), Mureka, Hume, Cartesia, MiniMax,
+     Fish Audio, Microsoft Azure Speech, OpenAI audio docs; open-weights repos
+     (ACE-Step, SongGeneration, Kokoro, Chatterbox) on GitHub/Hugging Face.
+     Watch the label-lawsuit/settlement news — it reshapes Suno/Udio terms.
    - **Text/LLM** — Anthropic docs (Claude), OpenAI cookbook / prompting guide
      (GPT), Google AI docs (Gemini), xAI (Grok). For anything about Claude or
      the Anthropic API, use the `claude-api` skill if available rather than

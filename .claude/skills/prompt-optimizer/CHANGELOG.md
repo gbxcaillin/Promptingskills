@@ -3,6 +3,26 @@
 Dated entries summarizing what each refresh changed. Newest first.
 See MAINTENANCE.md for the update procedure.
 
+## 2026-09-01 — new audio/music category
+- Added `references/audio-models.md`: a fourth model type covering music
+  generation (Suno v5.5, ElevenLabs Music, Udio v4, Mureka V9, SongGeneration 2,
+  Google Lyria 3.5 + RealTime, Stable Audio 2.5, ACE-Step 1.5, Riffusion,
+  MusicGen), voice/TTS (ElevenLabs v3, Hume Octave 2, Gemini TTS/Chirp 3 HD,
+  Azure Neural HD, MiniMax Speech 2.5, Fish Audio S2, OpenAI gpt-realtime,
+  Cartesia Sonic 3, Chatterbox, Kokoro-82M), and sound effects (ElevenLabs
+  SFX v2). Per-model prompting tips, a comparative-strengths table, a
+  reception section, and free-access/licensing caveats.
+- SKILL.md: audio added to the type table, reference routing, and step 3
+  (three audio prompt shapes: music style+lyrics metatags, TTS script+delivery
+  direction, SFX physical description). Method otherwise untouched.
+- Notable calls: Suno v5.5 mixed (rollout backlash, watermark/download caps);
+  Udio elite but download-locked post-settlement; ElevenLabs Music loved for
+  human-passing vocals + clean licensing; Gemini TTS / MiniMax Speech sleepers
+  (top TTS arenas, low buzz); PlayHT excluded (shut down after Meta
+  acquisition, Dec 2025).
+- (Web app gained the same 22 audio models with specs, sentiment, free tags,
+  wizard path, and an Audio filter — 108 models total.)
+
 ## 2026-08-26 — sentiment layer + corrections
 - Added a new provider: Microsoft MAI Image (MAI-Image-2.5, 2.5 Pro) with
   sourced prompting tips; ratings tempered from benchmark-inflated values and

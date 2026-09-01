@@ -2,9 +2,11 @@
 
 Turns a rough idea into a prompt shaped for the **specific** AI model you're
 targeting — image (Flux, Midjourney, GPT Image, Seedream, Nano Banana, Qwen…),
-video (Veo, Sora, Kling, Seedance, Hailuo, Wan…), or text/LLM (Claude, ChatGPT,
-Gemini, Grok) — and hands back the *reasoning guide* alongside the prompt so you
-can keep refining it. Includes a game/interactive-app prompt formula.
+video (Veo, Sora, Kling, Seedance, Hailuo, Wan…), audio/music (Suno, Udio,
+ElevenLabs, Stable Audio, Lyria…), voice/TTS and sound effects (ElevenLabs v3,
+Hume, Gemini TTS, Cartesia…), or text/LLM (Claude, ChatGPT, Gemini, Grok) — and
+hands back the *reasoning guide* alongside the prompt so you can keep refining
+it. Includes a game/interactive-app prompt formula.
 
 ## Install
 

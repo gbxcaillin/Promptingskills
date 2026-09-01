@@ -6,9 +6,11 @@ description: >-
   or optimizing an existing prompt, or fixing one that gives wrong results
   (garbled text, missing detail, generic output). Covers image models (Flux,
   Midjourney, GPT Image, Nano Banana, Seedream, Qwen Image, Recraft…), video
-  models (Veo, Sora, Kling, Seedance, Hailuo, Wan, LTX, PixVerse, Vidu…), and
-  text/LLM work including games and single-file HTML apps (Claude, ChatGPT,
-  Gemini, Grok). Use it even when the user only pastes an idea and names a
+  models (Veo, Sora, Kling, Seedance, Hailuo, Wan, LTX, PixVerse, Vidu…),
+  audio/music models (Suno, Udio, ElevenLabs, Stable Audio, Lyria, Mureka…),
+  voice/TTS and sound effects (ElevenLabs v3, Hume, Gemini TTS, Azure,
+  Cartesia…), and text/LLM work including games and single-file HTML apps
+  (Claude, ChatGPT, Gemini, Grok). Use it even when the user only pastes an idea and names a
   model, asks "what's a good prompt for X" or "how should I prompt X for Y", or
   hasn't picked a model yet. These per-model conventions aren't obvious from
   general knowledge, so reach for this skill instead of writing the prompt from
@@ -51,14 +53,15 @@ finished, optimal artifact.
 
 ### 1. Identify the target model, its family, and its type
 
-Ask or infer: which model, and is it **video**, **image**, or **text/LLM**?
-Map the model to its *family* (the provider/architecture line), because
-conventions are shared within a family, not per version:
+Ask or infer: which model, and is it **video**, **image**, **audio/music**, or
+**text/LLM**? Map the model to its *family* (the provider/architecture line),
+because conventions are shared within a family, not per version:
 
 | Type | Families (see reference file) |
 |------|-------------------------------|
 | Video | Seedance, MiniMax/Hailuo, Kling, Veo, Sora, Wan, LTX, PixVerse, Vidu, HappyHorse, Gemini video, Grok Imagine |
 | Image | Flux, GPT Image, Nano Banana, Seedream, Qwen Image, Recraft, MAI Image, Kling, Wan, Grok Imagine, Juggernaut, DynaVision, OpenArt, Z-Image |
+| Audio | Music: Suno, Udio, ElevenLabs Music, Mureka, Lyria, Stable Audio, ACE-Step, SongGeneration, Riffusion, MusicGen. Voice/TTS: ElevenLabs, Hume, Google, Azure, MiniMax Speech, Fish Audio, OpenAI, Cartesia, Chatterbox, Kokoro. SFX: ElevenLabs SFX |
 | Text/LLM | Claude, ChatGPT/GPT, Gemini, Grok |
 
 If the exact model isn't in the references, pick the closest family (e.g. any
@@ -69,6 +72,7 @@ SDXL checkpoint → the Juggernaut/SDXL conventions; any Midjourney-style servic
 
 - Video → `references/video-models.md`
 - Image → `references/image-models.md`
+- Audio/music → `references/audio-models.md`
 - Text/LLM → `references/text-models.md`
 
 Each file has the per-family conventions, negative-prompt behavior, and the
@@ -94,6 +98,23 @@ intent intact, then *only add what's missing*:
 - Handle the negative prompt per the model: some support it, some ignore it
   (rewrite negatives as positives — "sharp focus" not "no blur"), some have no
   parameter.
+
+**Audio/music** — match the prompt shape to the sub-type (details in
+`references/audio-models.md`):
+
+- **Music**: build a style description answering genre, mood, instrumentation,
+  tempo, and production era (sub-genre specificity beats adjectives), and — for
+  models with a lyrics field — structure the lyrics with recognized metatags
+  (`[Intro]` `[Verse]` `[Chorus]` `[Bridge]` `[Outro]`). Use the exclude-styles
+  field where it exists instead of writing negatives into the style.
+- **Voice/TTS**: the prompt is the script plus delivery direction, in the
+  model's own direction syntax — inline bracket tags (ElevenLabs), a separate
+  instructions field (OpenAI), plain-English acting notes (Hume, Gemini TTS),
+  or SSML (Azure). Punctuation is pacing: ellipses hesitate, dashes cut, CAPS
+  emphasize.
+- **SFX**: describe the physical event concretely — material + action +
+  environment + temporal shape — and set duration; layer separate generations
+  rather than asking for one complex scene.
 
 **Text/LLM** — restructure, don't decorate. Rebuild the rough prompt into the
 architecture the family responds to (details in `references/text-models.md`):
