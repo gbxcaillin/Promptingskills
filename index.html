@@ -207,6 +207,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .type-video{background:var(--teal);color:#fff}
 .type-image{background:var(--contrast-bg);color:var(--contrast-fg)}
 .type-text{background:var(--deep-teal);color:#fff}
+.type-audio{background:#6E56A8;color:#fff}
 .copy-btn{padding:6px 14px;border-radius:var(--radius);border:1px solid var(--ink);background:none;color:var(--ink);font-size:.66rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:var(--sans)}
 .copy-btn:hover{background:var(--ink);color:var(--paper)}
 .copy-btn.copied{border-color:var(--teal);background:var(--teal);color:#fff}
@@ -388,6 +389,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
       <button class="active" onclick="setType('all',this)">All</button>
       <button onclick="setType('video',this)">Video</button>
       <button onclick="setType('image',this)">Image</button>
+      <button onclick="setType('audio',this)">Audio</button>
       <button onclick="setType('text',this)">Text</button>
     </div>
     <h3 class="sub-head">Select models <span class="count" id="selectedCount">(0 selected)</span></h3>
@@ -452,6 +454,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
        <button class="active" onclick="setDirType('all',this)">All</button>
        <button onclick="setDirType('video',this)">Video</button>
        <button onclick="setDirType('image',this)">Image</button>
+       <button onclick="setDirType('audio',this)">Audio</button>
        <button onclick="setDirType('text',this)">Text</button>
      </div>
      <input type="text" class="search-input" placeholder="Search models..." oninput="onDirSearch(this.value)">
@@ -474,7 +477,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   <div class="wordmark">GBX</div>
   <div class="lockup">Professional&nbsp;&nbsp;Services</div>
   <div class="rule"></div>
-  Prompt Optimizer. Research-backed prompt engineering for 86 AI models.<br>
+  Prompt Optimizer. Research-backed prompt engineering for <span id="footerModelCount">86</span> AI models.<br>
   GBX PS PTY LTD &copy; 2026
 </footer>
 
@@ -602,6 +605,14 @@ const SPECIALTIES = {
     brain: "Brainstorming & ideation",
     follow: "Instruction & format control",
     long: "Long documents & lore"
+  },
+  audio: {
+    song: "Songs & vocals",
+    inst: "Instrumental & score",
+    voice: "Voice & narration",
+    sfx: "Sound effects & foley",
+    control: "Control & editing",
+    speed: "Speed & value"
   }
 };
 
@@ -1663,6 +1674,14 @@ const TEXT_STRATEGIES = {
 };
 
 // ═══════════════════════════════════════════════════════
+// AUDIO / MUSIC OPTIMIZATION STRATEGIES (Research-backed)
+// Populated from research below.
+// ═══════════════════════════════════════════════════════
+
+const AUDIO_STRATEGIES = {
+};
+
+// ═══════════════════════════════════════════════════════
 // STATE & RENDERING
 // ═══════════════════════════════════════════════════════
 
@@ -1842,7 +1861,7 @@ function setType(type, btn) {
   currentTypeFilter = type;
   currentFamilyFilter = null;
   if (currentSpecialty && type !== "all" && currentSpecialty.split(':')[0] !== type) currentSpecialty = null;
-  document.querySelectorAll(".type-toggle button").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll("#view-optimizer .type-toggle button").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
   render();
 }
@@ -2009,15 +2028,17 @@ function copyNeg(btn, id) {
 
 function optimizeForModel(basePrompt, model) {
   const strategies = model.type === "video" ? VIDEO_STRATEGIES
-    : model.type === "image" ? IMAGE_STRATEGIES : TEXT_STRATEGIES;
+    : model.type === "image" ? IMAGE_STRATEGIES
+    : model.type === "audio" ? AUDIO_STRATEGIES
+    : TEXT_STRATEGIES;
   const strategy = strategies[model.family] || { transform: p => p, tips: [] };
 
   let prompt = basePrompt.trim();
 
-  if (model.type === "text") {
-    // LLM prompts are multi-line structured templates; keep formatting intact
+  if (model.type === "text" || model.type === "audio") {
+    // LLM prompts (and audio style/lyric blocks) are structured; keep formatting intact.
     if (strategy.transform) prompt = strategy.transform(prompt, model);
-    return { optimized: prompt, negativePrompt: null, tips: strategy.tips || [] };
+    return { optimized: prompt, negativePrompt: strategy.negativePrompt || null, tips: strategy.tips || [] };
   }
 
   if (prompt.endsWith(".")) prompt = prompt.slice(0, -1);
@@ -2056,7 +2077,7 @@ function optimizePrompts() {
     });
 
     container.innerHTML = results.map((r, i) => {
-      const typeClass = r.model.type === "video" ? "type-video" : r.model.type === "image" ? "type-image" : "type-text";
+      const typeClass = r.model.type === "video" ? "type-video" : r.model.type === "image" ? "type-image" : r.model.type === "audio" ? "type-audio" : "type-text";
       const typeLabel = r.model.type.toUpperCase();
       const negHtml = r.negativePrompt ? `<div class="neg-prompt"><div class="neg-label">Negative Prompt <button class="copy-btn" onclick="copyNeg(this,'${i}')" style="margin-left:8px;font-size:.7rem;padding:2px 8px">Copy</button></div><span id="neg-${i}">${escapeHtml(r.negativePrompt)}</span></div>` : '';
       const tipsHtml = r.tips.length
@@ -2115,7 +2136,22 @@ const QUIZ = [
   { id: "type", q: "What are you creating?", options: [
     { label: "A video", value: "video" },
     { label: "An image", value: "image" },
+    { label: "Audio or music (songs, voice, sound effects)", value: "audio" },
     { label: "Text with an AI assistant (games, writing, ideas)", value: "text" }
+  ]},
+  { id: "kind", q: "What best describes what you are making?",
+    showIf: a => a.type && a.type.value === "audio", options: [
+    { label: "A full song with vocals and lyrics", weights: { song: 3, control: 1 } },
+    { label: "Instrumental music or a background score", weights: { inst: 3 } },
+    { label: "Spoken voice, narration or dialogue", weights: { voice: 3, control: 1 } },
+    { label: "Sound effects or foley", weights: { sfx: 3 } }
+  ]},
+  { id: "priorities", q: "What matters most to you?", sub: "Pick up to two.", multi: true,
+    showIf: a => a.type && a.type.value === "audio", options: [
+    { label: "The most realistic, expressive result", weights: { song: 1, voice: 1 } },
+    { label: "Precise control (structure, stems, editing, cloning)", weights: { control: 2 } },
+    { label: "Instrumental quality and production", weights: { inst: 2 } },
+    { label: "Fast, affordable iteration", weights: { speed: 2 } }
   ]},
   { id: "kind", q: "What best describes what you are making?",
     showIf: a => a.type && a.type.value === "text", options: [
@@ -2326,8 +2362,8 @@ function useWizardModels() {
   selectedModels = new Set(window._wizTop || []);
   currentTypeFilter = window._wizType || "all";
   currentFamilyFilter = null;
-  const idx = { all: 0, video: 1, image: 2, text: 3 }[currentTypeFilter];
-  document.querySelectorAll(".type-toggle button").forEach((b, i) => b.classList.toggle("active", i === idx));
+  const idx = { all: 0, video: 1, image: 2, audio: 3, text: 4 }[currentTypeFilter];
+  document.querySelectorAll("#view-optimizer .type-toggle button").forEach((b, i) => b.classList.toggle("active", i === idx));
   render();
   closeWizard();
   const promptEl = document.getElementById("userPrompt");
@@ -2353,6 +2389,7 @@ function toggleTheme() {
 }
 
 syncThemeLabel();
+(function(){ const el = document.getElementById("footerModelCount"); if (el) el.textContent = MODELS.length; })();
 render();
 </script>
 </body>
