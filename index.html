@@ -354,7 +354,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   <div class="lockup">Professional&nbsp;&nbsp;Services</div>
   <div class="rule"></div>
   <h1>Prompt Optimizer</h1>
-  <p>Enter a prompt, select your models, and get research-backed optimized versions tailored to each AI video, image and text model.</p>
+  <p>Enter a prompt, select your models, and get research-backed optimized versions tailored to each AI video, image, audio and text model.</p>
 </header>
 <nav class="main-nav" role="tablist" aria-label="Sections">
   <button class="nav-tab active" id="tab-optimizer" role="tab" aria-selected="true" onclick="showView('optimizer',this)">Prompt Optimizer</button>
@@ -564,6 +564,33 @@ const MODELS = [
   {id:"dynavision-xl",name:"DynaVision XL",type:"image",family:"DynaVision",desc:"Stylized 3D all-in-one SDXL checkpoint",provider:"DynaVision",spec:{illus:9,design:7}},
   {id:"flux-2-lora-realism",name:"Flux 2 LoRA Gallery Realism",type:"image",family:"Flux",desc:"Enhanced photorealism",provider:"Black Forest Labs",spec:{photo:10,port:9}},
 
+  // === AUDIO / MUSIC MODELS (researched Sep 2026) ===
+  // — Music generation —
+  {id:"suno-v5-5",name:"Suno v5.5",type:"audio",family:"Suno",desc:"Full songs with vocals; the category leader",provider:"Suno Inc.",spec:{song:10,inst:8,sfx:3,control:8,speed:8}},
+  {id:"elevenlabs-music",name:"ElevenLabs Music",type:"audio",family:"ElevenLabs Music",desc:"Most human-sounding, commercially-cleared vocals",provider:"ElevenLabs",spec:{song:9,inst:7,voice:6,sfx:3,control:8,speed:8}},
+  {id:"udio-v4",name:"Udio v4",type:"audio",family:"Udio",desc:"Audiophile-grade production and remixing",provider:"Uncharted Labs",spec:{song:9,inst:9,sfx:2,control:9,speed:7}},
+  {id:"mureka-v9",name:"Mureka V9",type:"audio",family:"Mureka",desc:"Lyrics-first songs with stems & MIDI export",provider:"Kunlun Tech",spec:{song:8,inst:7,voice:5,sfx:2,control:8,speed:8}},
+  {id:"tencent-songgeneration-2",name:"SongGeneration 2",type:"audio",family:"SongGeneration",desc:"Open-weights songs with top lyric accuracy",provider:"Tencent AI Lab",spec:{song:8,inst:7,control:7,speed:7}},
+  {id:"google-lyria-3-5",name:"Google Lyria 3.5",type:"audio",family:"Lyria",desc:"High-fidelity instrumental with improving vocals",provider:"Google DeepMind",spec:{song:7,inst:9,sfx:4,control:7,speed:8}},
+  {id:"stable-audio-2-5",name:"Stable Audio 2.5",type:"audio",family:"Stable Audio",desc:"Fast instrumental beds and sound design",provider:"Stability AI",spec:{song:3,inst:9,sfx:8,control:8,speed:10}},
+  {id:"ace-step-1-5",name:"ACE-Step 1.5",type:"audio",family:"ACE-Step",desc:"Fastest open-weights full-song model",provider:"ACE Studio + StepFun",spec:{song:7,inst:7,control:7,speed:10}},
+  {id:"riffusion-fuzz",name:"Riffusion FUZZ",type:"audio",family:"Riffusion",desc:"Free, no-signup song generation",provider:"Riffusion",spec:{song:6,inst:6,sfx:3,control:5,speed:8}},
+  {id:"lyria-realtime",name:"Lyria RealTime",type:"audio",family:"Lyria",desc:"Interactive real-time music jamming",provider:"Google DeepMind",spec:{inst:8,control:8,speed:9}},
+  {id:"meta-musicgen",name:"MusicGen",type:"audio",family:"AudioCraft",desc:"Open-weights instrumental baseline, self-hostable",provider:"Meta AI",spec:{song:2,inst:6,sfx:3,control:5,speed:5}},
+  // — Voice / TTS —
+  {id:"elevenlabs-v3",name:"ElevenLabs v3",type:"audio",family:"ElevenLabs",desc:"Most expressive TTS with inline audio tags",provider:"ElevenLabs",spec:{voice:10,control:9,speed:6}},
+  {id:"hume-octave-2",name:"Hume Octave 2",type:"audio",family:"Hume AI",desc:"Emotionally-aware LLM speech engine",provider:"Hume AI",spec:{voice:9,control:9,speed:6}},
+  {id:"google-gemini-tts",name:"Gemini TTS (Chirp 3 HD)",type:"audio",family:"Google Cloud",desc:"Directable multilingual cloud TTS with cloning",provider:"Google",spec:{voice:9,control:8,speed:8}},
+  {id:"azure-neural-tts",name:"Azure Neural HD TTS",type:"audio",family:"Azure AI Speech",desc:"Enterprise TTS with deep SSML control",provider:"Microsoft",spec:{voice:8,control:8,speed:8}},
+  {id:"minimax-speech",name:"MiniMax Speech 2.5",type:"audio",family:"MiniMax Audio",desc:"Multilingual TTS with 10-second cloning",provider:"MiniMax",spec:{voice:8,control:8,speed:7}},
+  {id:"fish-audio-s2",name:"Fish Audio S2 Pro",type:"audio",family:"Fish Audio",desc:"Fast-cloning TTS with open lineage",provider:"Fish Audio",spec:{voice:8,control:8,speed:8}},
+  {id:"openai-gpt-realtime",name:"OpenAI gpt-realtime",type:"audio",family:"OpenAI",desc:"Steerable realtime speech-to-speech & TTS",provider:"OpenAI",spec:{voice:8,control:7,speed:9}},
+  {id:"cartesia-sonic-3",name:"Cartesia Sonic 3",type:"audio",family:"Cartesia",desc:"Ultra-low-latency streaming voice for agents",provider:"Cartesia",spec:{voice:7,control:7,speed:10}},
+  {id:"chatterbox",name:"Chatterbox v3",type:"audio",family:"Chatterbox",desc:"MIT open TTS with cloning and emotion knob",provider:"Resemble AI",spec:{voice:7,control:8,speed:8}},
+  {id:"kokoro-82m",name:"Kokoro-82M",type:"audio",family:"Kokoro",desc:"Tiny Apache-licensed local TTS",provider:"hexgrad (community)",spec:{voice:6,control:3,speed:9}},
+  // — Sound effects —
+  {id:"elevenlabs-sfx",name:"ElevenLabs SFX v2",type:"audio",family:"ElevenLabs",desc:"Best-in-class text-to-SFX and foley",provider:"ElevenLabs",spec:{sfx:10,control:6,speed:9}},
+
   // === TEXT / LLM MODELS ===
   {id:"claude-fable-5",name:"Claude Fable 5",type:"text",family:"Claude",desc:"Anthropic's most capable model, tuned for the most demanding creative and long-horizon work",provider:"Anthropic",spec:{game:9,write:10,world:10,brain:9,follow:10,long:10}},
   {id:"claude-opus-5",name:"Claude Opus 5",type:"text",family:"Claude",desc:"Anthropic's flagship for deep creative and coding work",provider:"Anthropic",spec:{game:9,write:10,world:9,brain:8,follow:10,long:10}},
@@ -667,7 +694,30 @@ const SENTIMENT = {
   "vidu-q3": {mood:"sleeper", note:"Standout multi-reference (up to 7 images) character consistency across angles and cuts — the clearest differentiator for recurring-character work.", adj:{ref:2, con:2}},
   "vidu-q2": {mood:"sleeper", note:"Same reference-consistency strength as Q3 at lower fidelity.", adj:{ref:1, con:1}},
   "grok-imagine-v": {mood:"mixed", note:"Cheapest fast loop with native audio for vertical social; 720p ceiling and no provenance make it weak for client deliverables.", adj:{speed:2}},
-  "grok-imagine-1.5": {mood:"mixed", note:"Fast, cheap iteration with audio; not for polished client work needing 1080p, provenance, or asset retention.", adj:{speed:2}}
+  "grok-imagine-1.5": {mood:"mixed", note:"Fast, cheap iteration with audio; not for polished client work needing 1080p, provenance, or asset retention.", adj:{speed:2}},
+  // — Audio / Music —
+  "suno-v5-5": {mood:"mixed", note:"Still the default leader for vocal songs, but the v5.5 rollout drew heavy community backlash over output changes, pricing, and new download caps/watermarking; Suno Studio's stems and MIDI export are genuinely valued.", adj:{control:1, song:-1}},
+  "elevenlabs-music": {mood:"loved", note:"Broadly cited as the top pick when the vocal has to pass as human, helped by an unusually clean licensed-data and commercial-clearance story (self-serve clearance still excludes film/TV/games).", adj:{}},
+  "udio-v4": {mood:"mixed", note:"Praised as the audiophile's choice for instrumental cleanliness, but the post-settlement download lockdown gutted its practical value for creators; Sony is still litigating.", adj:{inst:1, speed:-1}},
+  "mureka-v9": {mood:"sleeper", note:"The under-the-radar Suno competitor whose MIDI export, deep stems, and voice cloning give producers more downstream control than the big two.", adj:{control:1}},
+  "tencent-songgeneration-2": {mood:"sleeper", note:"Open-source buzz for beating commercial models on measured lyric accuracy (8.55% phoneme error rate) while being free to self-host.", adj:{song:1}},
+  "google-lyria-3-5": {mood:"sleeper", note:"Strong 48kHz instrumental fidelity and a genuinely free, uncapped path via Google MusicFX; far less mindshare than Suno/Udio for finished vocal songs.", adj:{inst:1}},
+  "stable-audio-2-5": {mood:"sleeper", note:"Overlooked by song-makers but quietly excellent for instrumental beds, ad music, and sound design where speed and clean commercial licensing matter.", adj:{inst:1}},
+  "ace-step-1-5": {mood:"mixed", note:"Loved in the open-source scene for near-commercial quality at astonishing speed on cheap hardware, but its 'beats Suno' benchmark claims are not matched by finished-track polish.", adj:{song:-1}},
+  "riffusion-fuzz": {mood:"loved", note:"Community favorite for being genuinely free with no signup; widely acknowledged that audio fidelity sits below the paid leaders.", adj:{}},
+  "lyria-realtime": {mood:"sleeper", note:"Novel live-steering control that developers love for interactive and generative apps; not positioned as a finished-song tool, so it stays niche.", adj:{control:1}},
+  "meta-musicgen": {mood:"loved", note:"Respected as the open-source baseline that started the wave, but hobbyists say it has been left behind by 2026 open models on quality.", adj:{inst:-1}},
+  "elevenlabs-v3": {mood:"mixed", note:"Loved for expressiveness, but users consistently report the audio tags are inconsistent and v2 is steadier for neutral long-form narration.", adj:{control:-1}},
+  "hume-octave-2": {mood:"loved", note:"Expressiveness is genuinely differentiated (beat ElevenLabs Voice Design 71.6% in a blind study); the main gripe is developer-only accessibility.", adj:{}},
+  "google-gemini-tts": {mood:"sleeper", note:"Tops the TTS arenas yet gets far less creator buzz than ElevenLabs; Gemini-TTS takes plain-English delivery direction and Chirp 3 HD clones from a short clip.", adj:{voice:1}},
+  "azure-neural-tts": {mood:"mixed", note:"Trusted for reliability, huge language coverage, and unmatched SSML control, but stock voices feel less expressive than 2026 LLM-TTS rivals.", adj:{}},
+  "minimax-speech": {mood:"sleeper", note:"Repeatedly hit #1 on TTS arenas over OpenAI and ElevenLabs yet remains under-adopted in Western workflows.", adj:{voice:1}},
+  "fish-audio-s2": {mood:"loved", note:"Favorite of the self-host crowd: strong arena results, word-level emotion tags in S2, and a cheap API with an open repo.", adj:{}},
+  "openai-gpt-realtime": {mood:"mixed", note:"Praised for latency, steerability, and value; some find the fixed voice set less emotionally rich than ElevenLabs or Hume and dislike the no-cloning limit.", adj:{voice:-1}},
+  "cartesia-sonic-3": {mood:"mixed", note:"Undisputed latency king and cheap at scale, but reviewers note it ranks mid-pack on pure quality and needs manual pitch/speed/emotion tuning.", adj:{speed:1, voice:-1}},
+  "chatterbox": {mood:"loved", note:"Open-source favorite with a one-knob emotion-exaggeration control; Resemble's blind test had 65.3% prefer it over ElevenLabs (vendor-run, weigh accordingly).", adj:{}},
+  "kokoro-82m": {mood:"sleeper", note:"Community darling that punches far above its 82M parameters for size and cost; no cloning or emotion control though.", adj:{speed:1}},
+  "elevenlabs-sfx": {mood:"loved", note:"Consistently ranked the leading text-to-SFX and foley generator; sound designers rate many outputs indistinguishable from recorded foley in blind tests.", adj:{}}
 };
 
 // ═══════════════════════════════════════════════════════
@@ -738,7 +788,30 @@ const FREE_ACCESS = {
   "vidu-q2": {url:"https://www.vidu.com", how:"Free recurring credit allowance (watermarked, personal use)"},
   "ltx-2.5": {url:"https://huggingface.co/Lightricks/LTX-2.5", how:"Open weights on Hugging Face (free under $10M revenue)"},
   "ltx-2.3": {url:"https://huggingface.co/Lightricks", how:"Open weights on Hugging Face (free under $10M revenue)"},
-  "ltx-2.3-audio": {url:"https://huggingface.co/Lightricks", how:"Open weights on Hugging Face (free under $10M revenue)"}
+  "ltx-2.3-audio": {url:"https://huggingface.co/Lightricks", how:"Open weights on Hugging Face (free under $10M revenue)"},
+  // — Audio / Music —
+  "suno-v5-5": {url:"https://suno.com", how:"Free daily credits (older v4.5 model only; non-commercial)"},
+  "elevenlabs-music": {url:"https://elevenlabs.io", how:"Free tier ~7 songs/day (self-serve commercial clearance excludes film/TV/games)"},
+  "udio-v4": {url:"https://udio.com", how:"Free monthly credits (downloads may be restricted post-settlement)"},
+  "mureka-v9": {url:"https://www.mureka.ai", how:"Free tier with limited monthly credits"},
+  "tencent-songgeneration-2": {url:"https://huggingface.co/tencent/SongGeneration", how:"Open weights on Hugging Face — self-hostable"},
+  "google-lyria-3-5": {url:"https://aitestkitchen.withgoogle.com", how:"Free and uncapped via Google MusicFX (Google account)"},
+  "stable-audio-2-5": {url:"https://stableaudio.com", how:"Free tier with limited monthly generations"},
+  "ace-step-1-5": {url:"https://github.com/ace-step/ACE-Step-1.5", how:"Open weights, Apache 2.0 — free for commercial use"},
+  "riffusion-fuzz": {url:"https://www.riffusion.com", how:"Free public beta, no login, effectively unlimited"},
+  "lyria-realtime": {url:"https://aitestkitchen.withgoogle.com", how:"Free real-time jamming via Google MusicFX (Google account)"},
+  "meta-musicgen": {url:"https://github.com/facebookresearch/audiocraft", how:"Open weights — run locally (weights are CC BY-NC, non-commercial)"},
+  "elevenlabs-v3": {url:"https://elevenlabs.io", how:"Free ~10k credits/month (~10 min; watermarked, non-commercial)"},
+  "hume-octave-2": {url:"https://platform.hume.ai", how:"Free playground + starter API credits (non-commercial)"},
+  "google-gemini-tts": {url:"https://cloud.google.com/text-to-speech", how:"Free monthly character quota + new-account trial credits"},
+  "azure-neural-tts": {url:"https://azure.microsoft.com/en-us/products/ai-services/ai-speech", how:"Free F0 tier: 0.5M characters/month"},
+  "minimax-speech": {url:"https://www.minimax.io/audio", how:"Free trial credits in the MiniMax Audio web app"},
+  "fish-audio-s2": {url:"https://github.com/fishaudio/fish-speech", how:"Open-weights fish-speech to run locally; hosted trial at fish.audio"},
+  "openai-gpt-realtime": {url:"https://openai.fm", how:"Free no-signup browser demo of gpt-4o-mini-tts (13 voices)"},
+  "cartesia-sonic-3": {url:"https://cartesia.ai", how:"Free plan with monthly playground + API credits"},
+  "chatterbox": {url:"https://github.com/resemble-ai/chatterbox", how:"MIT open weights — free to self-host"},
+  "kokoro-82m": {url:"https://huggingface.co/hexgrad/Kokoro-82M", how:"Apache 2.0 open weights — free to self-host commercially"},
+  "elevenlabs-sfx": {url:"https://elevenlabs.io/sound-effects", how:"Free tier ~50 SFX generations/month, royalty-free"}
 };
 
 // ═══════════════════════════════════════════════════════
@@ -1674,11 +1747,260 @@ const TEXT_STRATEGIES = {
 };
 
 // ═══════════════════════════════════════════════════════
-// AUDIO / MUSIC OPTIMIZATION STRATEGIES (Research-backed)
-// Populated from research below.
+// AUDIO / MUSIC OPTIMIZATION STRATEGIES (Research-backed, Sep 2026)
+// Keyed by model id (audio models differ too much within a
+// family to share tips). No transforms: for audio the guide is
+// the product; the user's idea passes through untouched.
 // ═══════════════════════════════════════════════════════
 
 const AUDIO_STRATEGIES = {
+  "suno-v5-5": {
+    negativePrompt: "aggressive screaming, distorted metal guitar, lo-fi, spoken word",
+    tips: [
+      "Split the two boxes: Style box = global sound (genre, production, key instruments, vocal identity, mood); Lyrics box = the words + section structure only",
+      "Top-anchor the style: lead with vocal role + genre, e.g. 'Female pop vocalist, breathy, intimate, 90s R&B groove' — this locks identity before lyrics are parsed",
+      "Use recognized structure metatags: [Intro] [Verse] [Chorus] [Bridge] [Outro]; custom tags like [My Special Section] are ignored",
+      "Keep style tags to ~15-30 words; over-stuffing dilutes adherence",
+      "Punctuation is phrasing: commas, dashes and ellipses in lyrics become micro-pauses and breaths",
+      "Use the Exclude Styles field to steer away from unwanted genres",
+      "Use Suno Studio (paid) for multitrack editing, stem separation and MIDI export when you need control"
+    ]
+  },
+  "elevenlabs-music": {
+    negativePrompt: "acoustic, repetitive structure, four-on-the-floor kick, lo-fi",
+    tips: [
+      "Every prompt implicitly answers five questions — genre, mood, instrumentation, tempo, production era — so state all five",
+      "Be concrete on genre and era: 'energetic 1980s synth-pop, driving drum machine, male vocals', not 'rock'",
+      "Build section by section: generate the Intro, then use Continue to add Verse, Chorus, Breakdown, Outro for granular control",
+      "Call out specific instruments ('prominent slap bass, funky rhythm guitar, horn section')",
+      "Use Include/Exclude Styles to add or remove tags (e.g. exclude 'repetitive structure')",
+      "Steer with a ~30s audio reference to match an existing sonic direction; Music Finetunes (5-10 min of audio) builds a custom style",
+      "Reach for it specifically when the vocal has to pass as human in a commercial context"
+    ]
+  },
+  "udio-v4": {
+    negativePrompt: null,
+    tips: [
+      "Be sub-genre specific ('shoegaze', not 'rock') and name the production era ('80s reverb-heavy synth pop')",
+      "Describe production texture explicitly: 'warm analog', 'crisp digital', 'lo-fi tape'",
+      "Learn Manual Mode — a genuine expert mode, not an 'off switch'; treating it casually tanks quality",
+      "Use Magic Edit (inpainting) to regenerate one waveform section without rerolling the whole track",
+      "Use Stem Separation 2.0 to export vocals/bass/drums/other with strong phase coherence",
+      "Specify instruments, tempo and mood together for the tightest adherence",
+      "Check download availability before committing — exports have been restricted since the label settlements"
+    ]
+  },
+  "mureka-v9": {
+    negativePrompt: null,
+    tips: [
+      "Lead with lyrics — it composes around your words, so paste them first",
+      "Configure genre, mood, tempo and instrumentation as explicit parameters, not just prose",
+      "Use Reference Mode: upload a track you like and it generates in a similar sonic style",
+      "Export stems (5- or 12-stem) and MIDI when you need to finish the track in a DAW",
+      "Use voice cloning to keep a consistent vocalist across multiple songs",
+      "Reroll with a tweaked style description based on exactly what the first take got wrong"
+    ]
+  },
+  "tencent-songgeneration-2": {
+    negativePrompt: null,
+    tips: [
+      "Feed clean, well-punctuated lyrics — its edge is lyric/phoneme accuracy, so garbled input wastes it",
+      "Choose the output mode: vocals + accompaniment, pure instrumental, a cappella, or dual-track separated",
+      "Add a prompt-audio reference to guide style (budget ~6GB extra VRAM for it)",
+      "State the target language explicitly — it is genuinely multilingual (Chinese, English, Spanish, Japanese, more)",
+      "Give explicit structure/section cues in the prompt so it can plan lyric placement",
+      "Best run locally (10-16GB VRAM) or via a cheap API host rather than expecting a polished consumer UI"
+    ]
+  },
+  "google-lyria-3-5": {
+    negativePrompt: "vocals, distortion, low fidelity, dissonant",
+    tips: [
+      "Be descriptive and specific with adjectives; name genre, mood, key instruments and rhythmic feel",
+      "Include lyrics either as a theme or as exact words in quotes",
+      "Reference verse/chorus/bridge boundaries — 3.5 tracks song structure",
+      "Specify tempo and duration explicitly (3.5 added creative control over both)",
+      "In MusicFX-style surfaces, stack up to ~10 independent prompts, each acting as a separate 'track' in the mix",
+      "Use Extend and Edit to continue clips or transform mood/style rather than rerolling",
+      "Output carries a SynthID watermark; training data is licensed"
+    ]
+  },
+  "stable-audio-2-5": {
+    negativePrompt: "vocals, singing, lyrics, low quality, muddy mix",
+    tips: [
+      "Follow the formula: subject + genre + instruments + mood + tempo + key + production style + duration",
+      "Always add BPM for sync-critical work (video cuts, loops, VO beds): '...105 BPM'",
+      "Add a key signature for theory-aware output: 'Key of C minor'",
+      "Name specific sound sources, then add texture ('dusty vinyl crackle, warm Rhodes piano') to escape generic results",
+      "Use audio-to-audio and inpainting to transform or repair your own uploaded audio",
+      "It is built for instrumental and sound design — do not expect strong lead vocals",
+      "Use the negative prompt to strip unwanted elements"
+    ]
+  },
+  "ace-step-1-5": {
+    negativePrompt: null,
+    tips: [
+      "You can hand it a simple prompt — the built-in planner expands it into style, lyrics and arrangement metadata",
+      "Or supply your own lyrics + style descriptors to override the planner and keep tight control",
+      "Runs on modest consumer GPUs (<4GB VRAM), so iterate with fast rerolls",
+      "Use it via ComfyUI for node-based control over the generation pipeline",
+      "Validate by ear — its benchmark wins flatter it against the polish of top commercial vocals",
+      "Apache 2.0: output is commercially usable and the model is free to fine-tune"
+    ]
+  },
+  "riffusion-fuzz": {
+    negativePrompt: null,
+    tips: [
+      "Describe the full vibe in plain language — genre, mood, instrumentation, tempo; it is forgiving of natural prose",
+      "Interact intentionally (like/remix/download what you want more of); it personalizes future generations to your history",
+      "Seed from text, an audio clip, or an image when a prose prompt drifts",
+      "Reroll freely — it is free and effectively unlimited, so treat generation as cheap iteration",
+      "Set expectations: fidelity trails Suno/Udio, so favor it for ideation and demos over final masters"
+    ]
+  },
+  "lyria-realtime": {
+    negativePrompt: null,
+    tips: [
+      "Think in live steering, not one-shot prompts — add or adjust prompts mid-stream and changes apply instantly",
+      "Run up to ~10 concurrent weighted prompts, each a 'track', and ride the faders to morph the mix",
+      "Blend styles and instruments in real time rather than fully specifying a finished arrangement up front",
+      "Keep prompts to instrumental descriptors; it is not built for lead vocals or finished songs",
+      "Use it for interactive apps, live sets and generative backgrounds where responsiveness beats final polish"
+    ]
+  },
+  "meta-musicgen": {
+    negativePrompt: null,
+    tips: [
+      "Prompt for instrumental only — vocals are effectively unusable",
+      "Use melody conditioning: feed a reference melody plus a text style prompt to steer the arrangement",
+      "Keep prompts genre/mood/instrument focused ('upbeat 8-bit chiptune, driving drums, arpeggiated synth')",
+      "Pick the checkpoint for your hardware: 3.3B for quality, smaller for speed and low VRAM",
+      "Generate short segments and continue — long-form coherence is weak",
+      "Treat it as a free, hackable pipeline baseline rather than a finished-song tool (weights are non-commercial)"
+    ]
+  },
+  "elevenlabs-v3": {
+    negativePrompt: null,
+    tips: [
+      "Direct the performance with inline audio tags in brackets — [whispers], [laughs], [sighs], [excited], [sarcastically] — placed right before the words they affect",
+      "Style and accent tags work too ([pirate voice], [French accent]) but expect variance; regenerate a few times to land the read",
+      "For multi-character scenes use the Text-to-Dialogue mode rather than stuffing all lines into one call",
+      "Punctuation drives pacing: ellipses add hesitation, em-dashes cut, CAPITALS push emphasis and volume",
+      "For flat neutral long-form (audiobooks) many users still prefer v2 or Flash — v3 shines when you want acting, not consistency",
+      "Use Professional Voice Cloning (30+ min clean audio) over Instant clone for narration",
+      "Give enough surrounding text — v3 reads emotional subtext from context, so one-word prompts underperform"
+    ]
+  },
+  "hume-octave-2": {
+    negativePrompt: null,
+    tips: [
+      "It is an LLM that understands what it says — give natural-language acting notes ('whisper fearfully', 'sound sarcastic and tired')",
+      "Provide semantic context, not just the line; it infers emotion from meaning, so richer surrounding text improves the read",
+      "Design voices by description in the playground, then reuse the voice ID via the API",
+      "For interactive turn-taking apps use EVI (speech-to-speech), paired with an external LLM for the content",
+      "Not the lowest latency — prefer it for expressive VO and characters over high-volume phone agents",
+      "The free tier is non-commercial; budget a paid plan before shipping"
+    ]
+  },
+  "google-gemini-tts": {
+    negativePrompt: null,
+    tips: [
+      "Gemini-TTS takes natural-language style prompts — describe tone, pace, accent and emotion in plain English before the line",
+      "Chirp 3 HD voices follow the pattern <locale>-Chirp3-HD-<voice> (e.g. en-US-Chirp3-HD-Kore); pick the voice explicitly",
+      "Use Chirp 3 HD instant cloning from a short reference clip for a specific speaker; use Gemini-TTS when you need directable style",
+      "Stream for low latency in agents; batch for long-form narration",
+      "For multilingual work, set the correct locale in the voice name rather than relying on autodetect",
+      "Classic Cloud TTS voices still accept SSML (<break>, <phoneme>) for fine pause and pronunciation control"
+    ]
+  },
+  "azure-neural-tts": {
+    negativePrompt: null,
+    tips: [
+      "Best-in-class SSML: <break>, <prosody rate/pitch/volume>, <emphasis>, <phoneme> and <lang> give precision the newer LLM-TTS models cannot match",
+      "Use <mstts:express-as style='...' styledegree='2'> for emotion (cheerful, sad, angry, whispering) on supported voices",
+      "Neural HD v3 preview voices also accept prompt-level instructions on top of SSML",
+      "Fix pronunciation deterministically with <phoneme> or a custom lexicon — critical for names and brands",
+      "Personal Voice is the cloning path; it gates behind consent verification and Limited Access approval",
+      "Pick a region close to your users and stream to keep agent latency down"
+    ]
+  },
+  "minimax-speech": {
+    negativePrompt: null,
+    tips: [
+      "Pick HD for audiobooks and VO (rhythm-stable), Turbo for realtime and interactive use",
+      "Clone from ~10s of audio; keep the reference clean and single-speaker",
+      "Set emotion explicitly (happy/sad/surprised/angry) rather than hoping context carries it",
+      "Strong native accents across 30+ languages — set the target language and voice, do not mix scripts in one call",
+      "Compare hosts before buying: it is sold via the MiniMax app and several resellers at different prices",
+      "Break very long text into paragraph chunks to keep prosody consistent"
+    ]
+  },
+  "fish-audio-s2": {
+    negativePrompt: null,
+    tips: [
+      "Use word-level emotion tagging (new in S2) to spike specific words rather than styling the whole line",
+      "Zero-shot clone from 10-30s of audio; more clean reference audio noticeably improves fidelity",
+      "S1 remains the low-latency default (<150ms) for realtime; S2 Pro is the expressive-quality pick",
+      "For self-hosting, the open fish-speech repo runs locally; hosted S2 Pro adds the newest features",
+      "Match reference language to target language for the cleanest cross-lingual results",
+      "Keep segments short for the lowest latency in conversational use"
+    ]
+  },
+  "openai-gpt-realtime": {
+    negativePrompt: null,
+    tips: [
+      "Steer gpt-4o-mini-tts with the separate instructions field ('calm, professional, slightly warm; slow pace'), not by editing the spoken text",
+      "Instructions can set accent, emotion, intonation, impressions, speed and whispering — direct it like a voice actor",
+      "No voice cloning — pick the closest built-in voice (Cedar and Marin are newest) and steer from there",
+      "gpt-realtime is speech-to-speech: it switches language mid-sentence and takes interruptions; give it persona + tone rules in the system prompt",
+      "Prototype tone for free on openai.fm before wiring the API",
+      "Watch audio-token cost on realtime ($32/1M in, $64/1M out) — cap output length and cache where possible"
+    ]
+  },
+  "cartesia-sonic-3": {
+    negativePrompt: null,
+    tips: [
+      "Built for realtime agents — stream tokens in; budget ~166-190ms real end-to-end latency (vendor's ~90ms is model-only)",
+      "Cue laughter and emotion inline, but audition the output; expressiveness trails narration-first models",
+      "Expect to hand-tune pitch, speed and emotion to avoid a robotic read — do not rely on defaults",
+      "Use instant voice cloning for a consistent agent identity; keep the reference audio clean",
+      "Chunk text at natural clause boundaries to keep streaming prosody smooth",
+      "Reach for Sonic when latency is the product (phone agents); go elsewhere when audio quality matters more than speed"
+    ]
+  },
+  "chatterbox": {
+    negativePrompt: null,
+    tips: [
+      "Use the emotion-exaggeration parameter — one knob from monotone to dramatic (first open model with it)",
+      "Zero-shot clone from ~5s of clean, single-speaker reference audio",
+      "Run the Turbo variant for realtime on modest hardware",
+      "MIT-licensed, so commercial self-hosting is fine — still get consent for any cloned voice",
+      "Pick the right Language Pack variant for languages outside the core set",
+      "Outputs carry Resemble's PerTh watermark — relevant if downstream provenance matters"
+    ]
+  },
+  "kokoro-82m": {
+    negativePrompt: null,
+    tips: [
+      "Run it locally — realtime on CPU, many-times-realtime on GPU; ideal when cost and privacy beat expressiveness",
+      "No cloning and no emotion tags: steer only by choosing among the ~54 built-in voices",
+      "Keep scripts naturally punctuated for pacing — there is no acting direction",
+      "Use the ONNX/MLX community builds for the smallest footprint and easy edge deployment",
+      "Pair with an OpenAI-compatible local server wrapper to drop into existing TTS pipelines",
+      "Great for narration and UI readouts; do not expect emotional range or singing"
+    ]
+  },
+  "elevenlabs-sfx": {
+    negativePrompt: null,
+    tips: [
+      "Be concrete about material, size, distance and environment: 'heavy wooden door slamming shut in a stone cathedral' beats 'door sound'",
+      "Describe the temporal shape: 'starts quiet, builds to a metallic crash, long reverb tail'",
+      "Mix onomatopoeia with description ('whoosh then thud') to disambiguate",
+      "Set the duration parameter (0.5-22s) rather than trusting the default; enable looping for ambient beds",
+      "Tune prompt-influence: lower for variety, higher to hew tightly to the description",
+      "Layer complex scenes: generate impact, tail and ambience separately and mix in a DAW",
+      "For synced foley, use Video-to-Sound to auto-place effects against on-screen action"
+    ]
+  }
 };
 
 // ═══════════════════════════════════════════════════════
@@ -2031,7 +2353,7 @@ function optimizeForModel(basePrompt, model) {
     : model.type === "image" ? IMAGE_STRATEGIES
     : model.type === "audio" ? AUDIO_STRATEGIES
     : TEXT_STRATEGIES;
-  const strategy = strategies[model.family] || { transform: p => p, tips: [] };
+  const strategy = strategies[model.id] || strategies[model.family] || { transform: p => p, tips: [] };
 
   let prompt = basePrompt.trim();
 
