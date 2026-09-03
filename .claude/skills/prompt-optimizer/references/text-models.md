@@ -105,7 +105,7 @@ case). Reliable fixes are structural constraints, not cleverer wishes.
 
 | Model | Creative writing | Game/app coding | Worldbuilding | Brainstorming | Instruction-following | Long documents |
 |-------|:---:|:---:|:---:|:---:|:---:|:---:|
-| Claude (Opus/Fable) | 10 | 9 | 9–10 | 8–9 | 10 | 10 |
+| Claude (Fable 5.1/5, Opus 5) | 10 | 9 | 9–10 | 8–9 | 10 | 10 |
 | Gemini 3.1 Pro | 8 | 10 | 8 | 8 | 9 | 10 |
 | ChatGPT / GPT-5.6 | 6 | 9 | 7 | 8 | 9 | 7 |
 | Grok 4.6 | 9 | 7 | 9 | 9 | 7 | 6 |
@@ -119,6 +119,8 @@ worldbuilding, prompted lean and iterated fast.
 ### Claude
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
+- Current lineup (Sep 2026): Fable 5.1 (new flagship, Sep 1; 1M-token context) / Fable 5 / Opus 5 / Sonnet 5 / Haiku 4.5; Anthropic's docs suggest Opus 5 for most workloads and Fable 5.1 for the most demanding reasoning and long-horizon work
+- Fable 5.1 writes denser prose than Fable 5 — ask explicitly for 'short paragraphs, varied sentence length' if you want airier writing; it also uses less markdown in chat, so old anti-formatting boilerplate can over-suppress
 - Claude follows instructions literally; state the ambition level ('go beyond the basics, fully-featured') or you get the minimum
 - Structure prompts with XML tags: <task>, <context>, <constraints>, <examples>; Claude is trained to parse them
 - Give Claude a role in the first line; one sentence measurably focuses tone and quality
@@ -152,7 +154,7 @@ Tips:
 ### Gemini
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
-- Current models: Gemini 3.1 Pro (flagship), Gemini 3.7 Flash (fast tier, Aug 2026)
+- Current models: Gemini 3.1 Pro (flagship), Gemini 3.8 Flash (fast tier, Sep 2 2026; 3.7 Flash still live one tier back). 3.8 Flash intro pricing roughly doubles Jan 1, 2027
 - Use the PTCF structure Google recommends: Persona, Task, Context, Format
 - Be concise and direct; Gemini 3 over-analyzes verbose, persuasion-heavy prompts, so keep instructions tight imperatives
 - Context first, ask last: put all reference material above and the instruction at the very end
@@ -168,6 +170,7 @@ Tips:
 ### Grok
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
+- Grok 4.6 is current; 4.7 is announced for ~mid-Sept 2026 but not shipped
 - Iterate fast instead of perfecting: three quick attempts with refinements beat one 30-minute mega-prompt
 - Be surgical with context; include only the relevant material, never a whole project dump
 - Grok is literal: convert every adjective into a specification ('fun' becomes 'tight controls, escalating waves, combo multiplier')
@@ -181,17 +184,21 @@ Tips:
 - For prose, supply a voice sample; Grok's default register drifts flat or jokey without one
 
 
-## Real-world reception (community sentiment — Aug 2026, volatile)
+## Real-world reception (community sentiment — Sep 2026, volatile)
 
 Separate from the capability tips above; these are community/reviewer signals,
 dated and subjective. Weight them as directional, not measured.
 
 - **Claude Opus 5** — reality gap: over-confidence/hallucination on long
   factual & agentic tasks (a calibration tradeoff) plus verbose output; top
-  capability, "least enjoyable to work with". Nudge: instruction-following and
+  capability, "least enjoyable to work with". No fix shipped — Anthropic
+  instead leapfrogged it with Fable 5.1. Nudge: instruction-following and
   brainstorming down.
-- **Claude Fable 5** — loved: leads blind creative-writing tests; caveat, does
-  not preserve a specific personal voice. Nudge: writing, worldbuilding up.
+- **Claude Fable 5 / 5.1** — loved: Fable 5 still leads blind creative-writing
+  tests; early 5.1 reads (2 days in) call the writing "less stereotypically
+  Claude" and more responsive to style instructions — partially answering the
+  personal-voice knock — though the family's over-confidence trait persists in
+  agent work. Nudge: writing, worldbuilding up.
 - **Claude Sonnet 5** — loved: wins writing quality and instruction-following
   at a large price undercut. Nudge: writing, instruction up.
 - **Claude Haiku 4.5** — sleeper: punches above its price on coding/vibe-coding.
@@ -202,8 +209,10 @@ dated and subjective. Weight them as directional, not measured.
 - **Gemini 3.1 Pro** — reality gap: reasoning gains but reduced warmth and
   in-session drift (drops constraints); excellent long-doc/code review. Nudge:
   writing and instruction down, long documents up.
-- **Gemini 3.7 Flash** — sleeper: value pick for low-cost coding/agents; caution
-  before accepting edits unattended. Nudge: coding, instruction up.
+- **Gemini 3.7 Flash** — sleeper: value pick for low-cost coding/agents and
+  the current WebDev Arena leader for one-shot web builds; caution before
+  accepting edits unattended. 3.8 Flash (Sep 2) is too new to rank. Nudge:
+  coding, instruction up.
 - **Grok 4.6** — reality gap: best-in-class real-time research; "robotic"
   writing and weaker real-world coding than benchmarks imply. Nudge: writing and
   coding down, brainstorming up.

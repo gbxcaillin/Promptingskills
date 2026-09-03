@@ -31,18 +31,7 @@ Tips:
 - 30-80 words ideal. Elements beyond ~80 words get progressively ignored
 - Kontext models: three-part edit structure; what to change, how, what to preserve
 - For photorealism: specify camera body + lens + lighting setup, not 'realistic photo'
-- FLUX 3 (early access, July 2026) is a unified multimodal model; the FLUX.2 guidance here still applies to current image work
-
-### MAI Image
-Negative prompt: null (not supported — rewrite negatives as positives)
-Tips:
-- Microsoft's first-party model (MAI-Image-2.5, MAI-Image-2.5-Pro; Pro is the quality-first tier)
-- Write flowing natural-language descriptions, not comma-separated keyword tags
-- Order subject -> style -> lighting -> composition -> mood; layer details together
-- Put literal in-image text in single quotes with placement and style; text rendering is a standout strength (top-2 image editing on the arena)
-- Specify camera/lens, lighting, and materials explicitly for photoreal or cinematic output
-- For edits, describe one precise change and end with what must stay unchanged; surgical, layout-preserving edits with strong identity consistency
-- Output caps at ~1 megapixel (~1024x1024); available via Azure AI Foundry, Copilot/PowerPoint, and OpenRouter
+- FLUX 3 status (Sep 2026): only FLUX 3 Video is GA (Aug 4); the FLUX 3 image model is still unreleased with no public early access — this FLUX.2 guidance applies to all current image work
 
 ### GPT Image
 Negative prompt: null (not supported — rewrite negatives as positives)
@@ -56,11 +45,13 @@ Tips:
 - Camera references work well: 'Shot on Leica Q3, 28mm f/1.7 lens'
 - Avoid stacking generic praise ('stunning cinematic 8K masterpiece'); use visual facts instead
 - Quality parameter: set to 'high' for small text, dense panels, close-up portraits
-- Supports up to 4 reference images and transparent backgrounds (PNG/WebP)
+- Supports up to 4 reference images and transparent backgrounds (PNG/WebP; 'background: transparent' in the API since Aug 2026)
+- DALL·E was retired from ChatGPT on Aug 30, 2026; GPT Image 2 / ChatGPT Images is the replacement
 
 ### Nano Banana
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
+- Official model IDs: Nano Banana 2 = Gemini 3.1 Flash Image; Nano Banana 2 Lite = gemini-3.1-flash-lite-image (~4s generations). Google's Imagen line is deprecated (shutdowns from Aug 2026) with this family as the migration path
 - Narrative paragraphs, NOT keyword lists; Gemini-based architecture understands natural language
 - No negative prompts; use 'semantic positive framing': 'sharp focus' instead of 'not blurry'
 - Supports up to 14 reference images and 4K output
@@ -93,6 +84,17 @@ Tips:
 - Specify composition clearly: 'centered', 'rule of thirds', 'symmetrical layout'
 - Current version is V4.1 (V4.1, V4.1 Vector, V4.1 Utility, V4.1 Pro at 2048x2048); V4.1 Vector is the native production-SVG generator
 
+### Ideogram
+Negative prompt: null (not supported — steer with the structured caption instead)
+Tips:
+- Ideogram 4.0 (June 2026) is an open-weight, design-first model: frontier text rendering, bounding-box layout control, 2K photoreal; fp8/nf4 variants on Hugging Face
+- Trained exclusively on structured JSON captions — JSON prompts outperform plain text, and captions should exhaustively describe everything in the image
+- Use compositional_deconstruction with optional bbox coordinates and per-element descriptions for precise spatial layout
+- Steer color with a colour_palette array of hex codes inside the style description
+- Pair a high_level_description with the compositional breakdown (the official examples show the format); casual users can let the LLM 'magic prompt' expand plain text into the JSON
+- Layerize turns flat designs into editable text layers (string/font/color/position) on all plans and the API
+- License caveat: weights are marked non-commercial; commercial use goes through the API
+
 ### Wan
 Negative prompt: "blurry, distorted, low quality, deformed hands, unnatural proportions"
 Tips:
@@ -117,6 +119,7 @@ Tips:
 ### Kling
 Negative prompt: "blurry, low quality, distorted, extra fingers, deformed hands, unnatural proportions"
 Tips:
+- Current image models: Kling Image 3.0 / Image 3.0 Omni (Feb 2026) — native 2K/4K, text/signage rendering, 7 aspect ratios, up to 3 reference images, Series Mode multi-panel output
 - Supports extracting features from up to 10 reference images
 - Reference by image number: 'subjects from image 1 and image 2'
 - Formula: 'Keep [subject]'s facial features, character has [hairstyle], wearing [clothing], performing [action], background is [setting]'
@@ -177,7 +180,7 @@ Tips:
 ### MAI Image
 Negative prompt: null (not documented — exclude unwanted elements by phrasing positively; when editing, state what to leave unchanged)
 Tips:
-- Microsoft's first-party model (MAI-Image-2.5, MAI-Image-2.5-Pro; Pro is the quality-first tier); ranks top-3 text-to-image and #2 image editing on the LMArena human-preference leaderboard
+- Microsoft's first-party family (MAI-Image-2.5, 2.5-Flash, 2.5-Pro; Pro is the quality-first tier); #1 on the Artificial Analysis image-editing leaderboard and shipping inside PowerPoint, OneDrive, Foundry and OpenRouter
 - Write flowing natural-language descriptions, NOT comma-separated keyword tags
 - Order the prompt subject -> style -> lighting -> composition -> mood; layer details together
 - Put literal in-image text in single quotes with placement and style; text rendering is its standout strength
@@ -188,7 +191,7 @@ Tips:
 - Output caps at ~1 megapixel (~1024x1024); available via Azure AI Foundry, Copilot/PowerPoint, and OpenRouter
 
 
-## Real-world reception (community sentiment — Aug 2026, volatile)
+## Real-world reception (community sentiment — Sep 2026, volatile)
 
 Separate from the capability tips above; community/reviewer signals, dated and
 subjective.
@@ -202,7 +205,9 @@ subjective.
 - **Nano Banana 2** — mixed: best-in-class text/adherence; loud "flat/cartoonish"
   realism complaint; aggressive non-configurable safety.
 - **Seedream 5.0 Pro** — reality gap: cheaper/less restrictive with strong
-  adherence, but portraits regressed vs 4.5 and a banding artifact went unfixed.
+  adherence (realism effectively tied with Nano Banana 2 in blind usable-shot
+  rates), but portraits still regressed vs 4.5 and the banding artifact remains
+  unfixed as of late Aug — keep portrait traffic on 4.5.
 - **Seedream 4.5** — loved: excellent dense typography and 10-reference editing;
   the portrait edge over 5.0.
 - **Qwen Image 3.0** — sleeper: dense text/infographics across 12 languages;
@@ -210,12 +215,15 @@ subjective.
 - **Recraft V4.1** — sleeper: only model with native editable SVG; uneven on
   anatomy/detailed prompts.
 - **Z-Image** — sleeper: photoreal in under 3s on consumer GPUs.
-- **Grok Imagine Image 2.0** — reality gap: quality fine, but over-censorship and
-  a paywall erased the free/uncensored differentiator.
-- **MAI-Image 2.5 / 2.5 Pro** — unproven hype: launched top-3 on the arena (text/editing gains) but organic adoption and hands-on sentiment are thin; treat ratings as benchmark-derived until real use accumulates.
+- **Grok Imagine Image 2.0** — reality gap: capability is real (#2 worldwide on
+  both arena boards behind GPT Image 2), but over-censorship and a paywall
+  erased the free/uncensored differentiator.
+- **MAI-Image 2.5 / Flash / Pro** — mixed, rising: Pro hit #1 on the image-editing
+  leaderboard and the family now ships inside PowerPoint/OneDrive/Foundry —
+  real distribution, though independent creator sentiment is still sparse.
 - **Flux 2 Pro / Max** — mixed: strong multi-reference consistency; lingering
   "plastic/wax skin" in portraits.
-- **FLUX 3** — unproven hype: image access barely released; benchmark framing
-  ahead of real-world evidence. Treat cautiously.
+- **FLUX 3** — unproven hype: the image model is still unreleased (only FLUX 3
+  Video is GA), so no image sentiment can exist yet. Treat cautiously.
 - **Midjourney V8.2** — loved: top aesthetic quality and --sref/--cref
   consistency; historically weak literal text/prompt precision; billing gripes.
