@@ -487,8 +487,9 @@ const MODELS = [
   // === VIDEO MODELS ===
   {id:"seadance-2.5",name:"Seedance 2.5",type:"video",family:"Seedance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{story:10,ref:10,cin:9,aud:9,con:9,mot:8}},
   {id:"minimax-h3",name:"MiniMax H3",type:"video",family:"MiniMax",desc:"2K cinematic video with native audio",provider:"MiniMax",spec:{cin:9,aud:9,mot:8,con:8,story:8}},
+  {id:"minimax-h3-max",name:"MiniMax H3 Max",type:"video",family:"MiniMax",desc:"fal's speed-tuned H3: 5s clip in under 3 seconds, 768p with audio",provider:"fal",spec:{speed:10,aud:8,mot:8,cin:7,con:7}},
   {id:"seadance-2.0",name:"Seedance 2.0",type:"video",family:"Seedance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{story:9,ref:9,cin:8,aud:8,con:8,mot:8}},
-  {id:"gemini-omni-flash",name:"Gemini Omni Flash",type:"video",family:"Gemini",desc:"Conversational video generation by Google",provider:"Google",spec:{speed:8,story:7,aud:7,cin:7,ref:7}},
+  {id:"gemini-omni-flash",name:"Gemini Omni 1.1 Flash",type:"video",family:"Gemini",desc:"Chainable video: 40s scene extensions, keyframes & draft mode",provider:"Google",spec:{speed:8,story:8,aud:7,cin:8,ref:8}},
   {id:"flux-3-video",name:"FLUX 3 Video",type:"video",family:"Flux",desc:"Native audio, 5-20s, from Black Forest Labs",provider:"Black Forest Labs",spec:{cin:8,aud:8,mot:7,speed:7}},
   {id:"seadance-2.0-mini",name:"Seedance 2.0 Mini",type:"video",family:"Seedance",desc:"Cinematic videos with audio & multi-shots",provider:"ByteDance",spec:{speed:8,story:8,cin:7,aud:7}},
   {id:"kling-3.0-omni-v",name:"Kling 3.0 Omni",type:"video",family:"Kling",desc:"Enhanced multimodal references",provider:"Kuaishou",spec:{ref:10,con:9,cin:9,mot:9,aud:8,story:8}},
@@ -507,7 +508,7 @@ const MODELS = [
   {id:"grok-imagine-v",name:"Grok Imagine",type:"video",family:"Grok Imagine",desc:"Fast generation of cinematic videos",provider:"xAI",spec:{speed:9,cin:6,mot:6}},
   {id:"kling-2.6",name:"Kling 2.6",type:"video",family:"Kling",desc:"Cinematic videos with audio & voice",provider:"Kuaishou",spec:{aud:9,cin:8,mot:8,con:8}},
   {id:"wan-2.6",name:"Wan 2.6",type:"video",family:"Wan",desc:"Cinematic videos with audio & multi-shots",provider:"Alibaba",spec:{cin:8,aud:8,story:8,mot:7}},
-  {id:"sora-2",name:"Sora 2",type:"video",family:"Sora",desc:"Story-telling videos with audio (API sunsetting ~Sep 2026 — verify)",provider:"OpenAI",spec:{story:10,aud:9,cin:9,mot:8,con:8}},
+  {id:"sora-2",name:"Sora 2",type:"video",family:"Sora",desc:"Story-telling videos with audio (API dies Sept 24, 2026 — no successor)",provider:"OpenAI",spec:{story:10,aud:9,cin:9,mot:8,con:8}},
   {id:"ltx-2.5",name:"LTX 2.5",type:"video",family:"LTX",desc:"Open-weight multishot with cross-cut consistency & 4K HDR",provider:"Lightricks",spec:{speed:9,cin:8,mot:8,aud:8,story:8}},
   {id:"ltx-2.3",name:"LTX 2.3",type:"video",family:"LTX",desc:"Next-gen cinematic 4K videos up to 20s",provider:"Lightricks",spec:{speed:9,cin:8,mot:7}},
   {id:"ltx-2.3-audio",name:"LTX 2.3 Audio-to-Video",type:"video",family:"LTX",desc:"Generate video from audio with LTX 2.3",provider:"Lightricks",spec:{aud:10,cin:7}},
@@ -531,6 +532,7 @@ const MODELS = [
   {id:"seedream-5.0-pro",name:"Seedream 5.0 Pro",type:"image",family:"Seedream",desc:"ByteDance's flagship 5.0 image model",provider:"ByteDance",spec:{photo:9,text:9,adh:9,port:9,edit:8}},
   {id:"nano-banana-pro",name:"Nano Banana Pro",type:"image",family:"Nano Banana",desc:"Google's premium image model",provider:"Google",spec:{edit:10,text:10,photo:9,adh:9,design:8}},
   {id:"recraft-v4-1",name:"Recraft V4.1",type:"image",family:"Recraft",desc:"Recraft's image & native SVG model (V4.1 Vector/Utility/Pro tiers)",provider:"Recraft",spec:{design:10,text:9,illus:9,photo:7}},
+  {id:"ideogram-4",name:"Ideogram 4.0",type:"image",family:"Ideogram",desc:"Open-weight design-first model; frontier text rendering & layout control",provider:"Ideogram",spec:{text:9,design:9,adh:8,photo:7,illus:7,speed:7}},
   {id:"wan-2.7-i",name:"Wan 2.7",type:"image",family:"Wan",desc:"Alibaba's image model with facial control & text rendering",provider:"Alibaba",spec:{port:9,text:9,photo:8}},
   {id:"grok-imagine-image-2.0",name:"Grok Imagine Image 2.0",type:"image",family:"Grok Imagine",desc:"xAI's 2.0 image model with sharper text and precision editing",provider:"xAI",spec:{speed:9,text:8,edit:8,photo:8}},
   {id:"grok-imagine-i",name:"Grok Imagine",type:"image",family:"Grok Imagine",desc:"xAI's Aurora-powered image model",provider:"xAI",spec:{speed:9,photo:7,illus:7}},
@@ -544,7 +546,6 @@ const MODELS = [
   {id:"kling-o1-i",name:"Kling O1",type:"image",family:"Kling",desc:"Multi-reference & visual input remix",provider:"Kuaishou",spec:{edit:9,adh:7}},
   {id:"flux-kontext-pro",name:"Flux Kontext Pro",type:"image",family:"Flux",desc:"Enhanced context consistency",provider:"Black Forest Labs",spec:{edit:10,photo:8,text:7}},
   {id:"gpt-image-1.5",name:"GPT Image 1.5",type:"image",family:"GPT Image",desc:"OpenAI's flagship image model",provider:"OpenAI",spec:{adh:9,text:9,edit:9,design:8,photo:8}},
-  {id:"flux-3",name:"FLUX 3",type:"image",family:"Flux",desc:"Unified multimodal model (early access)",provider:"Black Forest Labs",spec:{photo:9,adh:9,text:8,edit:8}},
   {id:"flux-2-pro",name:"Flux 2 Pro",type:"image",family:"Flux",desc:"Enhanced speed & multi-reference",provider:"Black Forest Labs",spec:{photo:9,adh:9,text:8,edit:8,speed:7}},
   {id:"openart-photorealistic",name:"OpenArt Photorealistic",type:"image",family:"OpenArt",desc:"Lifelike portraits and realistic scene generation",provider:"OpenArt",spec:{photo:9,port:9}},
   {id:"z-image",name:"Z-Image",type:"image",family:"Z-Image",desc:"Enhanced speed & iteration efficiency",provider:"Z-Image",spec:{speed:9,photo:8,text:7}},
@@ -569,10 +570,10 @@ const MODELS = [
   {id:"suno-v5-5",name:"Suno v5.5",type:"audio",family:"Suno",desc:"Full songs with vocals; the category leader",provider:"Suno Inc.",spec:{song:10,inst:8,sfx:3,control:8,speed:8}},
   {id:"elevenlabs-music",name:"ElevenLabs Music",type:"audio",family:"ElevenLabs Music",desc:"Most human-sounding, commercially-cleared vocals",provider:"ElevenLabs",spec:{song:9,inst:7,voice:6,sfx:3,control:8,speed:8}},
   {id:"udio-v4",name:"Udio v4",type:"audio",family:"Udio",desc:"Audiophile-grade production and remixing",provider:"Uncharted Labs",spec:{song:9,inst:9,sfx:2,control:9,speed:7}},
-  {id:"mureka-v9",name:"Mureka V9",type:"audio",family:"Mureka",desc:"Lyrics-first songs with stems & MIDI export",provider:"Kunlun Tech",spec:{song:8,inst:7,voice:5,sfx:2,control:8,speed:8}},
+  {id:"mureka-v9",name:"Mureka V9.5",type:"audio",family:"Mureka",desc:"Lyrics-first songs with stems & MIDI export",provider:"Kunlun Tech",spec:{song:8,inst:7,voice:5,sfx:2,control:8,speed:8}},
   {id:"tencent-songgeneration-2",name:"SongGeneration 2",type:"audio",family:"SongGeneration",desc:"Open-weights songs with top lyric accuracy",provider:"Tencent AI Lab",spec:{song:8,inst:7,control:7,speed:7}},
   {id:"google-lyria-3-5",name:"Google Lyria 3.5",type:"audio",family:"Lyria",desc:"High-fidelity instrumental with improving vocals",provider:"Google DeepMind",spec:{song:7,inst:9,sfx:4,control:7,speed:8}},
-  {id:"stable-audio-2-5",name:"Stable Audio 2.5",type:"audio",family:"Stable Audio",desc:"Fast instrumental beds and sound design",provider:"Stability AI",spec:{song:3,inst:9,sfx:8,control:8,speed:10}},
+  {id:"stable-audio-2-5",name:"Stable Audio 3",type:"audio",family:"Stable Audio",desc:"Fast instrumental beds and sound design; open-weight tiers",provider:"Stability AI",spec:{song:3,inst:9,sfx:8,control:8,speed:10}},
   {id:"ace-step-1-5",name:"ACE-Step 1.5",type:"audio",family:"ACE-Step",desc:"Fastest open-weights full-song model",provider:"ACE Studio + StepFun",spec:{song:7,inst:7,control:7,speed:10}},
   {id:"riffusion-fuzz",name:"Riffusion FUZZ",type:"audio",family:"Riffusion",desc:"Free, no-signup song generation",provider:"Riffusion",spec:{song:6,inst:6,sfx:3,control:5,speed:8}},
   {id:"lyria-realtime",name:"Lyria RealTime",type:"audio",family:"Lyria",desc:"Interactive real-time music jamming",provider:"Google DeepMind",spec:{inst:8,control:8,speed:9}},
@@ -588,11 +589,13 @@ const MODELS = [
   {id:"cartesia-sonic-3",name:"Cartesia Sonic 3",type:"audio",family:"Cartesia",desc:"Ultra-low-latency streaming voice for agents",provider:"Cartesia",spec:{voice:7,control:7,speed:10}},
   {id:"chatterbox",name:"Chatterbox v3",type:"audio",family:"Chatterbox",desc:"MIT open TTS with cloning and emotion knob",provider:"Resemble AI",spec:{voice:7,control:8,speed:8}},
   {id:"kokoro-82m",name:"Kokoro-82M",type:"audio",family:"Kokoro",desc:"Tiny Apache-licensed local TTS",provider:"hexgrad (community)",spec:{voice:6,control:3,speed:9}},
+  {id:"breeze-tts-2",name:"Breeze TTS 2",type:"audio",family:"Breeze",desc:"Open-weight TTS claiming the arena top slot",provider:"BreezeBlue",spec:{voice:8,control:6,speed:9}},
   // — Sound effects —
   {id:"elevenlabs-sfx",name:"ElevenLabs SFX v2",type:"audio",family:"ElevenLabs",desc:"Best-in-class text-to-SFX and foley",provider:"ElevenLabs",spec:{sfx:10,control:6,speed:9}},
 
   // === TEXT / LLM MODELS ===
-  {id:"claude-fable-5",name:"Claude Fable 5",type:"text",family:"Claude",desc:"Anthropic's most capable model, tuned for the most demanding creative and long-horizon work",provider:"Anthropic",spec:{game:9,write:10,world:10,brain:9,follow:10,long:10}},
+  {id:"claude-fable-5-1",name:"Claude Fable 5.1",type:"text",family:"Claude",desc:"Anthropic's new flagship (Sep 2026): 1M-token context for the most demanding creative and long-horizon work",provider:"Anthropic",spec:{game:9,write:10,world:10,brain:9,follow:10,long:10}},
+  {id:"claude-fable-5",name:"Claude Fable 5",type:"text",family:"Claude",desc:"Anthropic's prior flagship, tuned for demanding creative and long-horizon work",provider:"Anthropic",spec:{game:9,write:10,world:10,brain:9,follow:10,long:10}},
   {id:"claude-opus-5",name:"Claude Opus 5",type:"text",family:"Claude",desc:"Anthropic's flagship for deep creative and coding work",provider:"Anthropic",spec:{game:9,write:10,world:9,brain:8,follow:10,long:10}},
   {id:"claude-sonnet-5",name:"Claude Sonnet 5",type:"text",family:"Claude",desc:"Fast, capable Claude for creative work and app building",provider:"Anthropic",spec:{game:9,write:9,world:9,brain:8,follow:9,long:9}},
   {id:"claude-haiku-4-5",name:"Claude Haiku 4.5",type:"text",family:"Claude",desc:"Quick, affordable Claude for drafts and iteration",provider:"Anthropic",spec:{game:7,write:7,world:7,brain:7,follow:8,long:7}},
@@ -600,7 +603,8 @@ const MODELS = [
   {id:"gpt-5-6-terra",name:"ChatGPT (GPT-5.6 Terra)",type:"text",family:"ChatGPT",desc:"OpenAI's balanced everyday tier",provider:"OpenAI",spec:{game:8,write:7,world:7,brain:8,follow:9,long:7}},
   {id:"gpt-5-6-luna",name:"ChatGPT (GPT-5.6 Luna)",type:"text",family:"ChatGPT",desc:"OpenAI's fast, cost-efficient tier for iteration",provider:"OpenAI",spec:{game:7,write:6,world:6,brain:8,follow:8,long:6}},
   {id:"gemini-3-1-pro",name:"Gemini 3.1 Pro",type:"text",family:"Gemini",desc:"Google's flagship; top-ranked at one-shot web games",provider:"Google",spec:{game:10,write:8,world:8,brain:8,follow:9,long:10}},
-  {id:"gemini-3-7-flash",name:"Gemini 3.7 Flash",type:"text",family:"Gemini",desc:"Fast Gemini for cheap, quick iteration",provider:"Google",spec:{game:8,write:7,world:7,brain:7,follow:8,long:9}},
+  {id:"gemini-3-8-flash",name:"Gemini 3.8 Flash",type:"text",family:"Gemini",desc:"Google's newest fast tier (Sep 2026); intro pricing doubles Jan 2027",provider:"Google",spec:{game:9,write:7,world:7,brain:8,follow:8,long:9}},
+  {id:"gemini-3-7-flash",name:"Gemini 3.7 Flash",type:"text",family:"Gemini",desc:"Fast Gemini for cheap iteration; current WebDev Arena leader",provider:"Google",spec:{game:8,write:7,world:7,brain:7,follow:8,long:9}},
   {id:"grok-4-6",name:"Grok 4.6",type:"text",family:"Grok",desc:"xAI's model; unconventional ideation and worldbuilding",provider:"xAI",spec:{game:7,write:9,world:9,brain:9,follow:7,long:6}},
 ];
 
@@ -654,51 +658,57 @@ const SPECIALTIES = {
 const SENTIMENT_DATE = "Aug 2026";
 const SENTIMENT = {
   // — Text / LLM —
-  "claude-opus-5": {mood:"gap", note:"Top-tier capability but users report over-confidence and hallucination on long factual/agentic tasks (a calibration tradeoff) plus verbose output — 'the best model many have tried and the one they least enjoy working with'.", adj:{follow:-2, brain:-1}},
-  "claude-fable-5": {mood:"loved", note:"Leads blind creative-writing tests for voice and risk; caveat: doesn't preserve a specific personal voice as well as a tuned Sonnet.", adj:{write:1, world:1}},
+  "claude-opus-5": {mood:"gap", note:"Top-tier capability but users report over-confidence and hallucination on long factual/agentic tasks (a calibration tradeoff) plus verbose output. No fix shipped — Anthropic leapfrogged it with Fable 5.1 and now frames Opus 5 as the everyday default.", adj:{follow:-2, brain:-1}},
+  "claude-fable-5-1": {mood:"loved", note:"Early reads (days in) call the writing 'less stereotypically Claude' and more responsive to style instructions — partially answering the personal-voice knock — though the family's over-confidence trait persists in agent work. Too new for arena placement.", adj:{}},
+  "claude-fable-5": {mood:"loved", note:"Still leads blind creative-writing tests for voice and risk; caveat: doesn't preserve a specific personal voice as well as a tuned Sonnet. Superseded as flagship by Fable 5.1 (Sep 2026).", adj:{write:1, world:1}},
   "claude-sonnet-5": {mood:"loved", note:"Reviewers say it wins writing quality and instruction-following outright at a large price undercut; the uplift felt like polish, not a paradigm.", adj:{write:1, follow:1}},
   "claude-haiku-4-5": {mood:"sleeper", note:"Punches above its price on coding and 'vibe coding'; a common fallback when pricier models stall.", adj:{game:1}},
   "gpt-5-6-sol": {mood:"mixed", note:"Strong long-horizon coding lane; headline benchmark leadership is contested by users as partly test-gamed.", adj:{game:1}},
   "gpt-5-6-luna": {mood:"mixed", note:"Fast and cheap, but repetitive phrasing and shallow structure on long-form creative.", adj:{write:-1}},
   "gemini-3-1-pro": {mood:"gap", note:"Big reasoning and long-document gains, but users report reduced warmth/creativity and in-session drift — it drops constraints and contradicts itself over long sessions.", adj:{write:-1, follow:-1, long:1}},
-  "gemini-3-7-flash": {mood:"sleeper", note:"A genuine value pick for low-cost coding and agents; reviewers caution before accepting its edits unattended in production.", adj:{game:1, follow:1}},
+  "gemini-3-7-flash": {mood:"sleeper", note:"A genuine value pick for low-cost coding and agents — and the current WebDev Arena leader for one-shot web builds; reviewers caution before accepting its edits unattended in production.", adj:{game:1, follow:1}},
+  "gemini-3-8-flash": {mood:"hype", note:"Days old (Sep 2): Google claims it beats Opus 5 on three benchmarks, but there is no community track record yet and the intro pricing doubles Jan 1, 2027 — treat the ratings as vendor-derived for now.", adj:{}},
   "grok-4-6": {mood:"gap", note:"Best-in-class real-time research and price, but 'robotic' creative writing and weaker real-world coding than benchmarks imply.", adj:{write:-1, game:-1, brain:1}},
   // — Image —
   "juggernaut-flux-pro": {mood:"sleeper", note:"Credited with fixing Flux's 'wax skin' — best-in-class believable portraits from simple prompts.", adj:{port:2, photo:1}},
   "juggernaut-xl": {mood:"mixed", note:"Still loved for local, uncensored photoreal work; SDXL-era weak prompt adherence and in-image text.", adj:{adh:-1}},
   "gpt-image-2": {mood:"gap", note:"#1 on the arena, but imprecise for exact graphic design/layout and prone to shading degradation after repeated edits; text and realism are genuinely strong.", adj:{design:-2, edit:-1, text:1, photo:1}},
   "nano-banana-2": {mood:"mixed", note:"Best-in-class text and prompt adherence; a loud, persistent 'flat/cartoonish' realism complaint and aggressive non-configurable safety.", adj:{photo:-1, text:1, adh:1}},
-  "seedream-5.0-pro": {mood:"gap", note:"Cheaper and less restrictive with strong spatial reasoning, but portraits reportedly regressed vs 4.5 and a banding artifact went unfixed for weeks.", adj:{port:-1, edit:-1, adh:1}},
+  "seedream-5.0-pro": {mood:"gap", note:"Cheaper and less restrictive with strong spatial reasoning (realism effectively tied with Nano Banana 2 in blind usable-shot rates), but portraits still regressed vs 4.5 and the banding artifact remains unfixed — keep portrait traffic on 4.5.", adj:{port:-1, edit:-1, adh:1}},
   "seedream-4.5": {mood:"loved", note:"Excellent multi-script/dense typography and 10-reference editing — the portrait-realism edge over 5.0 Pro.", adj:{text:1}},
   "qwen-image-3.0": {mood:"sleeper", note:"Headline strength is dense text, infographics and non-Latin scripts across 12 languages; launched with no weights/benchmarks, drawing skepticism.", adj:{text:2}},
   "recraft-v4-1": {mood:"sleeper", note:"The only model with native editable SVG/vector output; uneven on anatomy and detailed prompts.", adj:{design:2, port:-1, speed:1}},
   "z-image": {mood:"sleeper", note:"Photoreal in under 3s on a 6B consumer-GPU model — the efficiency darling of the local crowd.", adj:{speed:2, adh:1}},
   "grok-imagine-i": {mood:"gap", note:"Image quality is fine, but heavy over-censorship and a new paywall erased its free/uncensored differentiator; sentiment soured hard.", adj:{}},
-  "grok-imagine-image-2.0": {mood:"gap", note:"Sharper text and editing, but the over-censorship and paywall backlash dominates community mood.", adj:{}},
+  "grok-imagine-image-2.0": {mood:"gap", note:"Capability is real — #2 worldwide on both arena boards behind GPT Image 2 — but the over-censorship and paywall backlash still dominates community mood.", adj:{}},
   "flux-2-pro": {mood:"mixed", note:"Strong 8-10 reference-image consistency; lingering 'plastic/wax skin' in portraits from the Flux lineage.", adj:{port:-1, edit:1}},
   "flux-2-max": {mood:"mixed", note:"Excellent prompt adherence and multi-reference, but the Flux 'wax skin' portrait signature persists.", adj:{port:-1}},
-  "flux-3": {mood:"hype", note:"Image access barely released as of Aug 2026 — benchmark and 'foundation model' framing runs ahead of real-world evidence. Treat cautiously.", adj:{}},
-  "mai-image-2-5-pro": {mood:"hype", note:"Launched top-3 on the arena with documented text-rendering and editing gains, but organic community adoption and hands-on sentiment are still thin — benchmark-strong, mindshare-light.", adj:{}},
-  "mai-image-2-5": {mood:"hype", note:"Strong arena editing scores but almost no organic community discussion yet; treat the ratings as benchmark-derived until real-world use accumulates.", adj:{}},
+  "mai-image-2-5-pro": {mood:"mixed", note:"Rising: hit #1 on the image-editing leaderboard and now ships inside PowerPoint, OneDrive and Foundry — real distribution, though independent creator sentiment is still sparse.", adj:{}},
+  "mai-image-2-5": {mood:"mixed", note:"Rising: real product distribution across Microsoft's apps and strong arena editing scores, though organic community discussion remains thin.", adj:{}},
   // — Video —
   "hailuo-2.3": {mood:"gap", note:"Marketed 'physics champion' but community reports frequent morphing failures and unwanted background music baked into audio (Trustpilot ~1.4/5).", adj:{mot:-1, aud:-1}},
-  "seadance-2.5": {mood:"mixed", note:"Loved for its multimodal reference control and 30s single-pass; identity drift on long clips, advertised 4K unseen by reviewers, and censorship burns credits on rejections.", adj:{ref:2, con:-1}},
+  "seadance-2.5": {mood:"mixed", note:"Loved for its multimodal reference control and 30s single-pass; identity drift on long clips (50-reference workflows are emerging as the fix) and censorship burns credits. The old '4K unseen' complaint has softened — API hosts now ship 30s 4K.", adj:{ref:2, con:-1}},
   "kling-3.0": {mood:"loved", note:"The pragmatic community favorite for realistic humans and value; lip-sync widely panned past ~5s and failed generations burn credits with no refund.", adj:{aud:-1}},
   "kling-3.0-omni-v": {mood:"loved", note:"Praised for cloth/hair/liquid physics and reliable human animation; same lip-sync-past-5s and burned-credit gripes.", adj:{aud:-1}},
   "veo-3.1": {mood:"loved", note:"Consensus quality leader, but the short 8s clip ceiling and strict, non-overridable contextual censorship are the top professional complaints.", adj:{story:-1}},
   "veo-3.1-fast": {mood:"gap", note:"Value tier, but bug reports of 'random nonsense' outputs that ignore the inputs and burn credits.", adj:{}},
-  "sora-2": {mood:"gap", note:"Genuinely strong audio sync and physics, but widely felt as 'dumbed down' after launch, guardrails 'out of control', and the API is sunsetting.", adj:{}},
+  "sora-2": {mood:"gap", note:"Genuinely strong audio sync and physics, but widely felt as 'dumbed down' after launch and guardrails 'out of control'. The API dies Sept 24, 2026 with no successor — migrate rather than wait.", adj:{}},
   "ltx-2.5": {mood:"sleeper", note:"The open-source darling: only open model with native single-pass audio+video and 4K HDR, runs on a 32GB consumer GPU; raw fidelity still trails closed flagships.", adj:{speed:2}},
   "pixverse-v6": {mood:"sleeper", note:"Fast, action-heavy anime with clean line art beats its billing; not a realism leader.", adj:{anime:2}},
   "pixverse-c1": {mood:"sleeper", note:"The cinematic-continuity sibling; strong stylized/anime output, quality ceiling below flagships.", adj:{anime:1}},
   "vidu-q3": {mood:"sleeper", note:"Standout multi-reference (up to 7 images) character consistency across angles and cuts — the clearest differentiator for recurring-character work.", adj:{ref:2, con:2}},
   "vidu-q2": {mood:"sleeper", note:"Same reference-consistency strength as Q3 at lower fidelity.", adj:{ref:1, con:1}},
-  "grok-imagine-v": {mood:"mixed", note:"Cheapest fast loop with native audio for vertical social; 720p ceiling and no provenance make it weak for client deliverables.", adj:{speed:2}},
-  "grok-imagine-1.5": {mood:"mixed", note:"Fast, cheap iteration with audio; not for polished client work needing 1080p, provenance, or asset retention.", adj:{speed:2}},
+  "grok-imagine-v": {mood:"mixed", note:"Redemption arc: native 1080p (Aug 2026), voice cloning, and 7 reference anchors killed the old '720p ceiling' complaint — now reviewed as a serious image-to-video option while staying the cheapest fast loop with audio.", adj:{speed:2}},
+  "grok-imagine-1.5": {mood:"mixed", note:"Redemption arc: native 1080p plus voice and reference locking put it top-5 on the image-to-video arena — 'suddenly a serious image-to-video leader' — while staying the cheapest fast iteration loop with audio.", adj:{speed:2, cin:1}},
+  "gemini-omni-flash": {mood:"sleeper", note:"The 1.1 Flash update (Aug 27) made it chainable — 40s scene extensions, first/last-frame mode, cheap 360p drafts — and it now tops the image-to-video arena; quietly one of the strongest video workflows in Google's stack.", adj:{ref:1}},
+  "wan-3.0-v": {mood:"sleeper", note:"Now #1 on the text-to-video arena: 'not the image-quality ceiling, but possibly the most usable video model for ordinary people' — strong object permanence; weak on dialogue, in-frame text and crowds; no open weights shipped, which irritates the community.", adj:{con:1}},
+  "happyhorse-1.1": {mood:"gap", note:"Topped every arena board in April but slid to mid-pack (#7-9) by September as rivals shipped faster; the prompting conventions still hold.", adj:{cin:-1}},
+  "happyhorse": {mood:"gap", note:"The family topped the arenas in April but has slid to mid-pack as rivals shipped faster.", adj:{cin:-1}},
+  "minimax-h3-max": {mood:"hype", note:"fal's post-trained speed variant instantly topped the I2V-with-audio arena — the 5s-clip-in-under-3s speed is a real breakthrough, but the top rankings lean on fal's own evals and the model is days old.", adj:{}},
   // — Audio / Music —
-  "suno-v5-5": {mood:"mixed", note:"Still the default leader for vocal songs, but the v5.5 rollout drew heavy community backlash over output changes, pricing, and new download caps/watermarking; Suno Studio's stems and MIDI export are genuinely valued.", adj:{control:1, song:-1}},
+  "suno-v5-5": {mood:"mixed", note:"Still the default leader for vocal songs, but backlash deepened when download caps took effect Sep 3, 2026 — free tier now 7 lifetime downloads (Pro 20/mo, Premier 60/mo), applied retroactively; Suno Studio's stems and MIDI export are genuinely valued.", adj:{control:1, song:-1}},
   "elevenlabs-music": {mood:"loved", note:"Broadly cited as the top pick when the vocal has to pass as human, helped by an unusually clean licensed-data and commercial-clearance story (self-serve clearance still excludes film/TV/games).", adj:{}},
-  "udio-v4": {mood:"mixed", note:"Praised as the audiophile's choice for instrumental cleanliness, but the post-settlement download lockdown gutted its practical value for creators; Sony is still litigating.", adj:{inst:1, speed:-1}},
+  "udio-v4": {mood:"mixed", note:"Praised as the audiophile's choice for instrumental cleanliness, but the post-settlement download lockdown gutted its practical value; Sony escalated in July 2026 with a new 30,000-recording suit (~$4.5B exposure).", adj:{inst:1, speed:-1}},
   "mureka-v9": {mood:"sleeper", note:"The under-the-radar Suno competitor whose MIDI export, deep stems, and voice cloning give producers more downstream control than the big two.", adj:{control:1}},
   "tencent-songgeneration-2": {mood:"sleeper", note:"Open-source buzz for beating commercial models on measured lyric accuracy (8.55% phoneme error rate) while being free to self-host.", adj:{song:1}},
   "google-lyria-3-5": {mood:"sleeper", note:"Strong 48kHz instrumental fidelity and a genuinely free, uncapped path via Google MusicFX; far less mindshare than Suno/Udio for finished vocal songs.", adj:{inst:1}},
@@ -717,6 +727,7 @@ const SENTIMENT = {
   "cartesia-sonic-3": {mood:"mixed", note:"Undisputed latency king and cheap at scale, but reviewers note it ranks mid-pack on pure quality and needs manual pitch/speed/emotion tuning.", adj:{speed:1, voice:-1}},
   "chatterbox": {mood:"loved", note:"Open-source favorite with a one-knob emotion-exaggeration control; Resemble's blind test had 65.3% prefer it over ElevenLabs (vendor-run, weigh accordingly).", adj:{}},
   "kokoro-82m": {mood:"sleeper", note:"Community darling that punches far above its 82M parameters for size and cost; no cloning or emotion control though.", adj:{speed:1}},
+  "breeze-tts-2": {mood:"hype", note:"Vendor-claimed #1 on the TTS arena with sub-40ms latency and open weights (Aug 25, 2026) — a strong newcomer on paper, but the real-world track record is thin; validate by ear.", adj:{}},
   "elevenlabs-sfx": {mood:"loved", note:"Consistently ranked the leading text-to-SFX and foley generator; sound designers rate many outputs indistinguishable from recorded foley in blind tests.", adj:{}}
 };
 
@@ -750,6 +761,7 @@ const FREE_ACCESS = {
   "qwen-image-max": {url:"https://chat.qwen.ai", how:"Free daily image quota on chat.qwen.ai"},
   "qwen-image-plus": {url:"https://chat.qwen.ai", how:"Free daily image quota on chat.qwen.ai"},
   "recraft-v4-1": {url:"https://www.recraft.ai", how:"Free tier ~50 credits/day (outputs public, non-commercial)"},
+  "ideogram-4": {url:"https://huggingface.co/ideogram-ai/ideogram-4-fp8", how:"Open weights on Hugging Face (non-commercial license; commercial via API)"},
   "kling-3.0-omni-i": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked, personal use)"},
   "kling-o1-i": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked, personal use)"},
   "juggernaut-xl": {url:"https://civitai.com/models/133005", how:"Open weights on Civitai / Hugging Face — run it yourself"},
@@ -768,6 +780,7 @@ const FREE_ACCESS = {
   "seadance-1.5-pro": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina / Jimeng"},
   "seadance-1": {url:"https://dreamina.capcut.com", how:"Free daily credits on Dreamina / Jimeng"},
   "minimax-h3": {url:"https://huggingface.co/MiniMaxAI/MiniMax-H3", how:"Open weights on Hugging Face (license restricts local use in US/EU/UK/SK)"},
+  "minimax-h3-max": {url:"https://fal.ai/minimax-h3-max", how:"5 free generations/day for signed-in fal users"},
   "hailuo-02": {url:"https://hailuoai.video", how:"Free daily trial credits on the Hailuo app"},
   "hailuo-2.3": {url:"https://hailuoai.video", how:"Free daily trial credits on the Hailuo app"},
   "kling-3.0-omni-v": {url:"https://klingai.com", how:"Free daily credits on klingai.com (watermarked)"},
@@ -790,13 +803,13 @@ const FREE_ACCESS = {
   "ltx-2.3": {url:"https://huggingface.co/Lightricks", how:"Open weights on Hugging Face (free under $10M revenue)"},
   "ltx-2.3-audio": {url:"https://huggingface.co/Lightricks", how:"Open weights on Hugging Face (free under $10M revenue)"},
   // — Audio / Music —
-  "suno-v5-5": {url:"https://suno.com", how:"Free daily credits (older v4.5 model only; non-commercial)"},
+  "suno-v5-5": {url:"https://suno.com", how:"Free daily credits (older v4.5 model only; non-commercial; 7 lifetime downloads since Sep 3, 2026)"},
   "elevenlabs-music": {url:"https://elevenlabs.io", how:"Free tier ~7 songs/day (self-serve commercial clearance excludes film/TV/games)"},
   "udio-v4": {url:"https://udio.com", how:"Free monthly credits (downloads may be restricted post-settlement)"},
   "mureka-v9": {url:"https://www.mureka.ai", how:"Free tier with limited monthly credits"},
   "tencent-songgeneration-2": {url:"https://huggingface.co/tencent/SongGeneration", how:"Open weights on Hugging Face — self-hostable"},
   "google-lyria-3-5": {url:"https://aitestkitchen.withgoogle.com", how:"Free and uncapped via Google MusicFX (Google account)"},
-  "stable-audio-2-5": {url:"https://stableaudio.com", how:"Free tier with limited monthly generations"},
+  "stable-audio-2-5": {url:"https://stableaudio.com", how:"Free tier on stableaudio.com; open-weight Small/Medium on Hugging Face"},
   "ace-step-1-5": {url:"https://github.com/ace-step/ACE-Step-1.5", how:"Open weights, Apache 2.0 — free for commercial use"},
   "riffusion-fuzz": {url:"https://www.riffusion.com", how:"Free public beta, no login, effectively unlimited"},
   "lyria-realtime": {url:"https://aitestkitchen.withgoogle.com", how:"Free real-time jamming via Google MusicFX (Google account)"},
@@ -811,6 +824,7 @@ const FREE_ACCESS = {
   "cartesia-sonic-3": {url:"https://cartesia.ai", how:"Free plan with monthly playground + API credits"},
   "chatterbox": {url:"https://github.com/resemble-ai/chatterbox", how:"MIT open weights — free to self-host"},
   "kokoro-82m": {url:"https://huggingface.co/hexgrad/Kokoro-82M", how:"Apache 2.0 open weights — free to self-host commercially"},
+  "breeze-tts-2": {url:"https://huggingface.co/BreezeBlue/Breeze-TTS-2", how:"Open weights on Hugging Face — free to self-host"},
   "elevenlabs-sfx": {url:"https://elevenlabs.io/sound-effects", how:"Free tier ~50 SFX generations/month, royalty-free"}
 };
 
@@ -957,7 +971,9 @@ const VIDEO_STRATEGIES = {
       "Reliable on-screen text/UI rendering in video",
       "Describe transitions as physical events: circular wipes, vertical car-door cuts, flash-to-white",
       "Specify exposure/stock effects: fine grain, halation, VHS glitches, scanlines, chromatic aberration",
-      "Up to 7,000-character prompts supported"
+      "Up to 7,000-character prompts supported",
+      "H3 base weights are open (33B) but the license excludes local use in US/EU/UK/Korea",
+      "H3 Max (fal's speed variant): same prompting conventions at 768p — use [Shot 1]/[Shot 2] labels and wrap dialogue with voice/tone notes; a 5s clip renders in under 3 seconds"
     ],
     transform(p, model) {
       let r = ensurePresentTense(stripQualityTags(p));
@@ -979,7 +995,10 @@ const VIDEO_STRATEGIES = {
       "Max 10 seconds at 720p with native audio synthesis",
       "Multi-turn editing is the defining feature (up to 3 sequential edits)",
       "Describe the scene as if telling a story; natural conversational language works best",
-      "Include context and purpose of the video"
+      "Include context and purpose of the video",
+      "Omni 1.1 Flash (Aug 2026) adds chaining: extend scenes in 10s steps up to 40s — write extensions as sequential prompts that continue the narrative, not restated scenes",
+      "First/last-frame mode: describe the camera movement that connects the two keyframes; with video references, name which character performs the referenced action",
+      "Iterate in 360p draft mode (~60% faster, a third the cost), then re-render and upscale to 4K"
     ],
     transform(p, model) {
       let r = ensurePresentTense(p);
@@ -1305,7 +1324,8 @@ const IMAGE_STRATEGIES = {
       "Camera references work well: 'Shot on Leica Q3, 28mm f/1.7 lens'",
       "Avoid stacking generic praise ('stunning cinematic 8K masterpiece'); use visual facts instead",
       "Quality parameter: set to 'high' for small text, dense panels, close-up portraits",
-      "Supports up to 4 reference images and transparent backgrounds (PNG/WebP)"
+      "Supports up to 4 reference images and transparent backgrounds (PNG/WebP; 'background: transparent' in the API since Aug 2026)",
+      "DALL-E was retired from ChatGPT on Aug 30, 2026; GPT Image 2 / ChatGPT Images is the replacement"
     ],
     transform(p, model) {
       let r = stripQualityTags(p);
@@ -1321,6 +1341,7 @@ const IMAGE_STRATEGIES = {
   "Nano Banana": {
     negativePrompt: null,
     tips: [
+      "Official model IDs: Nano Banana 2 = Gemini 3.1 Flash Image; the Lite tier is gemini-3.1-flash-lite-image (~4s generations). Google's Imagen line is deprecated with this family as the migration path",
       "Narrative paragraphs, NOT keyword lists; Gemini-based architecture understands natural language",
       "No negative prompts; use 'semantic positive framing': 'sharp focus' instead of 'not blurry'",
       "Supports up to 14 reference images and 4K output",
@@ -1359,6 +1380,23 @@ const IMAGE_STRATEGIES = {
       if (!hasMaterial(r)) r += ', rich material textures with natural surface detail';
       r += ', natural sensor noise, slight imperfections for realism, refined artistic quality';
       return r;
+    }
+  },
+
+  // ── IDEOGRAM 4.0 ──
+  Ideogram: {
+    negativePrompt: null,
+    tips: [
+      "Ideogram 4.0 (June 2026) is an open-weight, design-first model: frontier text rendering, bounding-box layout control, 2K photoreal",
+      "Trained exclusively on structured JSON captions — JSON prompts outperform plain text, and captions should exhaustively describe everything in the image",
+      "Use compositional_deconstruction with optional bbox coordinates and per-element descriptions for precise spatial layout",
+      "Steer color with a colour_palette array of hex codes inside the style description",
+      "Pair a high_level_description with the compositional breakdown; casual users can let the LLM 'magic prompt' expand plain text into the structured JSON",
+      "Layerize turns flat designs into editable text layers (string/font/color/position) on all plans and the API",
+      "License caveat: weights are marked non-commercial; commercial use goes through the API"
+    ],
+    transform(p) {
+      return 'high_level_description: ' + p + '. Describe every element exhaustively; add a compositional_deconstruction with per-element descriptions (and bbox coordinates for precise layout), plus a colour_palette of hex codes in the style description.';
     }
   },
 
@@ -1428,6 +1466,7 @@ const IMAGE_STRATEGIES = {
   Kling: {
     negativePrompt: "blurry, low quality, distorted, extra fingers, deformed hands, unnatural proportions",
     tips: [
+      "Current image models: Kling Image 3.0 / 3.0 Omni (Feb 2026) — native 2K/4K, text/signage rendering, 7 aspect ratios, up to 3 reference images, Series Mode multi-panel output",
       "Supports extracting features from up to 10 reference images",
       "Reference by image number: 'subjects from image 1 and image 2'",
       "Formula: 'Keep [subject]'s facial features, character has [hairstyle], wearing [clothing], performing [action], background is [setting]'",
@@ -1601,6 +1640,8 @@ const TEXT_STRATEGIES = {
   Claude: {
     negativePrompt: null,
     tips: [
+      "Current lineup (Sep 2026): Fable 5.1 (new flagship, 1M-token context) / Fable 5 / Opus 5 / Sonnet 5 / Haiku 4.5; Anthropic suggests Opus 5 for most workloads and Fable 5.1 for the most demanding reasoning and long-horizon work",
+      "Fable 5.1 writes denser prose than Fable 5 — ask explicitly for 'short paragraphs, varied sentence length' if you want airier writing; it also uses less markdown in chat, so old anti-formatting boilerplate can over-suppress",
       "Claude follows instructions literally; state the ambition level ('go beyond the basics, fully-featured') or you get the minimum",
       "Structure prompts with XML tags: <task>, <context>, <constraints>, <examples>; Claude is trained to parse them",
       "Give Claude a role in the first line; one sentence measurably focuses tone and quality",
@@ -1684,7 +1725,7 @@ const TEXT_STRATEGIES = {
   Gemini: {
     negativePrompt: null,
     tips: [
-      "Current models: Gemini 3.1 Pro (flagship), Gemini 3.7 Flash (fast tier, Aug 2026)",
+      "Current models: Gemini 3.1 Pro (flagship), Gemini 3.8 Flash (fast tier, Sep 2 2026; 3.7 Flash still live one tier back and leads WebDev Arena). 3.8 Flash intro pricing roughly doubles Jan 1, 2027",
       "Use the PTCF structure Google recommends: Persona, Task, Context, Format",
       "Be concise and direct; Gemini 3 over-analyzes verbose, persuasion-heavy prompts, so keep instructions tight imperatives",
       "Context first, ask last: put all reference material above and the instruction at the very end",
@@ -1716,6 +1757,7 @@ const TEXT_STRATEGIES = {
   Grok: {
     negativePrompt: null,
     tips: [
+      "Grok 4.6 is current; 4.7 is announced for ~mid-Sept 2026 but not shipped",
       "Iterate fast instead of perfecting: three quick attempts with refinements beat one 30-minute mega-prompt",
       "Be surgical with context; include only the relevant material, never a whole project dump",
       "Grok is literal: convert every adjective into a specification ('fun' becomes 'tight controls, escalating waves, combo multiplier')",
@@ -1793,6 +1835,7 @@ const AUDIO_STRATEGIES = {
   "mureka-v9": {
     negativePrompt: null,
     tips: [
+      "Current flagship is V9.5 (Aug 31, 2026) — claims richer emotional depth and more lifelike vocals over V9",
       "Lead with lyrics — it composes around your words, so paste them first",
       "Configure genre, mood, tempo and instrumentation as explicit parameters, not just prose",
       "Use Reference Mode: upload a track you like and it generates in a similar sonic style",
@@ -1827,6 +1870,7 @@ const AUDIO_STRATEGIES = {
   "stable-audio-2-5": {
     negativePrompt: "vocals, singing, lyrics, low quality, muddy mix",
     tips: [
+      "Current family is Stable Audio 3 (GA May 2026): open-weight Small/Medium on Hugging Face, Large via API, plus a DAW plugin; 2.5 remains the fast enterprise/API tier",
       "Follow the formula: subject + genre + instruments + mood + tempo + key + production style + duration",
       "Always add BPM for sync-critical work (video cuts, loops, VO beds): '...105 BPM'",
       "Add a key signature for theory-aware output: 'Key of C minor'",
@@ -1987,6 +2031,15 @@ const AUDIO_STRATEGIES = {
       "Use the ONNX/MLX community builds for the smallest footprint and easy edge deployment",
       "Pair with an OpenAI-compatible local server wrapper to drop into existing TTS pipelines",
       "Great for narration and UI readouts; do not expect emotional range or singing"
+    ]
+  },
+  "breeze-tts-2": {
+    negativePrompt: null,
+    tips: [
+      "Open-weight release (Aug 25, 2026) claiming the top TTS-arena slot and sub-40ms time-to-first-audio — vendor-claimed, so validate by ear",
+      "Steer with voice selection and punctuation-driven pacing; expressive control is thinner than the hosted leaders",
+      "Self-host from the official Hugging Face repo when you want arena-grade quality without per-character pricing",
+      "Young model with a thin real-world track record; treat as a fast-moving candidate, not an established default"
     ]
   },
   "elevenlabs-sfx": {
