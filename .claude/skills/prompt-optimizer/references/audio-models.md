@@ -58,6 +58,7 @@ Tips:
 ### Mureka
 Negative prompt: null
 Tips:
+- Current flagship is V9.5 (Aug 31, 2026) — claims richer emotional depth and more lifelike vocals over V9
 - Lead with lyrics — it composes around your words, so paste them first
 - Configure genre, mood, tempo and instrumentation as explicit parameters, not just prose
 - Use Reference Mode: upload a track you like and it generates in a similar sonic style
@@ -78,6 +79,7 @@ Tips:
 ### Stable Audio
 Negative prompt: "vocals, singing, lyrics, low quality, muddy mix"
 Tips:
+- Current family is Stable Audio 3 (GA May 2026): open-weight Small/Medium on Hugging Face, Large via API, plus a DAW plugin (Aug 2026); 2.5 remains the fast enterprise/API tier
 - Follow the formula: subject + genre + instruments + mood + tempo + key + production style + duration
 - Always add BPM for sync-critical work: '...105 BPM'; add a key for theory-aware output: 'Key of C minor'
 - Name specific sound sources, then add texture ('dusty vinyl crackle, warm Rhodes piano') to escape generic results
@@ -205,6 +207,14 @@ Tips:
 - ONNX/MLX builds for edge deployment; pair with an OpenAI-compatible server wrapper
 - Narration and UI readouts, not acting or singing
 
+### Breeze TTS 2 (BreezeBlue, open weights)
+Negative prompt: null
+Tips:
+- Open-weight release (Aug 25, 2026) claiming the top TTS-arena slot and sub-40ms time-to-first-audio — vendor-claimed, so validate by ear
+- Steer with voice selection and punctuation-driven pacing; expressive control is thinner than the hosted leaders
+- Self-host from the official Hugging Face repo when you want arena-grade quality without per-character pricing
+- Young model with thin real-world track record; treat as a fast-moving candidate, not an established default
+
 ## Sound effects
 
 ### ElevenLabs SFX
@@ -225,15 +235,16 @@ Tips:
 | Suno v5.5 | 10 | 8 | — | 3 | 8 | 8 |
 | ElevenLabs Music | 9 | 7 | 6 | 3 | 8 | 8 |
 | Udio v4 | 9 | 9 | — | 2 | 9 | 7 |
-| Mureka V9 | 8 | 7 | 5 | 2 | 8 | 8 |
+| Mureka V9.5 | 8 | 7 | 5 | 2 | 8 | 8 |
 | SongGeneration 2 | 8 | 7 | — | — | 7 | 7 |
 | Google Lyria 3.5 | 7 | 9 | — | 4 | 7 | 8 |
-| Stable Audio 2.5 | 3 | 9 | — | 8 | 8 | 10 |
+| Stable Audio 3 | 3 | 9 | — | 8 | 8 | 10 |
 | ACE-Step 1.5 | 7 | 7 | — | — | 7 | 10 |
 | ElevenLabs v3 | — | — | 10 | — | 9 | 6 |
 | Hume Octave 2 | — | — | 9 | — | 9 | 6 |
 | Gemini TTS / Chirp 3 HD | — | — | 9 | — | 8 | 8 |
 | Cartesia Sonic 3 | — | — | 7 | — | 7 | 10 |
+| Breeze TTS 2 | — | — | 8 | — | 6 | 9 |
 | ElevenLabs SFX v2 | — | — | — | 10 | 6 | 9 |
 
 Rough guide: Suno or ElevenLabs Music for finished vocal songs (ElevenLabs when
@@ -247,9 +258,10 @@ self-hosting.
 
 Separate from the capability tips above; directional, not measured.
 
-- **Suno v5.5** — mixed: still the vocal-song default, but the v5.5 rollout drew
-  heavy backlash over output changes, pricing, and download caps/watermarking;
-  Studio's stems/MIDI are genuinely valued.
+- **Suno v5.5** — mixed: still the vocal-song default, but backlash deepened
+  when the download caps took effect Sep 3, 2026 — free tier now 7 *lifetime*
+  downloads (Pro 20/mo, Premier 60/mo), applied retroactively to existing
+  songs; Studio's stems/MIDI are genuinely valued.
 - **Udio v4** — mixed: the audiophile's choice on quality, but the
   post-settlement download lockdown gutted practical value; Sony still litigating.
 - **ElevenLabs Music** — loved: top pick when the vocal must pass as human;
@@ -278,14 +290,17 @@ Separate from the capability tips above; directional, not measured.
 
 Every model above has an official free path, but the strings attached differ:
 
-- **Free tiers, non-commercial or capped:** Suno (older model only), Udio,
-  ElevenLabs (music ~7 songs/day; TTS watermarked; SFX ~50/mo), Mureka,
-  Stable Audio, Riffusion (uncapped), Hume, Cartesia, MiniMax; Google MusicFX
-  is free and uncapped; openai.fm is a free no-signup TTS demo; Google Cloud
-  and Azure have free monthly quotas.
+- **Free tiers, non-commercial or capped:** Suno (older model only; since
+  Sep 3, 2026 free accounts get 7 *lifetime* downloads, applied
+  retroactively), Udio, ElevenLabs (music ~7 songs/day; TTS watermarked; SFX
+  ~50/mo), Mureka, Stable Audio, Riffusion (uncapped), Hume, Cartesia,
+  MiniMax; Google MusicFX is free and uncapped; openai.fm is a free no-signup
+  TTS demo; Google Cloud and Azure have free monthly quotas.
 - **Open weights, commercial-friendly:** ACE-Step (Apache 2.0), Kokoro
-  (Apache 2.0), Chatterbox (MIT), Fish Audio, SongGeneration (Hugging Face).
-  MusicGen weights are CC BY-NC (non-commercial).
-- **Watch for:** label lawsuits/settlements reshaping Suno and Udio terms;
+  (Apache 2.0), Chatterbox (MIT), Fish Audio, SongGeneration, Breeze TTS 2,
+  Stable Audio 3 Small/Medium (Hugging Face). MusicGen weights are CC BY-NC
+  (non-commercial).
+- **Watch for:** label lawsuits/settlements reshaping Suno and Udio terms
+  (Sony escalated against Udio in Jul 2026 with a new 30,000-recording suit);
   SynthID/PerTh/Suno watermarking in outputs; voice-cloning consent
   requirements (legal and ethical) on every cloning path, open or hosted.
