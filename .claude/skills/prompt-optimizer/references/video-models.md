@@ -33,7 +33,8 @@ Tips:
 - Describe transitions as physical events: circular wipes, vertical car-door cuts, flash-to-white
 - Specify exposure/stock effects: fine grain, halation, VHS glitches, scanlines, chromatic aberration
 - Up to 7,000-character prompts supported
-- H3 base weights (33B) were open-sourced in Aug 2026 under the MiniMax H3 Community License
+- H3 base weights (33B) were open-sourced in Aug 2026 under the MiniMax H3 Community License (territory clause excludes US/EU/UK/Korea for local use)
+- H3 Max (fal's post-trained variant, Aug 27 2026): 5s clip in under 3s at 768p with H3's native audio — #1 on the I2V-with-audio arena; same prompting conventions, use [Shot 1]/[Shot 2] labels and wrap dialogue in voice/tone notes
 
 ### Gemini
 Negative prompt: null (not supported — rewrite negatives as positives)
@@ -45,6 +46,9 @@ Tips:
 - Multi-turn editing is the defining feature (up to 3 sequential edits)
 - Describe the scene as if telling a story; natural conversational language works best
 - Include context and purpose of the video
+- Omni 1.1 Flash (Aug 27 2026) makes it chainable: scene extension in 10s steps up to 40s — write extensions as sequential prompts that continue the narrative, not restated scenes
+- First/last-frame mode: describe the camera movement that connects the two keyframes; with video references, name which character performs the referenced action
+- Iterate in 360p draft mode (~60% faster, a third the cost), then re-render and upscale to 4K
 
 ### Flux
 Negative prompt: null (not supported — rewrite negatives as positives)
@@ -56,6 +60,7 @@ Tips:
 - Specify camera and lens: 'Shot on Sony A7IV, 35mm lens, golden hour' for photorealism
 - Add one strong lighting description; vague lighting produces vague results
 - Keep under 80 words for standard work; up to 300 for complex multi-subject scenes
+- FLUX 3 Video went GA Aug 5 2026: up to 20s HD/Full-HD, keyframes, continuation, lip-sync in 14+ languages; draft mode at ~a third the full-render price for iteration
 
 ### Kling
 Negative prompt: "blur, distort, low quality, warping fingers, frozen lips, jittery eyes, face swap, character merge, identity drift, extra limbs, moonwalk sliding feet"
@@ -107,6 +112,7 @@ Tips:
 - For image-to-video: prompt ONLY motion and camera; the image defines entity, scene, and style
 - Maintain consistent visual style from start to end with explicit style anchoring
 - Wan 3.0 (Aug 2026) can generate ~30s videos from documents, slides, spreadsheets, and web pages, in addition to text and image inputs
+- Wan 3.0 is API-only for now — no open weights released (a break from Wan tradition; the repo sits empty) and docs route through Chinese jurisdiction, which matters for sensitive business content
 
 ### Veo
 Negative prompt: "blurry, low quality, distorted, glitchy, unnatural motion"
@@ -137,7 +143,7 @@ Tips:
 ### Sora
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
-- Availability (verify before relying on it): OpenAI shut down the Sora app in April 2026 and the Sora 2 API is scheduled to sunset around late September 2026
+- Availability: the Sora app died Apr 26, 2026 and the Sora 2 API sunsets Sept 24, 2026 — with no successor announced (the team moved to world-simulation research), so migrate rather than wait
 - 2-5 sentences structured as: scene / cinematography / actions / audio
 - Sora treats prompts as 'creative wish lists, not contracts'; same prompt yields different results each time
 - Shorter clips (4s) follow instructions more reliably; stitch two 4s clips rather than one 8s clip
@@ -187,16 +193,27 @@ Tips:
 - For best faces: use Image-to-Video with high-quality Start Frame instead of text-to-video
 
 
-## Real-world reception (community sentiment — Aug 2026, volatile)
+## Real-world reception (community sentiment — Sep 2026, volatile)
 
 Separate from the capability tips above; community/reviewer signals, dated and
 subjective. The video-model web surface is heavily polluted with SEO/AI-written
 "review" pages — treat magnitudes as ±1 uncertain.
 
+Arena snapshot (early Sep): Wan 3.0 #1 text-to-video and co-#1 with-audio;
+Gemini Omni Flash #1 image-to-video; fal's H3 Max #1 I2V-with-audio;
+HappyHorse — which topped every board in April — has slid to mid-pack.
+
 - **Hailuo 2.3** — reality gap: marketed "physics champion" vs frequent morphing
-  failures and unwanted background music (Trustpilot ~1.4/5).
+  failures and unwanted background music (Trustpilot ~1.4/5); attention has
+  shifted to H3/H3 Max.
+- **Wan 3.0** — rising: "not the image-quality ceiling, but possibly the most
+  usable video model for ordinary people" — strong object permanence; weak on
+  dialogue, in-frame text, hands/crowds; community irritated that no open
+  weights shipped.
 - **Seedance 2.5** — mixed: loved multimodal reference control; identity drift on
-  long clips, advertised 4K unseen, censorship burns credits.
+  long clips (50-reference workflows are emerging as the fix), censorship burns
+  credits. The "4K unseen" complaint has softened — Seedance 2.0 went native
+  4K/10-bit and 2.5 API hosts now ship 30s 4K.
 - **Kling 3.0 / 3.0 Omni** — loved: community favorite for realistic humans and
   value; lip-sync weak past ~5s, failed gens burn credits.
 - **Veo 3.1** — loved: quality leader; short 8s ceiling and strict contextual
@@ -204,15 +221,34 @@ subjective. The video-model web surface is heavily polluted with SEO/AI-written
 - **Veo 3.1 Fast** — reality gap: reports of "random nonsense" outputs that
   ignore inputs and burn credits.
 - **Sora 2** — reality gap: strong sync/physics but "dumbed down" post-launch,
-  heavy guardrails, and sunsetting.
+  heavy guardrails; API dies Sept 24, 2026 with no successor.
+- **HappyHorse** — mixed: from topping every arena board in April to mid-pack
+  (#7-9) by September as rivals shipped faster; the prompting conventions above
+  still hold.
 - **LTX 2.5** — sleeper: open-source darling; only open native audio+video and 4K
   HDR, runs on a 32GB GPU; raw fidelity trails closed flagships.
 - **PixVerse V6 / C1** — sleeper: anime/action with clean line art beats its
   billing; not a realism leader.
 - **Vidu Q3 / Q2** — sleeper: standout multi-reference character consistency
   across angles and cuts.
-- **Grok Imagine 1.5** — mixed: cheapest fast loop with audio; 720p ceiling and
-  no provenance make it weak for client deliverables.
+- **Grok Imagine 1.5** — redemption arc: native 1080p (since ~Aug 1), voice
+  cloning, and 7 reference anchors killed the old "720p ceiling" complaint;
+  now reviewed as "suddenly a serious image-to-video leader" (top-5 I2V arena)
+  while staying the cheapest fast loop with audio.
 - **Cross-cutting gripes** across paid models: credits burned on failed/filtered
   generations with no refund; lip-sync degrading past ~5s; censorship tightening
   after the 2026 Hollywood-vs-ByteDance IP fights.
+
+## Notable families not yet fully profiled
+
+Real, shipped models we have capability facts for but no researched prompting
+conventions yet — map them to the closest profiled family and say so:
+
+- **Runway Gen-4.5** — at one point #1 text-to-video on the arena; $0.12/s.
+- **Luma Ray 3.2** (Jun 2026) — 16 keyframes, 20s/1080p, native HDR + EXR
+  export, first Luma API.
+- **Vidu S1** (Jul 2026) — real-time interactive/voice-driven avatar video,
+  autoregressive unlimited duration at 540p.
+- **MAGI-2 Preview** (Sand.ai, Aug 2026) — open-weights 114B MoE, 10s
+  audio+video, needs 8x-Hopper-class hardware.
+- **HunyuanVideo-1.5** (Tencent) — 8.3B open model that runs on consumer GPUs.
