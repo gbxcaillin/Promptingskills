@@ -36,6 +36,9 @@ Tips:
 ### GPT Image
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
+- Current flagship is GPT Image 2.5 / "ChatGPT Images 2.5" (Sep 8, 2026): API models gpt-image-2.5-flare (fast default, ~7x faster/4x cheaper than GPT Image 2) and gpt-image-2.5-sunburst (top quality, slower). It debuted #1+#2 on both text-to-image and editing arenas; GPT Image 2 is now #3
+- Pick the tier: Flare for speed and default work, Sunburst for production/premium creative and multi-turn edits
+- Params (2.5): quality auto/low/medium/high/xhigh/max; size up to 3840px/edge (multiples of 16, ratio <=3:1); background='transparent' with PNG/WebP; number reference images and assign each a role (subject/style/clothing/background)
 - 6-slot framework: Subject+Action, Context/Setting, Style/Medium, Lighting, Camera/Composition, Mood+Constraints
 - Natural language, like briefing a creative director; 30-80 words of clear, specific prose
 - No negative prompt parameter; express constraints as inline exclusions at end: 'No watermark, no extra text'
@@ -93,7 +96,27 @@ Tips:
 - Steer color with a colour_palette array of hex codes inside the style description
 - Pair a high_level_description with the compositional breakdown (the official examples show the format); casual users can let the LLM 'magic prompt' expand plain text into the JSON
 - Layerize turns flat designs into editable text layers (string/font/color/position) on all plans and the API
-- License caveat: weights are marked non-commercial; commercial use goes through the API
+- License caveat: weights are marked non-commercial (code is Apache 2.0); commercial use goes through the API
+- Self-hosters: the bundled Hive moderation in the open inference code false-blocks some legitimate commercial prompts (blank/blocked outputs) — a known friction point
+
+### Muse Image
+Negative prompt: null (no negative field; no seed/aspect/guidance params either)
+Tips:
+- Meta's agentic image model (Jul 2026): it plans, web-searches, writes/runs code (accurate charts, QR codes), and critiques/refines its own drafts before returning
+- Natural descriptive sentences beat tag-soup (Subject + Style + Details + Composition) — it flattens keyword piles into generic output; trim adjectives rather than adding them
+- Up to 10 reference images for identity/character consistency — reference beats description; say explicitly what to keep
+- Name the exact text/layout/details that must not change during an edit; iterate one localized edit at a time
+- Ask for web-grounded facts, or charts/QR codes explicitly — it codes them for accuracy
+- Strong second tier (Arena #2 at launch for T2I and editing); HN testers put it a notch below the GPT/Google leaders in real use
+
+### Reve
+Negative prompt: null (not documented)
+Tips:
+- Layout-first model (Reve 2.1, Jul 2026): it plans the image as a structured, editable layout, then renders native 4K — every element is addressable for single-region re-render
+- Write prompts as layout instructions, not just style descriptors: give every element a home ('title at top, subject centered, logo bottom-right')
+- Exact in-image text in single quotes, kept short; separate subject / text / background clearly for faithful reproduction
+- Edit via natural-language single-region instructions instead of re-rolling (edits are famously cheap, ~$0.01)
+- The poster / dense-layout / exact-text design niche pick; strong multilingual text; ranks above Nano Banana 2 and Seedream on the text-to-image arena
 
 ### Wan
 Negative prompt: "blurry, distorted, low quality, deformed hands, unnatural proportions"
@@ -180,7 +203,8 @@ Tips:
 ### MAI Image
 Negative prompt: null (not documented — exclude unwanted elements by phrasing positively; when editing, state what to leave unchanged)
 Tips:
-- Microsoft's first-party family (MAI-Image-2.5, 2.5-Flash, 2.5-Pro; Pro is the quality-first tier); #1 on the Artificial Analysis image-editing leaderboard and shipping inside PowerPoint, OneDrive, Foundry and OpenRouter
+- Current family is MAI-Image-2.6 + 2.6-Flash (Sep 4, 2026); the 2.5 line stays available. Launched at #2 text-to-image / #1 editing on the arena (now #3-4 after GPT Image 2.5) — the "best price-per-Elo" pick; 2.6-Flash is 2.8x faster than GPT-Image-2-Medium for high-throughput edits
+- Uses natural-language edit instructions (targeted object edits, layout adaptation, text updates, artifact cleanup); multi-image reference editing; web grounding for up-to-date factual visuals
 - Write flowing natural-language descriptions, NOT comma-separated keyword tags
 - Order the prompt subject -> style -> lighting -> composition -> mood; layer details together
 - Put literal in-image text in single quotes with placement and style; text rendering is its standout strength
@@ -200,10 +224,19 @@ subjective.
   simple-prompt portraits.
 - **Juggernaut XL** — mixed: loved for local uncensored photoreal; SDXL-era weak
   prompt/text adherence.
-- **GPT Image 2** — reality gap: #1 on the arena but imprecise for exact graphic
-  design/layout and degrades after repeated edits; text and realism strong.
-- **Nano Banana 2** — mixed: best-in-class text/adherence; loud "flat/cartoonish"
-  realism complaint; aggressive non-configurable safety.
+- **GPT Image 2.5 (Flare / Sunburst)** — dominant: swept #1+#2 on both arenas at
+  launch (Sep 8), the widest #1-to-#2 gap recorded; sharper detail, natural
+  lighting, reliable multi-turn edits. Nano Banana 2 still wins some pure-
+  photorealism rounds. GPT Image 2 drops to #3 and is now the value/legacy tier.
+- **Nano Banana 2** — mixed, slipping: pushed down the boards (≈#6-9) by the
+  GPT 2.5 / MAI 2.6 / Reve / Muse wave, but still the go-to for skin, materials,
+  cinematic light and product hero shots; loses on instruction-following and text.
+- **Reve 2.1** — respected sleeper: layout-first, native 4K, ranks above Nano
+  Banana 2 and Seedream; the posters / dense-layout / exact-text pick, with cheap
+  iterative edits.
+- **Meta Muse Image** — strong second tier: agentic (plans, web-searches, codes
+  charts/QR); Arena #2 at launch, a notch below GPT/Google leaders in real use;
+  user pushback over Meta training on user photos.
 - **Seedream 5.0 Pro** — reality gap: cheaper/less restrictive with strong
   adherence (realism effectively tied with Nano Banana 2 in blind usable-shot
   rates), but portraits still regressed vs 4.5 and the banding artifact remains
@@ -215,12 +248,15 @@ subjective.
 - **Recraft V4.1** — sleeper: only model with native editable SVG; uneven on
   anatomy/detailed prompts.
 - **Z-Image** — sleeper: photoreal in under 3s on consumer GPUs.
-- **Grok Imagine Image 2.0** — reality gap: capability is real (#2 worldwide on
-  both arena boards behind GPT Image 2), but over-censorship and a paywall
-  erased the free/uncensored differentiator.
-- **MAI-Image 2.5 / Flash / Pro** — mixed, rising: Pro hit #1 on the image-editing
-  leaderboard and the family now ships inside PowerPoint/OneDrive/Foundry —
-  real distribution, though independent creator sentiment is still sparse.
+- **Grok Imagine Image 2.0** — reality gap, worsening: the "#2" was an Aug launch
+  snapshot; now ~#5 as rivals shipped, and the backlash deepened — the free tier
+  is effectively gone (0 free generations, hard upgrade wall) with no API.
+- **MAI-Image 2.6 / Flash** — rising, confirmed: 2.6 launched straight to #2
+  arena / #1 editing (Sep 4) and held the editing crown four days until GPT
+  Image 2.5 took it; now #3-4, the "cheapest Elo on the frontier" pick.
+- **Ideogram 4.0** — settled positive: top open-weight on DesignArena, picked
+  best by designers over Nano Banana 2 and FLUX; friction is the bundled Hive
+  moderation false-blocking legitimate prompts for self-hosters.
 - **Flux 2 Pro / Max** — mixed: strong multi-reference consistency; lingering
   "plastic/wax skin" in portraits.
 - **FLUX 3** — unproven hype: the image model is still unreleased (only FLUX 3

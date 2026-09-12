@@ -27,13 +27,14 @@ entry and say so.
 ### Suno
 Negative prompt: "aggressive screaming, distorted metal guitar, lo-fi, spoken word" (Exclude Styles field)
 Tips:
-- Split the two boxes: Style box = global sound (genre, production, key instruments, vocal identity, mood); Lyrics box = the words + section structure only
-- Top-anchor the style: lead with vocal role + genre, e.g. 'Female pop vocalist, breathy, intimate, 90s R&B groove' — this locks identity before lyrics are parsed
-- Use recognized structure metatags: [Intro] [Verse] [Chorus] [Bridge] [Outro]; custom tags like [My Special Section] are ignored
-- Keep style tags to ~15-30 words; over-stuffing dilutes adherence
-- Punctuation is phrasing: commas, dashes and ellipses in lyrics become micro-pauses and breaths
-- Use the Exclude Styles field to steer away from unwanted genres
-- Suno Studio (paid) adds multitrack editing, stem separation and MIDI export
+- Current generation is v6 (Sep 9, 2026): v6 (precise, Pro/Premier), v6-wild (exploratory, Pro/Premier), v6-mini (free tier). All pre-v6 models are retired for new generation; the first line trained with licensed partners (WMG, BMG, Believe)
+- v6 parses real musician vocabulary — spell out instrumentation, song structure, mood and stylistic references directly rather than vibe words
+- Pick the model by intent: v6 when you know what you want; v6-wild for ideas 'you didn't ask for'
+- Edit, don't regenerate: plain-language section edits ('change the chorus to a gospel choir') and single-lyric swaps work on existing tracks
+- Variety slider at 0 keeps your style tags fully authoritative; raise it for looser interpretation — change one control at a time
+- Style box / Lyrics box split still holds: style = global sound (genre, production, instruments, vocal identity); lyrics = words + [Intro] [Verse] [Chorus] [Bridge] [Outro] metatags; punctuation is phrasing
+- Enable Max Mode (extra credits) for songs over ~2 min, style transfer, or cross-track vocal consistency; multimodal seeds (audio/photo/video/voice memo) cost extra credits
+- Suno Studio (Premier) remains the only unlimited-download path; free tier is capped at 7 lifetime downloads
 
 ### ElevenLabs Music
 Negative prompt: "acoustic, repetitive structure, four-on-the-floor kick, lo-fi" (Exclude Styles)
@@ -68,6 +69,7 @@ Tips:
 ### Lyria (Google)
 Negative prompt: "vocals, distortion, low fidelity, dissonant" (Vertex exposes negative_prompt)
 Tips:
+- Lyria 3.5 rolled into the Gemini app and Gemini API on Sep 4, 2026: free for all Gemini users in-app (~3-min songs with vocals and timed lyrics); API id lyria-3.5 at $0.08/song, text + image input
 - Be descriptive and specific with adjectives; name genre, mood, key instruments and rhythmic feel
 - Include lyrics either as a theme or as exact words in quotes
 - Reference verse/chorus/bridge boundaries — Lyria 3.5 tracks song structure
@@ -161,6 +163,7 @@ Tips:
 ### MiniMax Speech
 Negative prompt: null
 Tips:
+- Current flagship is Speech 2.8 (HD/Turbo, Jan 2026)
 - HD for audiobooks/VO (rhythm-stable), Turbo for realtime
 - Clone from ~10s of clean single-speaker audio
 - Set emotion explicitly (happy/sad/surprised/angry) rather than hoping context carries it
@@ -186,6 +189,7 @@ Tips:
 ### Cartesia (Sonic)
 Negative prompt: null
 Tips:
+- Current version is Sonic 3.6 (GA Aug 27, 2026; 44 languages, better pacing/emotion); older snapshots (sonic-2, turbo, 3-2025) sunset after Oct 20, 2026
 - Built for realtime agents; budget ~166-190ms real end-to-end latency (vendor ~90ms is model-only)
 - Hand-tune pitch/speed/emotion to avoid a robotic read — don't rely on defaults
 - Chunk text at natural clause boundaries to keep streaming prosody smooth
@@ -210,10 +214,10 @@ Tips:
 ### Breeze TTS 2 (BreezeBlue, open weights)
 Negative prompt: null
 Tips:
-- Open-weight release (Aug 25, 2026) claiming the top TTS-arena slot and sub-40ms time-to-first-audio — vendor-claimed, so validate by ear
+- Open-weight release (Aug 25, 2026) — the #1 claim is now independently validated: Artificial Analysis's blind Speech Arena ranks it #1 open-weights on Provider Voices (beating ElevenLabs v3 and Fish S2 Pro), though only #16 on Controlled Voices, so "#1" holds for provider voices, not across the board
 - Steer with voice selection and punctuation-driven pacing; expressive control is thinner than the hosted leaders
 - Self-host from the official Hugging Face repo when you want arena-grade quality without per-character pricing
-- Young model with thin real-world track record; treat as a fast-moving candidate, not an established default
+- License caveat: reviewers call its restrictive license a commercial dealbreaker — check it before shipping
 
 ## Sound effects
 
@@ -232,7 +236,7 @@ Tips:
 
 | Model | Songs & vocals | Instrumental | Voice/TTS | SFX | Control | Speed/value |
 |-------|:---:|:---:|:---:|:---:|:---:|:---:|
-| Suno v5.5 | 10 | 8 | — | 3 | 8 | 8 |
+| Suno v6 | 9 | 8 | — | 3 | 9 | 7 |
 | ElevenLabs Music | 9 | 7 | 6 | 3 | 8 | 8 |
 | Udio v4 | 9 | 9 | — | 2 | 9 | 7 |
 | Mureka V9.5 | 8 | 7 | 5 | 2 | 8 | 8 |
@@ -258,17 +262,22 @@ self-hosting.
 
 Separate from the capability tips above; directional, not measured.
 
-- **Suno v5.5** — mixed: still the vocal-song default, but backlash deepened
-  when the download caps took effect Sep 3, 2026 — free tier now 7 *lifetime*
-  downloads (Pro 20/mo, Premier 60/mo), applied retroactively to existing
-  songs; Studio's stems/MIDI are genuinely valued.
+- **Suno v6** — mixed: v6/v6-wild/v6-mini shipped Sep 9 and retired the whole
+  pre-v6 line; broad agreement it sounds cleaner than v5.5 and section-editing is
+  a real control leap, but the launch collided with the Sep 3 download caps (free
+  = 7 lifetime downloads) and the forced retirement, so "best model yet" sits
+  next to "I'm cancelling"; some worry licensed data sanitized edgier genres.
 - **Udio v4** — mixed: the audiophile's choice on quality, but the
-  post-settlement download lockdown gutted practical value; Sony still litigating.
-- **ElevenLabs Music** — loved: top pick when the vocal must pass as human;
-  cleanest licensed-data/commercial-clearance story (excludes film/TV/games on
-  self-serve).
+  post-settlement download lockdown gutted practical value; Sony escalated in
+  July with a new 30,000-recording suit.
+- **ElevenLabs Music** — loved, strengthening: top pick when the vocal must pass
+  as human; cleanest licensed-data story, now reinforced by a Sep 10 multi-year
+  UMG licensing deal (a licensed fan-remix platform is in development).
 - **ElevenLabs v3** — mixed: expressive tags are inconsistent; many still prefer
   v2 for neutral long-form.
+- **Breeze TTS 2** — hype, now partly validated: independently ranked #1
+  open-weights on the blind Provider-Voices arena, but only mid-pack on
+  Controlled Voices and saddled with a restrictive license.
 - **ElevenLabs SFX v2** — loved: outputs rated indistinguishable from recorded
   foley in blind tests.
 - **Hume Octave 2** — loved: genuinely differentiated emotional acting; gripe is
@@ -290,12 +299,13 @@ Separate from the capability tips above; directional, not measured.
 
 Every model above has an official free path, but the strings attached differ:
 
-- **Free tiers, non-commercial or capped:** Suno (older model only; since
-  Sep 3, 2026 free accounts get 7 *lifetime* downloads, applied
+- **Free tiers, non-commercial or capped:** Suno (v6-mini on the free tier;
+  since Sep 3, 2026 free accounts get 7 *lifetime* downloads, applied
   retroactively), Udio, ElevenLabs (music ~7 songs/day; TTS watermarked; SFX
   ~50/mo), Mureka, Stable Audio, Riffusion (uncapped), Hume, Cartesia,
-  MiniMax; Google MusicFX is free and uncapped; openai.fm is a free no-signup
-  TTS demo; Google Cloud and Azure have free monthly quotas.
+  MiniMax; Google MusicFX and Lyria 3.5 in the Gemini app are free and uncapped;
+  openai.fm is a free no-signup TTS demo; Google Cloud and Azure have free
+  monthly quotas.
 - **Open weights, commercial-friendly:** ACE-Step (Apache 2.0), Kokoro
   (Apache 2.0), Chatterbox (MIT), Fish Audio, SongGeneration, Breeze TTS 2,
   Stable Audio 3 Small/Medium (Hugging Face). MusicGen weights are CC BY-NC

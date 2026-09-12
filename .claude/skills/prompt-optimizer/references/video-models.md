@@ -192,6 +192,53 @@ Tips:
 - Fast whips, wild handheld, and hyper-detailed reflections cause shimmer; avoid them
 - For best faces: use Image-to-Video with high-quality Start Frame instead of text-to-video
 
+### Runway
+Negative prompt: null (explicitly unsupported)
+Tips:
+- Gen-4.5 (Dec 2025) is Runway's flagship: keep prompts simple, direct and motion-focused — subject + action + camera movement + what changes over time
+- Positive phrasing only; describe what you want, never "no X"
+- It executes complex sequenced instructions well — specify detailed camera choreography, precise event timing, and atmospheric changes in one prompt
+- Use style descriptors for motion style (live action, smooth animation, stop motion) and aesthetic
+- Limits: 1,000-char prompt, 2-10s, no native audio, no last-frame input; credit burn (~25 credits/s) is the standing complaint
+- Community pattern: iterate cheaply in Kling, finish hero/character shots in Runway
+
+### Luma
+Negative prompt: null
+Tips:
+- Ray 3.2 (Jun 2026) is a direction-first pro-pipeline model: 20s/1080p, native 10/12/16-bit HDR with ACES EXR export, up to 16 keyframes per clip
+- Be specific and directive; explicitly describe physical interactions ("fabric draping with weight", "realistic bubble physics") — it understands physics but needs guiding detail
+- Use keyframes (up to 16) when pacing/art direction matters, instead of longer prose
+- Video-to-video: start from the source, describe the END state, keep Adherence on Auto until you have a reason not to
+- Iterate in Draft Mode (~5x faster), then "master" the winning shot to 4K HDR without changing identity/motion/composition
+- Best-in-class frame-level control for film/post pipelines; no audio generation
+
+### Vidu S1 (real-time)
+Negative prompt: null (not applicable — interactive control model)
+Tips:
+- A real-time interactive model (Jul 2026), not a clip generator: it builds a live, voice-controlled character from one image (person/anime/pet) + a chosen or cloned voice
+- Voice IS the prompt — your speech is a live instruction driving the character's whole visual behavior; direct it while it generates, not upfront
+- Start from one clean reference image; the model infers expressions and gestures with no preset animations
+- Scope: live 540p character streams only — use Vidu Q3 for finished, edited clips
+
+### MAGI-2 (open weights)
+Negative prompt: null
+Tips:
+- Sand.ai's open 114B-param MoE unified audio-video model (Aug 2026, Apache 2.0): T2V + I2V with sound generated in the same pass; fixed 10s clips
+- Use the built-in prompt-enhancement (PE) — it rewrites short prompts into the long structured captions the model was trained on (separate T2V/I2V templates)
+- If prompting manually, write long structured captions, not one-liners; describe the soundscape/dialogue since audio and video are generated jointly
+- I2V: prompt + a first-frame image; dimensions must be multiples of 16
+- Heavy to self-host (~307GB weights, 8x Hopper-class GPUs); hosted availability is unconfirmed
+
+### HunyuanVideo
+Negative prompt: supported (--negative_prompt param; a default string ships in the repo config)
+Tips:
+- Tencent's lightweight open model (HunyuanVideo-1.5, 8.3B, Apache 2.0) — runs in ~14GB VRAM, the accessibility king of local video; 5-10s at 480p/720p (1080p via built-in super-resolution)
+- Formula: Subject + Motion + Scene + [Shot Type] + [Camera Movement] + [Lighting] + [Style] + [Atmosphere]; longer, detailed prompts measurably help
+- Sequential action language: "first... then... next... finally..." builds motion as a time-ordered process
+- Concrete actions over abstract emotion: "the boy smiles, eyes crinkling" beats "happy"
+- State spatial orientation (left/right frame, foreground/background) in multi-subject scenes; standard camera vocabulary (dolly, crane, tracking, orbit, pan) works
+- I2V: emphasize subject motion + scene motion + camera movement, and leave the default Qwen3 auto prompt-rewrite on; no native audio
+
 
 ## Real-world reception (community sentiment — Sep 2026, volatile)
 
@@ -199,9 +246,10 @@ Separate from the capability tips above; community/reviewer signals, dated and
 subjective. The video-model web surface is heavily polluted with SEO/AI-written
 "review" pages — treat magnitudes as ±1 uncertain.
 
-Arena snapshot (early Sep): Wan 3.0 #1 text-to-video and co-#1 with-audio;
-Gemini Omni Flash #1 image-to-video; fal's H3 Max #1 I2V-with-audio;
-HappyHorse — which topped every board in April — has slid to mid-pack.
+Arena snapshot (mid-Sep): Wan 3.0 #1 text-to-video and co-#1 with-audio;
+Gemini Omni 1.1 Flash #1 image-to-video (no-audio) and #2 T2V; fal's H3 Max #1
+I2V-with-audio; HappyHorse — which topped every board in April — has slid to
+mid-pack.
 
 - **Hailuo 2.3** — reality gap: marketed "physics champion" vs frequent morphing
   failures and unwanted background music (Trustpilot ~1.4/5); attention has
@@ -232,9 +280,26 @@ HappyHorse — which topped every board in April — has slid to mid-pack.
 - **Vidu Q3 / Q2** — sleeper: standout multi-reference character consistency
   across angles and cuts.
 - **Grok Imagine 1.5** — redemption arc: native 1080p (since ~Aug 1), voice
-  cloning, and 7 reference anchors killed the old "720p ceiling" complaint;
-  now reviewed as "suddenly a serious image-to-video leader" (top-5 I2V arena)
-  while staying the cheapest fast loop with audio.
+  cloning, and 7 reference anchors killed the old "720p ceiling" complaint; now
+  a credible option (top-10 I2V-with-audio, #7) while staying the cheapest fast
+  loop with audio.
+- **Gemini Omni 1.1 Flash** — loved: went GA Aug 27 with 40s chained scenes,
+  first/last-frame control and 360p-4K tiers; now #2 on both T2V boards and #1
+  I2V (no-audio). (The preview endpoint deprecates Sept 30.)
+- **MiniMax H3 Max** — sleeper→proven: fal's speed variant holds #1 I2V-with-
+  audio and #3 T2V-with-audio; ~50x speedup (I2V ~6s, T2V ~5s) at 768p with
+  stereo audio is the real story.
+- **Runway Gen-4.5** — mixed: quality universally respected but credit burn is
+  the #1 complaint and, with no audio, it has fallen off the with-audio boards;
+  Runway pivoted to reselling rivals' models via Media Router.
+- **Luma Ray 3.2** — sleeper: beloved in film/post for HDR/EXR and 16-keyframe
+  direction; low mindshare among casual prompters, no audio.
+- **HunyuanVideo 1.5** — loved (open-source): "SOTA you can actually run" in
+  ~14GB VRAM; fast ComfyUI + LoRA ecosystem; no native audio.
+- **MAGI-2 Preview** — sleeper: first open ~100B-scale video MoE with unified
+  audio; mid-pack arena Elo and an 8x-Hopper requirement keep it niche.
+- **Vidu S1** — hype: opens the "real-time interactive" category (live voice-
+  driven avatars); excitement tempered by 540p and its narrow scope.
 - **Cross-cutting gripes** across paid models: credits burned on failed/filtered
   generations with no refund; lip-sync degrading past ~5s; censorship tightening
   after the 2026 Hollywood-vs-ByteDance IP fights.
@@ -244,11 +309,9 @@ HappyHorse — which topped every board in April — has slid to mid-pack.
 Real, shipped models we have capability facts for but no researched prompting
 conventions yet — map them to the closest profiled family and say so:
 
-- **Runway Gen-4.5** — at one point #1 text-to-video on the arena; $0.12/s.
-- **Luma Ray 3.2** (Jun 2026) — 16 keyframes, 20s/1080p, native HDR + EXR
-  export, first Luma API.
-- **Vidu S1** (Jul 2026) — real-time interactive/voice-driven avatar video,
-  autoregressive unlimited duration at 540p.
-- **MAGI-2 Preview** (Sand.ai, Aug 2026) — open-weights 114B MoE, 10s
-  audio+video, needs 8x-Hopper-class hardware.
-- **HunyuanVideo-1.5** (Tencent) — 8.3B open model that runs on consumer GPUs.
+- **HiDream-O1-Video** (HiDream.ai) — #4 on the I2V-with-audio arena; part of the
+  omni-modal O1 family; almost no standalone prompting docs yet.
+- **Agnes Video 2.5** (Agnes AI / Pavo) — climbing the arena; Flash tier is free
+  (720p, 4-12s, 200 daily credits); OpenAI-Videos-compatible API.
+- **SkyReels V4** (Skywork) — unified audio-video, 1080p/32fps up to 15s; limited
+  preview with a free tier, weights not released (a break from V1-V3).

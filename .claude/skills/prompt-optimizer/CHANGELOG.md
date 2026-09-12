@@ -3,6 +3,34 @@
 Dated entries summarizing what each refresh changed. Newest first.
 See MAINTENANCE.md for the update procedure.
 
+## 2026-09-12 — full refresh (all four categories)
+Text/LLM:
+- Added GPT-6 Astra (OpenAI's new flagship, shipped Sep 3-4; reasoning/agents/
+  one-shot games strong, creative writing a weakness — Sol still writes better).
+- Grok 4.7 slipped (announced, not shipped as of Sep 12) — deliberately not added.
+- Matured sentiment: Fable 5.1 now #1 agent board + beats Opus 5 on coding, but
+  22-35% more output burns capped plans; Gemini 3.8 Flash deflated to a
+  batch/agent specialist (3.7 Flash keeps the WebDev Arena lead).
+Image:
+- Added GPT Image 2.5 (flare/sunburst, Sep 8; swept #1+#2 on both arenas),
+  MAI-Image 2.6 (+Flash, Sep 4), and two prior omissions: Meta Muse Image
+  (agentic, Jul) and Reve 2.1 (layout-first 4K, Jul).
+- Sentiment: Nano Banana 2 slipping (still the photoreal niche); Grok Imagine
+  free tier effectively gone; Ideogram 4.0 settled-positive (Hive-moderation
+  friction). Deprecations: gpt-image-1 (Oct 23) and older image APIs (Dec 1).
+Video:
+- Promoted five watchlist families to full profiles: Runway Gen-4.5, Luma
+  Ray 3.2, Vidu S1 (real-time), MAGI-2 Preview (open), HunyuanVideo 1.5 (open).
+- Sentiment: Gemini Omni 1.1 Flash upgraded to loved (GA, #1 I2V no-audio);
+  H3 Max proven #1 I2V-with-audio; Grok softened to top-10; Sora 2 death clock
+  holds (Sept 24). New watchlist: HiDream-O1-Video, Agnes Video 2.5, SkyReels V4.
+Audio:
+- Suno v6 shipped Sep 9 (v6/v6-wild/v6-mini; retired the whole pre-v6 line;
+  first licensed-data generation). Lyria 3.5 rolled into the Gemini app/API
+  (Sep 4, free). ElevenLabs signed a UMG deal (Sep 10). Corrections: MiniMax
+  Speech 2.8, Cartesia Sonic 3.6. Breeze TTS 2 #1 claim independently validated
+  for provider voices (mid-pack on controlled voices; restrictive license).
+
 ## 2026-09-03 — full refresh (all four categories)
 Text/LLM:
 - Claude Fable 5.1 shipped Sep 1 (new flagship, 1M context; denser prose and

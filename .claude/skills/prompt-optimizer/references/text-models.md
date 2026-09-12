@@ -29,8 +29,10 @@ Before finishing, verify the result against the task above.
 ```
 
 **ChatGPT / GPT** — Markdown sections, contradiction-free, verbosity controlled.
-Reasoning models (GPT-5 Thinking) get a high-level goal and NO step-by-step;
-fast models (Instant, 4o) get an explicit "First plan…, then build…, then verify":
+Reasoning models (GPT-6 Astra, GPT-5.6 Sol) get a high-level goal and NO
+step-by-step; fast models (Luna, Terra) get an explicit "First plan…, then
+build…, then verify". Astra also wants an explicit reasoning-effort level (it
+has no default) and responds to a named slop-word blocklist:
 ```
 # Role and Objective
 You are [role]. Build exactly what is specified; where unspecified, choose the
@@ -107,11 +109,14 @@ case). Reliable fixes are structural constraints, not cleverer wishes.
 |-------|:---:|:---:|:---:|:---:|:---:|:---:|
 | Claude (Fable 5.1/5, Opus 5) | 10 | 9 | 9–10 | 8–9 | 10 | 10 |
 | Gemini 3.1 Pro | 8 | 10 | 8 | 8 | 9 | 10 |
-| ChatGPT / GPT-5.6 | 6 | 9 | 7 | 8 | 9 | 7 |
+| GPT-6 Astra | 5 | 9 | 6 | 10 | 9 | 8 |
+| ChatGPT / GPT-5.6 Sol | 6 | 9 | 7 | 8 | 9 | 7 |
 | Grok 4.6 | 9 | 7 | 9 | 9 | 7 | 6 |
 
 Rough guide: Claude for prose and agentic coding; Gemini for one-shot web games
-and huge-context work; GPT for spec-to-working-code; Grok for wild ideation and
+and huge-context work; GPT-6 Astra for verifiable-answer reasoning, math, and
+one-shot game/3D builds (but its prose is a weak point — Sol still writes
+better); GPT-5.6 for spec-to-working-code; Grok for wild ideation and
 worldbuilding, prompted lean and iterated fast.
 
 ## Family tips (the guide)
@@ -121,6 +126,8 @@ Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
 - Current lineup (Sep 2026): Fable 5.1 (new flagship, Sep 1; 1M-token context) / Fable 5 / Opus 5 / Sonnet 5 / Haiku 4.5; Anthropic's docs suggest Opus 5 for most workloads and Fable 5.1 for the most demanding reasoning and long-horizon work
 - Fable 5.1 writes denser prose than Fable 5 — ask explicitly for 'short paragraphs, varied sentence length' if you want airier writing; it also uses less markdown in chat, so old anti-formatting boilerplate can over-suppress
+- Fable 5.1 emits 22-35% more output than Fable 5 and defaults to fewer status updates during long tool-calling turns; on capped plans, scope tasks tightly and set a lower reasoning effort (medium often beats high for clean style-following) to avoid burning session limits
+- Fable 5.1's prompting guide: give a clear deliverable + action boundaries + a definition of 'finished' rather than micromanaging steps; explicitly tell it NOT to fix unrelated bugs or expand scope
 - Claude follows instructions literally; state the ambition level ('go beyond the basics, fully-featured') or you get the minimum
 - Structure prompts with XML tags: <task>, <context>, <constraints>, <examples>; Claude is trained to parse them
 - Give Claude a role in the first line; one sentence measurably focuses tone and quality
@@ -137,11 +144,14 @@ Tips:
 ### ChatGPT
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
-- Current family is GPT-5.6 (Sol = flagship reasoning, Terra = balanced, Luna = fast); the older GPT-5 Thinking/Instant and GPT-4o names are superseded
+- Current lineup (Sep 2026): GPT-6 Astra is the new flagship (single model, no tiers; shipped Sep 3-4); GPT-5.6 (Sol = reasoning, Terra = balanced, Luna = fast, now the free default) stays available below it. Older GPT-5 Thinking/Instant and GPT-4o names are superseded
+- Match the model to the job: Astra for verifiable-answer reasoning, math, agentic/browser tasks, and one-shot game/3D builds; Sol for creative writing (Sol still beats Astra on writing) and spec-to-code; Luna/Terra for cheap fast iteration
+- Astra's prompting guide (new): structure as GOAL / CONTEXT / PRIORITY / AUTONOMY / TOOLS / OUTPUT / VERIFICATION / STOP-CONDITION; steer via five levers — initiative/follow-through, instruction-following, personality/writing style, subagent delegation, testing/verification
+- Astra has NO default reasoning-effort level — set it explicitly ('reasoning effort: medium' is the common default); it kills AI-slop words if you ban them by name ('avoid: bottom line, leverage, delve, game-changer, seamlessly, testament to')
 - Structure prompts with Markdown headers: # Role and Objective, # Instructions, # Output Format, # Context
 - GPT burns reasoning on contradictions; scan your prompt and resolve any conflicting instructions before sending
 - In long prompts, state critical instructions at the beginning AND repeat them at the end
-- Reasoning tier (GPT-5.6 Sol) wants a high-level goal like briefing a senior colleague; skip 'think step by step'
+- Reasoning tiers (Astra, GPT-5.6 Sol) want a high-level goal like briefing a senior colleague; skip 'think step by step'
 - Fast tiers (GPT-5.6 Luna/Terra) want explicit steps spelled out: 'First plan..., then build..., then verify'
 - Control verbosity explicitly: 'no preamble, no recap, at most 3 sentences after the code'
 - Add persistence lines for multi-step work: 'keep going until fully resolved; make reasonable assumptions rather than asking'
@@ -194,25 +204,40 @@ dated and subjective. Weight them as directional, not measured.
   capability, "least enjoyable to work with". No fix shipped — Anthropic
   instead leapfrogged it with Fable 5.1. Nudge: instruction-following and
   brainstorming down.
-- **Claude Fable 5 / 5.1** — loved: Fable 5 still leads blind creative-writing
-  tests; early 5.1 reads (2 days in) call the writing "less stereotypically
-  Claude" and more responsive to style instructions — partially answering the
-  personal-voice knock — though the family's over-confidence trait persists in
-  agent work. Nudge: writing, worldbuilding up.
+- **Claude Fable 5.1** — loved: now #1 on the LMArena agent board and the Mazur
+  debate benchmark; beats Opus 5 on every published coding benchmark (gap widest
+  on terminal-heavy tasks). Wins head-to-head prose cadence vs Fable 5 and flags
+  its guesses instead of inventing facts. Caveat: emits 22-35% more output —
+  Max-plan users report burning session limits fast; medium effort often beats
+  high for clean style-following. Nudge: writing, worldbuilding up.
+- **Claude Fable 5** — loved: still #1 on the creative-writing arena board (5.1
+  isn't listed there yet); prose "words fine, music slightly off" vs 5.1. Nudge:
+  writing, worldbuilding up.
 - **Claude Sonnet 5** — loved: wins writing quality and instruction-following
   at a large price undercut. Nudge: writing, instruction up.
 - **Claude Haiku 4.5** — sleeper: punches above its price on coding/vibe-coding.
-- **GPT-5.6 Sol** — mixed: strong long-horizon coding; benchmark leadership
-  contested as partly test-gamed. Nudge: coding up.
-- **GPT-5.6 Luna** — mixed: repetitive, shallow on long-form creative. Nudge:
-  writing down.
+- **GPT-6 Astra** — mixed/dominant-but-narrow: crushes verifiable-answer tasks,
+  math, and agentic/one-shot game+3D builds (FrontierMath, browser games in a
+  day), but creative writing is a genuine weakness — ranks *below* GPT-5.6 Sol
+  on writing benchmarks, "no personality, reads as machine-written". Reach for
+  it for reasoning/agents, not prose. Nudge: brainstorming up, writing down.
+- **GPT-5.6 Sol** — mixed: still OpenAI's *best writing model* (beats Astra on
+  writing Elo) and strong long-horizon coding; benchmark leadership contested as
+  partly test-gamed. Nudge: coding up.
+- **GPT-5.6 Luna** — mixed: repetitive, shallow on long-form creative; now the
+  ChatGPT free/Go default. Nudge: writing down.
 - **Gemini 3.1 Pro** — reality gap: reasoning gains but reduced warmth and
   in-session drift (drops constraints); excellent long-doc/code review. Nudge:
   writing and instruction down, long documents up.
 - **Gemini 3.7 Flash** — sleeper: value pick for low-cost coding/agents and
-  the current WebDev Arena leader for one-shot web builds; caution before
-  accepting edits unattended. 3.8 Flash (Sep 2) is too new to rank. Nudge:
-  coding, instruction up.
+  *still the WebDev Arena leader* for one-shot web builds. Nudge: coding,
+  instruction up.
+- **Gemini 3.8 Flash** — hype deflated to specialist: did NOT take the WebDev
+  lead (debuted #18; 3.7 still leads), slow first-token (~13s) and heavy token
+  bloat make it poor for interactive use — but decent for overnight batch and
+  long-horizon agentic work. "Matches Opus 5" only on cherry-picked benchmarks.
+  Nudge: none (use 3.7 for the fast lane).
 - **Grok 4.6** — reality gap: best-in-class real-time research; "robotic"
   writing and weaker real-world coding than benchmarks imply. Nudge: writing and
-  coding down, brainstorming up.
+  coding down, brainstorming up. (Grok 4.7 was announced but slipped — not
+  shipped as of Sep 12.)
