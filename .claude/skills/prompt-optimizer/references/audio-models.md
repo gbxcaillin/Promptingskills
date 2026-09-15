@@ -195,6 +195,15 @@ Tips:
 - Chunk text at natural clause boundaries to keep streaming prosody smooth
 - Pick Sonic when latency is the product; go elsewhere when audio quality matters more
 
+### Inworld (Realtime TTS-2)
+Negative prompt: null
+Tips:
+- Realtime TTS-2 (Sep 2026) is a low-latency streaming voice model — it topped the Artificial Analysis Realtime and Controlled Voice arenas at launch
+- Built for interactive agents and games: stream text in and chunk at clause boundaries to keep latency low
+- Steer delivery with plain-language style/emotion direction; punctuation drives pacing
+- Priced for scale ($5/1M chars on-demand) with a free monthly TTS allowance — a genuine budget realtime pick
+- Validate expressiveness against ElevenLabs/Hume for premium VO; its edge is latency + cost, not top-end acting
+
 ### Chatterbox (Resemble, open weights)
 Negative prompt: null
 Tips:
@@ -248,6 +257,7 @@ Tips:
 | Hume Octave 2 | — | — | 9 | — | 9 | 6 |
 | Gemini TTS / Chirp 3 HD | — | — | 9 | — | 8 | 8 |
 | Cartesia Sonic 3 | — | — | 7 | — | 7 | 10 |
+| Inworld Realtime TTS-2 | — | — | 8 | — | 7 | 9 |
 | Breeze TTS 2 | — | — | 8 | — | 6 | 9 |
 | ElevenLabs SFX v2 | — | — | — | 10 | 6 | 9 |
 
@@ -286,6 +296,9 @@ Separate from the capability tips above; directional, not measured.
   creator buzz than ElevenLabs.
 - **Cartesia Sonic** — mixed: latency king, mid-pack on pure quality, needs
   hand-tuning.
+- **Inworld Realtime TTS-2** — sleeper: topped the realtime and controlled-voice
+  arenas at launch and is priced for scale; the value pick for interactive
+  agents, though not a premium-VO acting model.
 - **Mureka / Stable Audio / Lyria / SongGeneration / Kokoro** — sleepers:
   each quietly beats its billing in a niche (producer control, licensed
   instrumental beds, free uncapped MusicFX, lyric accuracy, size/cost).
@@ -303,7 +316,8 @@ Every model above has an official free path, but the strings attached differ:
   since Sep 3, 2026 free accounts get 7 *lifetime* downloads, applied
   retroactively), Udio, ElevenLabs (music ~7 songs/day; TTS watermarked; SFX
   ~50/mo), Mureka, Stable Audio, Riffusion (uncapped), Hume, Cartesia,
-  MiniMax; Google MusicFX and Lyria 3.5 in the Gemini app are free and uncapped;
+  Inworld (free monthly TTS minutes), MiniMax; Google MusicFX and Lyria 3.5 in
+  the Gemini app are free and uncapped;
   openai.fm is a free no-signup TTS demo; Google Cloud and Azure have free
   monthly quotas.
 - **Open weights, commercial-friendly:** ACE-Step (Apache 2.0), Kokoro

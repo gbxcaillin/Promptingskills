@@ -3,6 +3,21 @@
 Dated entries summarizing what each refresh changed. Newest first.
 See MAINTENANCE.md for the update procedure.
 
+## 2026-09-15 — delta refresh (3-day window)
+Mostly "confirmed, no change" (image/video/audio had no in-window releases).
+Real deltas applied:
+- Text: added GLM-5.3 (Zhipu, open, long agentic coding) and DeepSeek V4-Pro
+  (open, single-shot spec-to-patch) — pre-existing roster gaps, both current
+  (V4-Pro's Sep 14 retirement was cancelled). Noted GPT-6 Pro as a documented
+  ChatGPT tier powered by GPT-6 Astra (not a separate model). Grok 4.7 still not
+  shipped (two missed dates; 4.8/4.9 roadmap talk) — 4.6 stays current. Fable
+  5.1 now also #1 on the AA Intelligence Index; Opus 5.1 still an unverified
+  rumor.
+- Audio: added Inworld Realtime TTS-2 (topped the realtime/controlled-voice
+  arenas; budget realtime pick) — a gap flagged since the audio launch research.
+- Image/Video: no change (FLUX 3 image still unreleased, GPT Image 2.5 still #1,
+  Sora 2 sunset still Sept 24, Suno v6 aftermath unchanged).
+
 ## 2026-09-12 — full refresh (all four categories)
 Text/LLM:
 - Added GPT-6 Astra (OpenAI's new flagship, shipped Sep 3-4; reasoning/agents/

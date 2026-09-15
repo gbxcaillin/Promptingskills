@@ -111,13 +111,17 @@ case). Reliable fixes are structural constraints, not cleverer wishes.
 | Gemini 3.1 Pro | 8 | 10 | 8 | 8 | 9 | 10 |
 | GPT-6 Astra | 5 | 9 | 6 | 10 | 9 | 8 |
 | ChatGPT / GPT-5.6 Sol | 6 | 9 | 7 | 8 | 9 | 7 |
+| DeepSeek V4-Pro (open) | 6 | 9 | 6 | 8 | 7 | 7 |
+| GLM-5.3 (open) | 6 | 8 | 6 | 7 | 8 | 9 |
 | Grok 4.6 | 9 | 7 | 9 | 9 | 7 | 6 |
 
 Rough guide: Claude for prose and agentic coding; Gemini for one-shot web games
 and huge-context work; GPT-6 Astra for verifiable-answer reasoning, math, and
 one-shot game/3D builds (but its prose is a weak point — Sol still writes
-better); GPT-5.6 for spec-to-working-code; Grok for wild ideation and
-worldbuilding, prompted lean and iterated fast.
+better); GPT-5.6 for spec-to-working-code; DeepSeek V4-Pro for spec-to-patch
+single-shot code and GLM-5.3 for long agentic coding loops (both open-weights,
+weak at prose); Grok for wild ideation and worldbuilding, prompted lean and
+iterated fast.
 
 ## Family tips (the guide)
 
@@ -160,6 +164,16 @@ Tips:
 - For iteration turns, scope the edit: name the exact element to change and cap the blast radius ('change only the jump physics')
 - Use a self-reflection rubric for one-shot builds: 'first define what makes a world-class result, then meet that bar'
 - Re-state formatting and style rules every few messages in long chats; compliance decays
+- GPT-6 Pro is a higher-reasoning Astra tier inside ChatGPT ($100/$200 Pro, Business, Enterprise — not Plus), not a separate model; prompt it exactly like Astra
+
+### DeepSeek & GLM (open-weights coding)
+Negative prompt: null (not supported — rewrite negatives as positives)
+Tips:
+- Both are open-weights, self-hostable, and strong on code but weak at prose — reach for them on the coding/app-building lane, not creative writing
+- DeepSeek V4-Pro (1.6T MoE, Aug 2026) is the single-shot spec-to-patch specialist: give it a COMPLETE spec plus full function/file context and ask for the diff/patch directly; it excels at well-specified one-shot generation over back-and-forth
+- GLM-5.3 (Zhipu, 743B, Aug 2026) is the long agentic-loop pick: decompose the task into explicit multi-step plans, give repo context and a clear success criterion, and let it run hours-long agent loops; it plans better than it single-shots
+- Rule of thumb: DeepSeek for "here's the spec, produce the patch"; GLM for "work this repo autonomously toward this goal"
+- Both are fine for high-iteration loops thanks to low/flat open pricing; for prose, worldbuilding, or nuanced instruction-following, route to Claude or Gemini instead
 
 ### Gemini
 Negative prompt: null (not supported — rewrite negatives as positives)
@@ -204,9 +218,11 @@ dated and subjective. Weight them as directional, not measured.
   capability, "least enjoyable to work with". No fix shipped — Anthropic
   instead leapfrogged it with Fable 5.1. Nudge: instruction-following and
   brainstorming down.
-- **Claude Fable 5.1** — loved: now #1 on the LMArena agent board and the Mazur
-  debate benchmark; beats Opus 5 on every published coding benchmark (gap widest
-  on terminal-heavy tasks). Wins head-to-head prose cadence vs Fable 5 and flags
+- **Claude Fable 5.1** — loved: now #1 on the LMArena agent board, the Mazur
+  debate benchmark, and the Artificial Analysis Intelligence Index (53.4, ahead
+  of GPT-6 Astra 52.8 and Opus 5 50.7); beats Opus 5 on every published coding
+  benchmark (gap widest on terminal-heavy tasks). (An Opus 5.1 is rumored but
+  unverified — not shipped.) Wins head-to-head prose cadence vs Fable 5 and flags
   its guesses instead of inventing facts. Caveat: emits 22-35% more output —
   Max-plan users report burning session limits fast; medium effort often beats
   high for clean style-following. Nudge: writing, worldbuilding up.
@@ -239,5 +255,11 @@ dated and subjective. Weight them as directional, not measured.
   Nudge: none (use 3.7 for the fast lane).
 - **Grok 4.6** — reality gap: best-in-class real-time research; "robotic"
   writing and weaker real-world coding than benchmarks imply. Nudge: writing and
-  coding down, brainstorming up. (Grok 4.7 was announced but slipped — not
-  shipped as of Sep 12.)
+  coding down, brainstorming up. (Grok 4.7 has now missed two dates and still
+  isn't shipped as of Sep 15; 4.8/4.9 are roadmap talk only — 4.6 stays current.)
+- **DeepSeek V4-Pro** — strong (open): highest open-weight SWE-bench Verified;
+  the community's spec-to-patch codegen pick. Its planned Sep 14 retirement was
+  cancelled, so it stays current. Weak at prose.
+- **GLM-5.3** — the momentum pick (open): ~50% coding gain over 5.2 and emergent
+  cybersecurity/audit strength on long agentic loops; lags DeepSeek on one-shot
+  codegen. Weak at prose.
