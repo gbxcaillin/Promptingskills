@@ -3,6 +3,17 @@
 Dated entries summarizing what each refresh changed. Newest first.
 See MAINTENANCE.md for the update procedure.
 
+## 2026-09-19 — verification sweep (no model changes)
+Full delta sweep across all four categories found nothing sourced to add,
+remove, or re-rate in the Sep 15-19 window — the roster is current as of the
+Sep 15 refresh. Confirmed: Grok 4.7 and 4.8 both still unshipped (Musk-on-X
+roadmap talk only; docs.x.ai still tops out at 4.6); Opus 5.1 still an
+unverified rumor (Opus 5 stays current); FLUX 3 image still unreleased; no new
+media models; Sora 2 API shutdown still Sept 24, 2026 with no successor. Only
+change this cycle: bumped the web app's user-facing FREE_CHECKED / SENTIMENT_DATE
+stamps from "Aug 2026" to "Sep 2026" (the skill references were already Sep),
+since the data has been re-verified through September.
+
 ## 2026-09-15 — delta refresh (3-day window)
 Mostly "confirmed, no change" (image/video/audio had no in-window releases).
 Real deltas applied:
