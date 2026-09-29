@@ -140,18 +140,10 @@ Tips:
 - Video resolution: up to 1080p (native since the July 2026 update), duration 6-30 seconds
 - July 2026 update adds text-to-video (previously image-to-video only), voice reference for face and voice consistency across scenes, and up to 7 reference anchors for scene control
 
-### Sora
-Negative prompt: null (not supported — rewrite negatives as positives)
+### Sora (discontinued)
+Negative prompt: n/a
 Tips:
-- Availability: the Sora app died Apr 26, 2026 and the Sora 2 API sunsets Sept 24, 2026 — with no successor announced (the team moved to world-simulation research), so migrate rather than wait
-- 2-5 sentences structured as: scene / cinematography / actions / audio
-- Sora treats prompts as 'creative wish lists, not contracts'; same prompt yields different results each time
-- Shorter clips (4s) follow instructions more reliably; stitch two 4s clips rather than one 8s clip
-- Native audio generation; ALWAYS specify sound or the model decides for you
-- Duration set via API parameter (4/8/12/16/20s), not in prose text
-- Excels at single-action sequences with specific camera language
-- Struggles with: hands, text rendering, object permanence, and physics past 20 seconds
-- Each prompt should focus on a single clear moment with one action
+- DISCONTINUED: the Sora app died Apr 26, 2026 and the Sora 2 API shut down Sept 24, 2026, with no successor (the team moved to world-simulation research). It is no longer usable — do not recommend it; migrate to Veo 3.1, Kling 3.0, Wan 3.0, or Luma Ray for new work
 
 ### LTX
 Negative prompt: null (not supported — rewrite negatives as positives)
@@ -268,8 +260,8 @@ mid-pack.
   censorship are the top pro gripes.
 - **Veo 3.1 Fast** — reality gap: reports of "random nonsense" outputs that
   ignore inputs and burn credits.
-- **Sora 2** — reality gap: strong sync/physics but "dumbed down" post-launch,
-  heavy guardrails; API dies Sept 24, 2026 with no successor.
+- **Sora 2** — discontinued: the API shut down Sept 24, 2026 with no successor
+  (the app closed in April). No longer usable; kept here only as a migration note.
 - **HappyHorse** — mixed: from topping every arena board in April to mid-pack
   (#7-9) by September as rivals shipped faster; the prompting conventions above
   still hold.

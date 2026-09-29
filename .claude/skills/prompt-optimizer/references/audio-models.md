@@ -39,6 +39,7 @@ Tips:
 ### ElevenLabs Music
 Negative prompt: "acoustic, repetitive structure, four-on-the-floor kick, lo-fi" (Exclude Styles)
 Tips:
+- Current version is v2.5 (Sep 2026)
 - Every prompt implicitly answers five questions — genre, mood, instrumentation, tempo, production era — so state all five
 - Be concrete on genre and era: 'energetic 1980s synth-pop, driving drum machine, male vocals', not 'rock'
 - Build section by section: generate the Intro, then Continue to add Verse, Chorus, Breakdown, Outro for granular control

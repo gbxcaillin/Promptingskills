@@ -107,28 +107,29 @@ case). Reliable fixes are structural constraints, not cleverer wishes.
 
 | Model | Creative writing | Game/app coding | Worldbuilding | Brainstorming | Instruction-following | Long documents |
 |-------|:---:|:---:|:---:|:---:|:---:|:---:|
-| Claude (Fable 5.1/5, Opus 5) | 10 | 9 | 9–10 | 8–9 | 10 | 10 |
+| Claude (Opus 5.5, Fable 5.1) | 10 | 9–10 | 9–10 | 8–9 | 10 | 10 |
 | Gemini 3.1 Pro | 8 | 10 | 8 | 8 | 9 | 10 |
 | GPT-6 Astra | 5 | 9 | 6 | 10 | 9 | 8 |
-| ChatGPT / GPT-5.6 Sol | 6 | 9 | 7 | 8 | 9 | 7 |
+| ChatGPT (GPT-6 Sol) | 8 | 8 | 8 | 8 | 8 | 7 |
 | DeepSeek V4-Pro (open) | 6 | 9 | 6 | 8 | 7 | 7 |
 | GLM-5.3 (open) | 6 | 8 | 6 | 7 | 8 | 9 |
-| Grok 4.6 | 9 | 7 | 9 | 9 | 7 | 6 |
+| Grok 4.7 | 8 | 7 | 9 | 9 | 7 | 8 |
 
-Rough guide: Claude for prose and agentic coding; Gemini for one-shot web games
-and huge-context work; GPT-6 Astra for verifiable-answer reasoning, math, and
-one-shot game/3D builds (but its prose is a weak point — Sol still writes
-better); GPT-5.6 for spec-to-working-code; DeepSeek V4-Pro for spec-to-patch
-single-shot code and GLM-5.3 for long agentic coding loops (both open-weights,
-weak at prose); Grok for wild ideation and worldbuilding, prompted lean and
-iterated fast.
+Rough guide: Claude for prose and agentic coding (Opus 5.5 is the current
+overall leader); Gemini for one-shot web games and huge-context work; GPT-6
+Astra for verifiable-answer reasoning, math, and one-shot game/3D builds (prose
+is a weak point — GPT-6 Sol writes better); GPT-6 Sol/Luna for cheaper everyday
+and high-volume work; DeepSeek V4-Pro for spec-to-patch single-shot code and
+GLM-5.3 for long agentic coding loops (both open-weights, weak at prose); Grok
+for wild ideation, worldbuilding and long-horizon agentic runs, prompted lean.
 
 ## Family tips (the guide)
 
 ### Claude
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
-- Current lineup (Sep 2026): Fable 5.1 (new flagship, Sep 1; 1M-token context) / Fable 5 / Opus 5 / Sonnet 5 / Haiku 4.5; Anthropic's docs suggest Opus 5 for most workloads and Fable 5.1 for the most demanding reasoning and long-horizon work
+- Current lineup (Sep 2026): Opus 5.5 (new flagship, Sep 22; 1M-token context, now #1 on the AA Intelligence Index and ~20% cheaper than Opus 5) / Fable 5.1 / Fable 5 / Opus 5 / Sonnet 5 / Haiku 4.5. Reach for Opus 5.5 or Fable 5.1 for the most demanding reasoning, coding and long-horizon work; Sonnet 5 for everyday work at a price undercut
+- Opus 5.5 has an effort/thinking dial that sets both reasoning depth AND cost — set it explicitly; it communicates naturally and puts key info first, and is strong at long agentic coding
 - Fable 5.1 writes denser prose than Fable 5 — ask explicitly for 'short paragraphs, varied sentence length' if you want airier writing; it also uses less markdown in chat, so old anti-formatting boilerplate can over-suppress
 - Fable 5.1 emits 22-35% more output than Fable 5 and defaults to fewer status updates during long tool-calling turns; on capped plans, scope tasks tightly and set a lower reasoning effort (medium often beats high for clean style-following) to avoid burning session limits
 - Fable 5.1's prompting guide: give a clear deliverable + action boundaries + a definition of 'finished' rather than micromanaging steps; explicitly tell it NOT to fix unrelated bugs or expand scope
@@ -148,7 +149,7 @@ Tips:
 ### ChatGPT
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
-- Current lineup (Sep 2026): GPT-6 Astra is the new flagship (single model, no tiers; shipped Sep 3-4); GPT-5.6 (Sol = reasoning, Terra = balanced, Luna = fast, now the free default) stays available below it. Older GPT-5 Thinking/Instant and GPT-4o names are superseded
+- Current lineup (Sep 2026): GPT-6 Astra is the flagship (single model, no tiers; Sep 3-4). GPT-6 Sol and GPT-6 Luna shipped Sep 22 — the Sol/Luna tiers moved up to the GPT-6 generation, inheriting Astra's reasoning at ~half the old price (Sol for demanding everyday/agentic work, Luna for high-volume/cheap). A GPT-6 Terra is unconfirmed; Terra stays a GPT-5.6 tier for now. Older GPT-5 Thinking/Instant and GPT-4o names are superseded
 - Match the model to the job: Astra for verifiable-answer reasoning, math, agentic/browser tasks, and one-shot game/3D builds; Sol for creative writing (Sol still beats Astra on writing) and spec-to-code; Luna/Terra for cheap fast iteration
 - Astra's prompting guide (new): structure as GOAL / CONTEXT / PRIORITY / AUTONOMY / TOOLS / OUTPUT / VERIFICATION / STOP-CONDITION; steer via five levers — initiative/follow-through, instruction-following, personality/writing style, subagent delegation, testing/verification
 - Astra has NO default reasoning-effort level — set it explicitly ('reasoning effort: medium' is the common default); it kills AI-slop words if you ban them by name ('avoid: bottom line, leverage, delve, game-changer, seamlessly, testament to')
@@ -194,7 +195,7 @@ Tips:
 ### Grok
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
-- Grok 4.6 is current; 4.7 is announced for ~mid-Sept 2026 but not shipped
+- Grok 4.7 shipped Sep 21 as xAI's frontier entry (coexists with 4.6 at the same low price); it is trained for hard, multi-hour agentic tasks and self-verifies, but is verbose and slow — constrain output length and use the effort dial (xhigh for hard problems). Coding and instruction-tightness still trail Claude/GPT-6. Grok 4.8 (2.5T) is in training, not shipped
 - Iterate fast instead of perfecting: three quick attempts with refinements beat one 30-minute mega-prompt
 - Be surgical with context; include only the relevant material, never a whole project dump
 - Grok is literal: convert every adjective into a specification ('fun' becomes 'tight controls, escalating waves, combo multiplier')
@@ -213,35 +214,37 @@ Tips:
 Separate from the capability tips above; these are community/reviewer signals,
 dated and subjective. Weight them as directional, not measured.
 
-- **Claude Opus 5** — reality gap: over-confidence/hallucination on long
-  factual & agentic tasks (a calibration tradeoff) plus verbose output; top
-  capability, "least enjoyable to work with". No fix shipped — Anthropic
-  instead leapfrogged it with Fable 5.1. Nudge: instruction-following and
-  brainstorming down.
-- **Claude Fable 5.1** — loved: now #1 on the LMArena agent board, the Mazur
-  debate benchmark, and the Artificial Analysis Intelligence Index (53.4, ahead
-  of GPT-6 Astra 52.8 and Opus 5 50.7); beats Opus 5 on every published coding
-  benchmark (gap widest on terminal-heavy tasks). (An Opus 5.1 is rumored but
-  unverified — not shipped.) Wins head-to-head prose cadence vs Fable 5 and flags
-  its guesses instead of inventing facts. Caveat: emits 22-35% more output —
-  Max-plan users report burning session limits fast; medium effort often beats
-  high for clean style-following. Nudge: writing, worldbuilding up.
+- **Claude Opus 5.5** — strongly positive: shipped Sep 22 as "the most capable
+  model available" and the new #1 on the AA Intelligence Index (58), displacing
+  Fable 5.1; a big step up on agentic coding (Terminal-Bench, OSWorld) and >30%
+  faster, and the first Opus to get *cheaper* (~20% cut). Only gripe: the effort
+  dial makes real cost less predictable. Nudge: coding, instruction up.
+- **Claude Opus 5** — reality gap (now superseded): over-confidence/hallucination
+  on long factual & agentic tasks plus verbose output; Opus 5.5 is the fix and
+  the reason to move off it. Nudge: instruction-following and brainstorming down.
+- **Claude Fable 5.1** — loved: was #1 on the AA Intelligence Index until Opus 5.5
+  passed it (now #2); still #1 on the LMArena agent board and the Mazur debate
+  benchmark, and beats Opus 5 on every published coding benchmark. Wins prose
+  cadence vs Fable 5 and flags guesses instead of inventing facts. Caveat: emits
+  22-35% more output — capped-plan users burn limits fast; medium effort often
+  beats high for clean style-following. Nudge: writing, worldbuilding up.
 - **Claude Fable 5** — loved: still #1 on the creative-writing arena board (5.1
   isn't listed there yet); prose "words fine, music slightly off" vs 5.1. Nudge:
   writing, worldbuilding up.
 - **Claude Sonnet 5** — loved: wins writing quality and instruction-following
-  at a large price undercut. Nudge: writing, instruction up.
+  at a large price undercut. Nudge: writing, instruction up. (A Sonnet 5.5 is
+  signaled "within weeks" but not officially shipped — verify before relying on it.)
 - **Claude Haiku 4.5** — sleeper: punches above its price on coding/vibe-coding.
 - **GPT-6 Astra** — mixed/dominant-but-narrow: crushes verifiable-answer tasks,
   math, and agentic/one-shot game+3D builds (FrontierMath, browser games in a
-  day), but creative writing is a genuine weakness — ranks *below* GPT-5.6 Sol
+  day), but creative writing is a genuine weakness — ranks *below* the Sol tier
   on writing benchmarks, "no personality, reads as machine-written". Reach for
   it for reasoning/agents, not prose. Nudge: brainstorming up, writing down.
-- **GPT-5.6 Sol** — mixed: still OpenAI's *best writing model* (beats Astra on
-  writing Elo) and strong long-horizon coding; benchmark leadership contested as
-  partly test-gamed. Nudge: coding up.
-- **GPT-5.6 Luna** — mixed: repetitive, shallow on long-form creative; now the
-  ChatGPT free/Go default. Nudge: writing down.
+- **GPT-6 Sol** — positive: the Sol tier moved up to GPT-6 (Sep 22) at ~half the
+  old price; OpenAI's best-writing tier and strong long-horizon coding, a notch
+  below Astra on raw reasoning. Nudge: coding up.
+- **GPT-6 Luna** — mixed: cheap/fast high-volume tier (price roughly halved);
+  repetitive and shallow on long-form creative. Nudge: writing down.
 - **Gemini 3.1 Pro** — reality gap: reasoning gains but reduced warmth and
   in-session drift (drops constraints); excellent long-doc/code review. Nudge:
   writing and instruction down, long documents up.
@@ -253,10 +256,13 @@ dated and subjective. Weight them as directional, not measured.
   bloat make it poor for interactive use — but decent for overnight batch and
   long-horizon agentic work. "Matches Opus 5" only on cherry-picked benchmarks.
   Nudge: none (use 3.7 for the fast lane).
-- **Grok 4.6** — reality gap: best-in-class real-time research; "robotic"
-  writing and weaker real-world coding than benchmarks imply. Nudge: writing and
-  coding down, brainstorming up. (Grok 4.7 has now missed two dates and still
-  isn't shipped as of Sep 15; 4.8/4.9 are roadmap talk only — 4.6 stays current.)
+- **Grok 4.7** — cautiously positive "budget frontier": shipped Sep 21 at the
+  same low price as 4.6, strong on long-horizon agentic knowledge work and
+  legal/finance benchmarks, but coding and instruction-tightness trail Claude
+  and GPT-6, and verbosity inflates real cost. Best-in-class real-time research;
+  worldbuilding/ideation stay its creative strengths. Nudge: coding and
+  instruction down, worldbuilding and brainstorming up. (Grok 4.8 is in training,
+  not shipped.)
 - **DeepSeek V4-Pro** — strong (open): highest open-weight SWE-bench Verified;
   the community's spec-to-patch codegen pick. Its planned Sep 14 retirement was
   cancelled, so it stays current. Weak at prose.

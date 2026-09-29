@@ -3,6 +3,25 @@
 Dated entries summarizing what each refresh changed. Newest first.
 See MAINTENANCE.md for the update procedure.
 
+## 2026-09-29 — delta refresh (10-day window; real releases)
+Text/LLM:
+- Claude Opus 5.5 shipped Sep 22 — new flagship, now #1 on the AA Intelligence
+  Index (displaces Fable 5.1), big agentic-coding step up, ~20% cheaper. Opus 5.1
+  was never real; 5.5 is the actual successor.
+- Grok 4.7 shipped Sep 21 — xAI's frontier entry (coexists with 4.6 at the same
+  low price); strong long-horizon/legal-finance, coding & instruction still trail
+  Claude/GPT-6, verbose. Grok 4.8 still in training (not added).
+- GPT-6 Sol and GPT-6 Luna shipped Sep 22 — the Sol/Luna tiers moved up to the
+  GPT-6 generation at ~half price; relabeled from GPT-5.6. GPT-6 Terra unconfirmed.
+- Sonnet 5.5 signaled but not officially shipped — flagged, not added.
+Video:
+- Sora 2 retired: the API shut down Sep 24, 2026 with no successor (app already
+  closed in April). Removed from the app roster; kept as a discontinued note in
+  the skill.
+Audio:
+- ElevenLabs Music version noted as v2.5 (Sep 11, pre-window).
+Image: no change (FLUX 3 image still unreleased, no Midjourney V9, no Seedream fix).
+
 ## 2026-09-19 — verification sweep (no model changes)
 Full delta sweep across all four categories found nothing sourced to add,
 remove, or re-rate in the Sep 15-19 window — the roster is current as of the
