@@ -65,11 +65,12 @@ Tips:
 ### Kling
 Negative prompt: "blur, distort, low quality, warping fingers, frozen lips, jittery eyes, face swap, character merge, identity drift, extra limbs, moonwalk sliding feet"
 Tips:
+- Current top tier is Kling 4.0 Flash (Sep 28, rolling out to annual subscribers first; GA was planned for Oct): single clips up to 30s (2x prior), 4K with stereo audio, up to 10 keyframes and 15 multimodal references, improved lip-sync. 3.0 Omni remains the widely-available tier
 - 5-part spine: [Camera Movement] + [Scene/Environment] + [Subject & Action] + [Lighting/Mood/Style] + [Audio/Time]
 - Sweet spot: 50-150 words. Over 300 words causes model to ignore and hallucinate
 - One camera move per shot: 'dolly push', 'tracking shot', 'orbit'; never combine multiple moves
 - Use ++keyword++ emphasis on 2-4 critical elements only
-- Multi-shot: label as 'Shot 1 (0-3s):' format. Supports up to 6 shots in Kling 3.0
+- Multi-shot: label as 'Shot 1 (0-3s):' format (up to 6 shots in 3.0); in 4.0, use keyframes (up to 10) to pin narrative beats across the longer 30s and write time-progressive prompts describing how the scene evolves
 - Dialogue: [Character A: Description, voice tone]: 'Dialogue text'
 - SFX: prefix for sound effects. Describe ambient acoustics plainly
 - Always specify action endpoints: 'picks up the cup, then settles back into place'
@@ -255,7 +256,9 @@ mid-pack.
   credits. The "4K unseen" complaint has softened — Seedance 2.0 went native
   4K/10-bit and 2.5 API hosts now ship 30s 4K.
 - **Kling 3.0 / 3.0 Omni** — loved: community favorite for realistic humans and
-  value; lip-sync weak past ~5s, failed gens burn credits.
+  value; lip-sync weak past ~5s, failed gens burn credits. Kling 4.0 Flash (Sep 28)
+  is the big step up — 30s clips, 4K + stereo audio, better lip-sync — but is
+  gated to annual subscribers first, so 3.0 stays the accessible tier for now.
 - **Veo 3.1** — loved: quality leader; short 8s ceiling and strict contextual
   censorship are the top pro gripes.
 - **Veo 3.1 Fast** — reality gap: reports of "random nonsense" outputs that

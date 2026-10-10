@@ -54,13 +54,14 @@ Tips:
 ### Nano Banana
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
-- Official model IDs: Nano Banana 2 = Gemini 3.1 Flash Image; Nano Banana 2 Lite = gemini-3.1-flash-lite-image (~4s generations). Google's Imagen line is deprecated (shutdowns from Aug 2026) with this family as the migration path
+- Current Flash tier is Nano Banana 2.1 (Oct 2026; model id gemini-nano-banana-2.1) — better quality, adherence, multi-turn consistency and text over Nano Banana 2; Nano Banana 2 = Gemini 3.1 Flash Image, Lite = gemini-3.1-flash-lite-image. Google's Imagen line is deprecated with this family as the migration path
+- Set the thinking level — Minimal / Medium (2.1 default) / High — higher for complex compositions
 - Narrative paragraphs, NOT keyword lists; Gemini-based architecture understands natural language
 - No negative prompts; use 'semantic positive framing': 'sharp focus' instead of 'not blurry'
-- Supports up to 14 reference images and 4K output
-- Multilingual text rendering supported
+- Supply up to 14 reference images for fusion (up to 4 for character consistency); keep subject names consistent across turns to lock identity
+- State output resolution explicitly (1K default, 2K, 4K); multilingual text rendering supported
 - For photorealism: specify camera equipment and materiality; 'Shot on Canon R5, 85mm f/1.4'
-- Multi-turn conversational editing is a core feature; refine iteratively
+- Multi-turn conversational editing is a core feature; iterate across edit turns rather than one giant prompt
 - Describe materials and textures explicitly for best results
 
 ### Seedream
@@ -228,9 +229,11 @@ subjective.
   launch (Sep 8), the widest #1-to-#2 gap recorded; sharper detail, natural
   lighting, reliable multi-turn edits. Nano Banana 2 still wins some pure-
   photorealism rounds. GPT Image 2 drops to #3 and is now the value/legacy tier.
-- **Nano Banana 2** — mixed, slipping: pushed down the boards (≈#6-9) by the
-  GPT 2.5 / MAI 2.6 / Reve / Muse wave, but still the go-to for skin, materials,
-  cinematic light and product hero shots; loses on instruction-following and text.
+- **Nano Banana 2 / 2.1** — mixed, slipping then refreshed: NB2 was pushed down
+  the boards (≈#6-9) by the GPT 2.5 / MAI 2.6 / Reve / Muse wave but stays the
+  go-to for skin, materials, cinematic light and product hero shots; the Oct Flash
+  update (2.1) claims better quality/adherence/consistency/text — Google's own
+  numbers, no independent arena data yet.
 - **Reve 2.1** — respected sleeper: layout-first, native 4K, ranks above Nano
   Banana 2 and Seedream; the posters / dense-layout / exact-text pick, with cheap
   iterative edits.

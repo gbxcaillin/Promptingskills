@@ -128,7 +128,7 @@ for wild ideation, worldbuilding and long-horizon agentic runs, prompted lean.
 ### Claude
 Negative prompt: null (not supported — rewrite negatives as positives)
 Tips:
-- Current lineup (Sep 2026): Opus 5.5 (new flagship, Sep 22; 1M-token context, now #1 on the AA Intelligence Index and ~20% cheaper than Opus 5) / Fable 5.1 / Fable 5 / Opus 5 / Sonnet 5 / Haiku 4.5. Reach for Opus 5.5 or Fable 5.1 for the most demanding reasoning, coding and long-horizon work; Sonnet 5 for everyday work at a price undercut
+- Current lineup (Oct 2026): Opus 5.5 (flagship, Sep 22; #1 on the AA Intelligence Index) / Fable 5.1 / Fable 5 / Opus 5 / Sonnet 5.5 (Sep 28; now #2 on the AA Index at the Sonnet price) / Sonnet 5 / Haiku 5.5 (Oct 7; ~75% cheaper small model) / Haiku 4.5. Reach for Opus 5.5 or Fable 5.1 for the most demanding reasoning, coding and long-horizon work; Sonnet 5.5 for everyday/agentic work at a price undercut; Haiku 5.5 for cheap high-volume tasks
 - Opus 5.5 has an effort/thinking dial that sets both reasoning depth AND cost — set it explicitly; it communicates naturally and puts key info first, and is strong at long agentic coding
 - Fable 5.1 writes denser prose than Fable 5 — ask explicitly for 'short paragraphs, varied sentence length' if you want airier writing; it also uses less markdown in chat, so old anti-formatting boilerplate can over-suppress
 - Fable 5.1 emits 22-35% more output than Fable 5 and defaults to fewer status updates during long tool-calling turns; on capped plans, scope tasks tightly and set a lower reasoning effort (medium often beats high for clean style-following) to avoid burning session limits
@@ -231,10 +231,20 @@ dated and subjective. Weight them as directional, not measured.
 - **Claude Fable 5** — loved: still #1 on the creative-writing arena board (5.1
   isn't listed there yet); prose "words fine, music slightly off" vs 5.1. Nudge:
   writing, worldbuilding up.
-- **Claude Sonnet 5** — loved: wins writing quality and instruction-following
-  at a large price undercut. Nudge: writing, instruction up. (A Sonnet 5.5 is
-  signaled "within weeks" but not officially shipped — verify before relying on it.)
-- **Claude Haiku 4.5** — sleeper: punches above its price on coding/vibe-coding.
+- **Claude Sonnet 5.5** — strong-positive: shipped Sep 28 and now #2 on the AA
+  Intelligence Index (56) at the unchanged Sonnet price ($2/$10), ~30% faster
+  with fewer tokens/tool calls; near-flagship on everyday agentic, bug-fixing and
+  polished docs/slides/sheets (Opus 5.5 still for complex multi-step work). The
+  default-tier value pick. Nudge: coding, instruction up.
+- **Claude Sonnet 5** — loved but superseded: still great writing and
+  instruction-following at a price undercut; Sonnet 5.5 is the reason to move up.
+  Nudge: writing, instruction up.
+- **Claude Haiku 5.5** — positive: shipped Oct 7, ~75% cheaper to run than
+  Haiku 4.5 with a big agentic/computer-use jump for its tier; the new small-model
+  default for cheap, fast, high-volume classify/extract/summarize and tool-calling.
+  Watch the 100K-input threshold (rate jumps above it) and budget ~30% more tokens.
+- **Claude Haiku 4.5** — superseded by Haiku 5.5; still punched above its price on
+  coding/vibe-coding.
 - **GPT-6 Astra** — mixed/dominant-but-narrow: crushes verifiable-answer tasks,
   math, and agentic/one-shot game+3D builds (FrontierMath, browser games in a
   day), but creative writing is a genuine weakness — ranks *below* the Sol tier

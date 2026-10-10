@@ -3,6 +3,28 @@
 Dated entries summarizing what each refresh changed. Newest first.
 See MAINTENANCE.md for the update procedure.
 
+## 2026-10-10 — delta refresh (11-day window)
+Text/LLM:
+- Claude Sonnet 5.5 (Sep 28) added — now #2 on the AA Intelligence Index at the
+  Sonnet price; supersedes Sonnet 5 as the everyday/agentic value pick.
+- Claude Haiku 5.5 (Oct 7) added — ~75% cheaper, big agentic jump; supersedes
+  Haiku 4.5 as the small-model default.
+- Watch-items still unshipped (not added): Grok 4.8, GPT-6 Terra, Gemini 3.2/4.0,
+  DeepSeek V5, GLM-6. AA Index #1 unchanged (Opus 5.5 @58).
+Image:
+- Nano Banana 2.1 (Oct 6) added as the current Flash tier — quality/adherence/
+  consistency/text gains (Google's own claims; no independent arena data yet).
+Video:
+- Kling 4.0 Flash (Sep 28) added — 30s clips, 4K + stereo audio, 10 keyframes,
+  improved lip-sync; gated to annual subscribers first, so 3.0 stays the
+  accessible tier.
+Audio:
+- Suno Speech beta (Oct 1) added — a single model generating spoken voice + an
+  original music bed together (free beta).
+Held for next cycle (thin/pre-window, no solid prompting detail): Tencent Hy
+Image 3.5 Preview, Grok Imagine 1.5 Lite. No change: FLUX 3 image still
+unreleased, no Midjourney V9, no Seedream fix, Udio platform still unlaunched.
+
 ## 2026-09-29 — delta refresh (10-day window; real releases)
 Text/LLM:
 - Claude Opus 5.5 shipped Sep 22 — new flagship, now #1 on the AA Intelligence

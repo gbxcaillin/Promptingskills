@@ -36,6 +36,16 @@ Tips:
 - Enable Max Mode (extra credits) for songs over ~2 min, style transfer, or cross-track vocal consistency; multimodal seeds (audio/photo/video/voice memo) cost extra credits
 - Suno Studio (Premier) remains the only unlimited-download path; free tier is capped at 7 lifetime downloads
 
+### Suno Speech (voice + music)
+Negative prompt: null
+Tips:
+- A beta model (Oct 1, 2026) that generates a spoken voice AND an original backing track together as one cohesive take — not pure TTS and not pure music
+- Provide the full script/spoken text plus a short description of the music bed's mood/genre and energy, so the track sits under the speech rather than competing
+- Keep accents simple — testers report accent drift on complex or non-neutral accents
+- Don't over-specify dramatic pauses; they can run long
+- Generate short segments and stitch for long-form narration
+- Free beta to all users (web/iOS/Android); terms still provisional
+
 ### ElevenLabs Music
 Negative prompt: "acoustic, repetitive structure, four-on-the-floor kick, lo-fi" (Exclude Styles)
 Tips:
@@ -247,6 +257,7 @@ Tips:
 | Model | Songs & vocals | Instrumental | Voice/TTS | SFX | Control | Speed/value |
 |-------|:---:|:---:|:---:|:---:|:---:|:---:|
 | Suno v6 | 9 | 8 | — | 3 | 9 | 7 |
+| Suno Speech (beta) | 8 | — | 7 | — | 6 | 7 |
 | ElevenLabs Music | 9 | 7 | 6 | 3 | 8 | 8 |
 | Udio v4 | 9 | 9 | — | 2 | 9 | 7 |
 | Mureka V9.5 | 8 | 7 | 5 | 2 | 8 | 8 |
@@ -278,6 +289,9 @@ Separate from the capability tips above; directional, not measured.
   a real control leap, but the launch collided with the Sep 3 download caps (free
   = 7 lifetime downloads) and the forced retirement, so "best model yet" sits
   next to "I'm cancelling"; some worry licensed data sanitized edgier genres.
+- **Suno Speech** — positive (beta): a novel single model that generates spoken
+  voice + an original music bed in one take (free beta, Oct 1); rough edges on
+  accents and pause length are expected at this stage.
 - **Udio v4** — mixed: the audiophile's choice on quality, but the
   post-settlement download lockdown gutted practical value; Sony escalated in
   July with a new 30,000-recording suit.
