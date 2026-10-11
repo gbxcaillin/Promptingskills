@@ -86,6 +86,29 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .btn-secondary:hover{background:var(--ink);color:var(--paper)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 
+/* Lead funnel into gbxps.com */
+.gbx-funnel{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:var(--radius);padding:44px 40px;margin:52px 0 0}
+.gbx-funnel h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,3.6vw,2.4rem);line-height:1.15;margin:0 0 10px;color:var(--ink)}
+.gbx-funnel .funnel-lead{color:var(--ink2);font-size:.95rem;line-height:1.6;max-width:660px;margin:0 0 28px}
+.funnel-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.funnel-card{display:flex;flex-direction:column;background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.funnel-card.accent{border-color:rgba(46,139,110,.4);background:var(--teal-tint)}
+.funnel-card h3{font-family:var(--serif);font-weight:500;font-size:1.32rem;margin:0 0 8px;color:var(--ink)}
+.funnel-card p{color:var(--ink2);font-size:.86rem;line-height:1.6;margin:0 0 18px;flex:1}
+.funnel-card .btn{align-self:flex-start;text-decoration:none}
+.funnel-foot{margin-top:22px;font-size:.82rem;color:var(--ink3);display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center}
+.funnel-foot a{color:var(--accent-text);text-decoration:none;border-bottom:1px solid var(--line)}
+.funnel-foot a:hover{border-bottom-color:var(--accent-text)}
+@media(max-width:640px){.funnel-cards{grid-template-columns:1fr}.gbx-funnel{padding:32px 20px}}
+
+/* High-intent nudge shown with optimized results */
+.results-cta{margin-top:24px;border:1px solid var(--line);border-left:3px solid var(--teal);background:var(--teal-tint);border-radius:var(--radius);padding:16px 18px;font-size:.88rem;line-height:1.55;color:var(--ink2);display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.results-cta strong{color:var(--ink);font-weight:600}
+.results-cta .rc-links{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto}
+.results-cta a{color:var(--accent-text);font-weight:500;text-decoration:none;white-space:nowrap}
+.results-cta a:hover{text-decoration:underline}
+
+
 .type-toggle{display:flex;background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
 .type-toggle button{padding:9px 20px;background:none;border:none;color:var(--ink2);font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s;font-family:var(--sans)}
 .type-toggle button.active{background:var(--contrast-bg);color:var(--contrast-fg)}
@@ -434,6 +457,13 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
       <button class="action-btn" onclick="regenerate()" title="Re-roll the example variations">&#8635; Regenerate examples</button>
     </div>
     <div id="resultsContainer"></div>
+    <div class="results-cta">
+      <span><strong>You&rsquo;re already optimising prompts.</strong> Want help putting AI to work across your business, or a hand learning the basics in a small group?</span>
+      <span class="rc-links">
+        <a href="https://gbxps.com/tools?utm_source=prompt-optimizer&amp;utm_medium=results&amp;utm_campaign=ai-funnel" target="_blank" rel="noopener">Explore AI &rarr;</a>
+        <a href="https://gbxps.com/contact?utm_source=prompt-optimizer&amp;utm_medium=results&amp;utm_campaign=ai-seminar&amp;enquiry=ai-seminar" target="_blank" rel="noopener">Join a seminar &rarr;</a>
+      </span>
+    </div>
   </div>
 
   <div class="empty-state" id="emptyState">
@@ -471,6 +501,28 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
    <div class="dir-list" id="directoryList"></div>
  </div><!-- /view-directory -->
 
+ <section class="gbx-funnel" aria-labelledby="funnel-h">
+   <span class="section-label">From GBX Professional Services</span>
+   <h2 id="funnel-h">Ready to put AI to work in your business?</h2>
+   <p class="funnel-lead">This optimizer is one of our free tools. GBX Professional Services helps businesses turn AI from a buzzword into real, practical gains &mdash; without the jargon or the overwhelm.</p>
+   <div class="funnel-cards">
+     <div class="funnel-card">
+       <h3>Explore AI for your business</h3>
+       <p>Browse our free tools and plain-English insights, or run the two-minute AI Health Check to find where AI could save your team time and money.</p>
+       <a class="btn btn-secondary" href="https://gbxps.com/tools?utm_source=prompt-optimizer&amp;utm_medium=tool&amp;utm_campaign=ai-funnel" target="_blank" rel="noopener">Explore tools &amp; insights</a>
+     </div>
+     <div class="funnel-card accent">
+       <h3>Join a small-group AI seminar</h3>
+       <p>Small groups, high impact. Practical, judgement-free sessions for people who are time-poor or feel they&rsquo;ve missed the basics &mdash; leave knowing how to actually use AI day to day.</p>
+       <a class="btn btn-primary" href="https://gbxps.com/contact?utm_source=prompt-optimizer&amp;utm_medium=tool&amp;utm_campaign=ai-seminar&amp;enquiry=ai-seminar" target="_blank" rel="noopener">Register your interest</a>
+     </div>
+   </div>
+   <div class="funnel-foot">
+     <span>Melbourne-based, working remotely across AU &amp; beyond.</span>
+     <span>Prefer email? <a href="mailto:cc@gbxps.com?subject=AI%20enquiry%20from%20the%20Prompt%20Optimizer">cc@gbxps.com</a></span>
+   </div>
+ </section>
+
 </div>
 
 <footer class="footer">
@@ -478,7 +530,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
   <div class="lockup">Professional&nbsp;&nbsp;Services</div>
   <div class="rule"></div>
   Prompt Optimizer. Research-backed prompt engineering for <span id="footerModelCount">86</span> AI models.<br>
-  GBX PS PTY LTD &copy; 2026
+  A free tool by <a href="https://gbxps.com?utm_source=prompt-optimizer&amp;utm_medium=footer&amp;utm_campaign=ai-funnel" target="_blank" rel="noopener" style="color:#fff;border-bottom:1px solid rgba(255,255,255,.4);text-decoration:none">gbxps.com</a> &middot; GBX PS PTY LTD &copy; 2026
 </footer>
 
 <script>
