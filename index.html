@@ -100,6 +100,19 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .funnel-foot a{color:var(--accent-text);text-decoration:none;border-bottom:1px solid var(--line)}
 .funnel-foot a:hover{border-bottom-color:var(--accent-text)}
 @media(max-width:640px){.funnel-cards{grid-template-columns:1fr}.gbx-funnel{padding:32px 20px}}
+.lead-form{display:flex;flex-direction:column;gap:6px;margin-top:2px}
+.lead-hp{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.lead-label{font-size:.72rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--ink2);margin-top:8px}
+.lead-label span{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink3)}
+.lead-input{font:inherit;font-size:.9rem;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:9px 11px;width:100%;box-sizing:border-box}
+.lead-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 2px var(--teal-tint)}
+.lead-form .btn{align-self:stretch;margin-top:14px;border:none;cursor:pointer;text-align:center}
+.lead-form .btn:disabled{opacity:.6;cursor:default}
+.lead-status{font-size:.82rem;line-height:1.5;margin:10px 0 0}
+.lead-status.ok{color:var(--accent-text);font-weight:500}
+.lead-status.err{color:#c0392b}
+.lead-status a{color:inherit;text-decoration:underline}
+.lead-fineprint{font-size:.72rem;color:var(--ink3);line-height:1.5;margin:8px 0 0}
 
 /* High-intent nudge shown with optimized results */
 .results-cta{margin-top:24px;border:1px solid var(--line);border-left:3px solid var(--teal);background:var(--teal-tint);border-radius:var(--radius);padding:16px 18px;font-size:.88rem;line-height:1.55;color:var(--ink2);display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
@@ -513,8 +526,23 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
      </div>
      <div class="funnel-card accent">
        <h3>Join a small-group AI seminar</h3>
-       <p>Small groups, high impact. Practical, judgement-free sessions for people who are time-poor or feel they&rsquo;ve missed the basics &mdash; leave knowing how to actually use AI day to day.</p>
-       <a class="btn btn-primary" href="https://gbxps.com/contact?utm_source=prompt-optimizer&amp;utm_medium=tool&amp;utm_campaign=ai-seminar&amp;enquiry=ai-seminar" target="_blank" rel="noopener">Register your interest</a>
+       <p>Small groups, high impact. Practical, judgement-free sessions for people who are time-poor or feel they&rsquo;ve missed the basics &mdash; leave knowing how to actually use AI day to day. Register your interest and we&rsquo;ll be in touch.</p>
+       <form class="lead-form" id="leadForm" novalidate>
+         <input class="lead-hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+         <label class="lead-label" for="leadName">Name <span>(optional)</span></label>
+         <input class="lead-input" id="leadName" name="name" type="text" autocomplete="name" placeholder="Your name">
+         <label class="lead-label" for="leadEmail">Email</label>
+         <input class="lead-input" id="leadEmail" name="email" type="email" autocomplete="email" required placeholder="you@yourbusiness.com">
+         <label class="lead-label" for="leadInterest">I&rsquo;m interested in</label>
+         <select class="lead-input" id="leadInterest" name="interest">
+           <option value="A small-group AI seminar">A small-group AI seminar</option>
+           <option value="Exploring AI for my business">Exploring AI for my business</option>
+           <option value="Both">Both</option>
+         </select>
+         <button class="btn btn-primary" type="submit" id="leadSubmit">Register your interest</button>
+         <p class="lead-status" id="leadStatus" role="status" aria-live="polite"></p>
+         <p class="lead-fineprint">We&rsquo;ll only use your details to reply about your enquiry. No spam, and you can ask us to delete them any time.</p>
+       </form>
      </div>
    </div>
    <div class="funnel-foot">
@@ -3049,6 +3077,81 @@ function toggleTheme() {
 syncThemeLabel();
 (function(){ const el = document.getElementById("footerModelCount"); if (el) el.textContent = MODELS.length; })();
 render();
+
+// Lead capture. The optimizer is published both on gbxps.com (same origin) and
+// standalone on github.io (cross origin), so pick the endpoint from the host:
+// a relative path when we are already on gbxps.com, the absolute URL otherwise.
+(function(){
+  var form = document.getElementById("leadForm");
+  if (!form) return;
+  var onSite = /(^|\.)gbxps\.com$/.test(location.hostname);
+  var endpoint = onSite ? "/api/tool-lead" : "https://gbxps.com/api/tool-lead";
+  var status = document.getElementById("leadStatus");
+  var btn = document.getElementById("leadSubmit");
+  var label = btn.textContent;
+
+  function setStatus(kind, msg) {
+    status.className = "lead-status" + (kind ? " " + kind : "");
+    if (kind === "err") status.innerHTML = msg;
+    else status.textContent = msg;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("leadEmail").value.trim();
+    var at = email.indexOf("@");
+    if (at < 1 || email.indexOf(".", at) < 0) {
+      setStatus("err", "Please enter a valid email address.");
+      document.getElementById("leadEmail").focus();
+      return;
+    }
+    // Honeypot: a real person leaves this blank. Pretend success for bots.
+    if (form.querySelector('[name="_gotcha"]').value) {
+      form.reset();
+      setStatus("ok", "Thanks! We will be in touch.");
+      return;
+    }
+    var interest = document.getElementById("leadInterest").value;
+    var payload = {
+      kind: "tool",
+      source: "Prompt Optimizer",
+      email: email,
+      name: document.getElementById("leadName").value.trim(),
+      fields: { Interest: interest },
+      summary: "Enquiry from the Prompt Optimizer about: " + interest + ".",
+      page: location.href
+    };
+    btn.disabled = true;
+    btn.textContent = "Sending…";
+    setStatus("", "");
+    fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (j) {
+          return { ok: r.ok, body: j };
+        });
+      })
+      .then(function (res) {
+        if (res.ok && res.body && res.body.ok) {
+          form.reset();
+          btn.textContent = "Sent";
+          setStatus("ok", res.body.emailed
+            ? "Thanks! Check your inbox for a confirmation. We will follow up personally soon."
+            : "Thanks! We have your details and will be in touch soon.");
+          return;
+        }
+        throw new Error("rejected");
+      })
+      .catch(function () {
+        btn.disabled = false;
+        btn.textContent = label;
+        setStatus("err", 'Something went wrong. Please email <a href="mailto:admin@gbxps.com?subject=AI%20enquiry%20from%20the%20Prompt%20Optimizer">admin@gbxps.com</a> and we will pick it up.');
+      });
+  });
+})();
 </script>
 </body>
 </html>

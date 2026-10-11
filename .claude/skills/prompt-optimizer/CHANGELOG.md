@@ -3,6 +3,17 @@
 Dated entries summarizing what each refresh changed. Newest first.
 See MAINTENANCE.md for the update procedure.
 
+## 2026-10-11 — app: lead capture form (gbxps.com funnel)
+App (index.html) only; no model-data or skill-reference changes.
+- The "Join a small-group AI seminar" funnel card is now a real capture form
+  (name optional, email, interest) with honeypot, client-side email validation,
+  and success/error states. On submit it POSTs JSON to the gbxps.com
+  /api/tool-lead pipeline as {kind:'tool', source:'Prompt Optimizer'}.
+- Endpoint is origin-aware: relative /api/tool-lead when served on gbxps.com
+  (the daily-synced on-site copy), absolute https://gbxps.com/api/tool-lead
+  from the standalone github.io copy. The latter needs the CORS handler added
+  to the Website repo (PR, allowlisting the github.io origin).
+
 ## 2026-10-10 — delta refresh (11-day window)
 Text/LLM:
 - Claude Sonnet 5.5 (Sep 28) added — now #2 on the AA Intelligence Index at the
