@@ -93,6 +93,8 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
 .funnel-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .funnel-card{display:flex;flex-direction:column;background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
 .funnel-card.accent{border-color:rgba(46,139,110,.4);background:var(--teal-tint)}
+.funnel-tag{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono,inherit);font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text);background:var(--surface);border:1px solid rgba(46,139,110,.35);border-radius:999px;padding:4px 11px;margin:0 0 12px}
+.funnel-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--teal)}
 .funnel-card h3{font-family:var(--serif);font-weight:500;font-size:1.32rem;margin:0 0 8px;color:var(--ink)}
 .funnel-card p{color:var(--ink2);font-size:.86rem;line-height:1.6;margin:0 0 18px;flex:1}
 .funnel-card .btn{align-self:flex-start;text-decoration:none}
@@ -525,8 +527,9 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;line-height:1.6;f
        <a class="btn btn-secondary" href="https://gbxps.com/tools?utm_source=prompt-optimizer&amp;utm_medium=tool&amp;utm_campaign=ai-funnel" target="_blank" rel="noopener">Explore tools &amp; insights</a>
      </div>
      <div class="funnel-card accent">
+       <span class="funnel-tag">Runs in small cohorts</span>
        <h3>Join a small-group AI seminar</h3>
-       <p>Small groups, high impact. Practical, judgement-free sessions for people who are time-poor or feel they&rsquo;ve missed the basics &mdash; leave knowing how to actually use AI day to day. Register your interest and we&rsquo;ll be in touch.</p>
+       <p>Small groups, high impact. Practical, judgement-free sessions for people who are time-poor or feel they&rsquo;ve missed the basics &mdash; leave knowing how to actually use AI day to day. We run these in small cohorts, so register your interest and we&rsquo;ll be in touch about the next one.</p>
        <form class="lead-form" id="leadForm" novalidate>
          <input class="lead-hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
          <label class="lead-label" for="leadName">Name <span>(optional)</span></label>
